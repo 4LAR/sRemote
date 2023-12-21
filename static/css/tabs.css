@@ -1,0 +1,99 @@
+
+.tabs_bg {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 29px;
+  border-bottom: 1px solid #181A1F;
+  margin: 0px;
+}
+
+.tabs {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 29px;
+  margin: 0px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs > li {
+  position: relative;
+  display: inline-block;
+  width: 140px;
+  border-right: 1px solid #181A1F;
+  cursor: pointer;
+}
+
+.tabs > li.selected {
+  height: calc(100% + 1px);
+  width: 138px;
+  border-left: 2px solid #568AF2;
+  background-color: #282C34;
+}
+
+.tabs > li > p {
+  margin: 5px 0px;
+  padding: 0px;
+  padding-left: 10px;
+  width: 90%;
+  text-align: center;
+  color: #6B727D;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tabs > li.selected > p {
+  color: #D7DAE0;
+}
+
+.tabs > li > div {
+  position: absolute;
+  display: block;
+  background-color: #21252B;
+  width: 18px;
+  height: 18px;
+  top: 6px;
+  right: 6px;
+  border-radius: 2px;
+  opacity: .0;
+  transition: .1s all;
+}
+
+.tabs > li > div > img {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  filter: invert(.4);
+  top: 3px;
+  left: 3px;
+}
+
+.tabs > li:hover > div {
+  opacity: 1;
+}
+
+.tabs > li.selected:hover > div {
+  background-color: #282C34;
+}
+
+.tabs > li.selected:hover > div > img {
+  filter: invert(.8);
+}
+
+.tabs > li:hover > div:hover {
+  background-color: #568AF2;
+}
+
+.tabs > li:hover > div:hover > img {
+  filter: invert(0.15);
+}

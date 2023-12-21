@@ -1,0 +1,21 @@
+{
+  "name": "discord-rich",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "author": "100LAR STUDIO",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^26.6.2",
+    "electron-packager": "^17.1.2",
+    "electron-reloader": "^1.2.3",
+    "ssh2": "^1.15.0"
+  },
+  "dependencies": {
+    "discord-rpc": "^4.0.1",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "scripts": {
+    "start": "electron ."
+  }
+}

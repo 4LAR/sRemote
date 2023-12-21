@@ -1,0 +1,32 @@
+
+body {
+  background-color: #21252B;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+li {
+  list-style-type: none;
+}
+
+ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+p {
+  color: #D7DAE0;
+}
+
+/*----------------------------------------------------------------------------*/
+
+#terminal {
+  position: absolute;
+  top: 30px;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  background-color: #000;
+}
