@@ -9,7 +9,7 @@ const conn = new Client();
 const term = new Terminal({
   cursorBlink: true,
   macOptionIsMeta: true,
-  scrollback: true,
+  // scrollback: true,
   theme: {
     // foreground: '#d2d2d2',
     // background: '#282C34',
@@ -57,6 +57,10 @@ conn.on('ready', () => {
 
     const wait_ms = 50;
     window.onresize = debounce(fitToscreen, wait_ms);
+
+    document.addEventListener("DOMContentLoaded", function() {
+      fitToscreen();
+    });
   });
 }).connect({
   host: '192.168.1.119',

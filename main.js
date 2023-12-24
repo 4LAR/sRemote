@@ -5,7 +5,7 @@ const path = require('path');
 let win;
 let top = {};
 
-const DEBUG = false;
+const DEBUG = true;
 
 require('electron-reloader')(module, {
   // ignore: [

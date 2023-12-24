@@ -26,6 +26,7 @@ function append_tab(name, id="", selected=false) {
   `, function() {
     select_tab(id);
   }, id + "_menu", className=(selected)? "selected": "");
+  append_to_ul("tabs", ``, undefined, "", "line");
   append_to_ul("terminal_list", `<iframe src="ssh.html" style="display: none" id="${id + "_body"}"></div>`);
   // var iframe = document.getElementById(id + "_body");
   // iframe.onload = function () {

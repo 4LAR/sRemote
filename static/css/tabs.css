@@ -1,24 +1,15 @@
 
-.tabs_bg {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 29px;
-  border-bottom: 1px solid #181A1F;
-  margin: 0px;
-}
-
 .tabs {
   position: fixed;
   top: 0px;
   left: 0px;
-  width: 100%;
-  height: 29px;
+  width: 200px;
+  height: 100%;
   margin: 0px;
-  overflow-y: hidden;
-  overflow-x: scroll;
-  white-space: nowrap;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border-right: 1px solid #1C262D;
+  background-color: #080B0E;
 }
 
 .tabs::-webkit-scrollbar {
@@ -26,18 +17,23 @@
 }
 
 .tabs > li {
+  margin-top: -5px;
   position: relative;
-  display: inline-block;
-  width: 140px;
-  border-right: 1px solid #181A1F;
+  width: 100%;
   cursor: pointer;
+  height: 40px;
+}
+
+.tabs > li.line {
+  margin-top: 0px;
+  border-bottom: 1px solid #1C262D;
+  height: 0px;
 }
 
 .tabs > li.selected {
-  height: calc(100% + 1px);
-  width: 138px;
-  border-left: 2px solid #568AF2;
-  background-color: #282C34;
+  width: calc(100% - 3px);
+  border-left: 3px solid #3391EE;
+  background-color: #141B1F;
 }
 
 .tabs > li > p {
