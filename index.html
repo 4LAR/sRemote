@@ -8,19 +8,30 @@
     <link rel="stylesheet" href = "./static/css/libs/xterm.css"/>
     <link rel="stylesheet" href = "./static/css/main.css"/>
     <link rel="stylesheet" href = "./static/css/tabs.css"/>
+    <link rel="stylesheet" href = "./static/css/alert.css"/>
   </head>
   <body class="scroll_style">
     <div class="body">
       <ul id="terminal_list"></ul>
-      <!-- <div id="terminal"></div> -->
     </div>
-    <ul id="tabs" class="tabs"></ul>
+    <div class="toolBar">
+      <img src="./static/img/add.svg" onclick="alert_create_connection()">
+    </div>
+    <ul id="tabs" class="tabs block_select"></ul>
+    <div class="bg_alert" id="bg_alert" onclick="close_alert()"></div>
+    <div id="alert">
+      <div class="alert_head">
+        <img src="./static/img/plus.svg" onclick="close_alert()">
+      </div>
+      <div class="alert_body" id="alert_body"></div>
+    </div>
   </body>
   <script type="text/javascript" src="./static/js/libs/xterm.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-fit.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-search.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-web-links.js"></script>
   <script type="text/javascript" src="./static/js/main.js"></script>
-  <script type="text/javascript" src="./static/js/terminal.js"></script>
+  <script type="text/javascript" src="./static/js/alert.js"></script>
   <script type="text/javascript" src="./static/js/tabs.js"></script>
+  <script type="text/javascript" src="./static/js/connection.js"></script>
 </html>

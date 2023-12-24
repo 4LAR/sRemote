@@ -6,14 +6,16 @@
       "port": 22,
       "username": "stolar",
       "password": "4040"
-    }, {
+    },
+    {
       "name": "ubuntu-server 2",
       "host": "192.168.1.119",
       "port": 22,
       "username": "stolar",
       "password": "4040"
-    }, {
-      "name": "ubuntu-server 3",
+    },
+    {
+      "name": "ubuntu-server 3123123123321123",
       "host": "192.168.1.119",
       "port": 22,
       "username": "stolar",

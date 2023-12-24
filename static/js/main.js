@@ -50,4 +50,10 @@ function debounce(func, wait_ms) {
   };
 }
 
+//
+function get_arg(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+
 /*----------------------------------------------------------------------------*/

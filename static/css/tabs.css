@@ -1,10 +1,36 @@
 
-.tabs {
+.toolBar {
   position: fixed;
   top: 0px;
   left: 0px;
   width: 200px;
-  height: 100%;
+  height: 30px;
+  border-bottom: 1px solid #1C262D;
+  border-right: 1px solid #1C262D;
+}
+
+.toolBar > img {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 15px;
+  filter: invert(.6);
+  transition: .1s all;
+  cursor: pointer;
+}
+
+.toolBar > img:hover {
+  filter: invert(1);
+}
+
+/*----------------------------------------------------------------------------*/
+
+.tabs {
+  position: fixed;
+  top: 31px;
+  left: 0px;
+  width: 200px;
+  height: calc(100% - 31px);
   margin: 0px;
   overflow-y: scroll;
   overflow-x: hidden;
@@ -17,7 +43,7 @@
 }
 
 .tabs > li {
-  margin-top: -5px;
+  /* margin-top: -5px; */
   position: relative;
   width: 100%;
   cursor: pointer;
@@ -37,30 +63,46 @@
 }
 
 .tabs > li > p {
-  margin: 5px 0px;
+  position: absolute;
+  left: 35px;
+  margin: 0;
   padding: 0px;
-  padding-left: 11px;
-  width: 90%;
-  text-align: center;
-  color: #6B727D;
+  width: calc(100% - 40px);
+  text-align: left;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: #6B727D;
 }
+
+.tabs > li > p.name {
+  position: absolute;
+  top: 0px;
+  left: 35px;
+}
+
+.tabs > li > p.host {
+  position: absolute;
+  top: 20px;
+  left: 35px;
+  opacity: .8;
+  font-size: .9em;
+}
+
 
 .tabs > li.selected > p {
   color: #D7DAE0;
-  padding-left: 10px;
+  left: 32px;
 }
 
 .tabs > li > div {
   position: absolute;
   display: block;
-  background-color: #21252B;
+  /* background-color: #21252B; */
   width: 18px;
   height: 18px;
   top: 6px;
-  right: 6px;
+  left: 6px;
   border-radius: 2px;
   opacity: .0;
   transition: .1s all;
@@ -80,7 +122,8 @@
 }
 
 .tabs > li.selected:hover > div {
-  background-color: #282C34;
+  /* background-color: #282C34; */
+  left: 6px;
 }
 
 .tabs > li.selected:hover > div > img {

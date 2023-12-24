@@ -7,11 +7,14 @@ let top = {};
 
 const DEBUG = true;
 
-require('electron-reloader')(module, {
-  // ignore: [
-  //   "config.json"
-  // ]
-})
+try {
+  require('electron-reloader')(module, {
+    ignore: [
+      "config.json",
+      "connections.json"
+    ]
+  })
+} catch {}
 
 const createWindow = () => {
   top.win = new BrowserWindow({
@@ -20,7 +23,9 @@ const createWindow = () => {
       contextIsolation: false,
     },
     width: (DEBUG)? 1050: 800,
+    minWidth:800,
     height: 600,
+    minHeight:600,
     icon: 'logo.png',
     resizable: true
   })

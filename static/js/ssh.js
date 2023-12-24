@@ -1,15 +1,12 @@
-window.require = parent.window.require
 const { Client } = require('ssh2');
 
 const CONNECTIONS_FILE = "connections.json"
-var config_file = JSON.parse(JSON.stringify(require(`./${CONNECTIONS_FILE}`)));
-
+var config = JSON.parse(JSON.stringify(require(`./${CONNECTIONS_FILE}`))).connections[Number(get_arg("id"))];
 const conn = new Client();
 
 const term = new Terminal({
   cursorBlink: true,
   macOptionIsMeta: true,
-  // scrollback: true,
   theme: {
     // foreground: '#d2d2d2',
     // background: '#282C34',
@@ -26,6 +23,8 @@ const term = new Terminal({
     // brightRed: '#f54235'
   }
 });
+
+term.attachCustomKeyEventHandler(customKeyEventHandler);
 
 const fit = new FitAddon.FitAddon();
 term.loadAddon(fit);
@@ -63,8 +62,29 @@ conn.on('ready', () => {
     });
   });
 }).connect({
-  host: '192.168.1.119',
-  port: 22,
-  username: 'stolar',
-  password: '4040'
+  host: config.host,
+  port: config.port,
+  username: config.username,
+  password: config.password
 });
+
+function customKeyEventHandler(e) {
+  if (e.type !== "keydown") {
+    return true;
+  }
+  if (e.ctrlKey && e.shiftKey) {
+    const key = e.key.toLowerCase();
+    if (key === "v") {
+      navigator.clipboard.readText().then((toPaste) => {
+        term.writeText(toPaste);
+      });
+      return false;
+    } else if (key === "c" || key === "x") {
+      const toCopy = term.getSelection();
+      navigator.clipboard.writeText(toCopy);
+      term.focus();
+      return false;
+    }
+  }
+  return true;
+}

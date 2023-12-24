@@ -4,7 +4,12 @@ body {
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
   font-size: 14px;
   line-height: 1.5;
-  overflow: hidden;
+}
+
+.block_select {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 li {
@@ -22,24 +27,6 @@ p {
 
 /*----------------------------------------------------------------------------*/
 
-/* #terminal_list > li {
-  position: absolute;
-  top: 30px;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  background-color: #000;
-}
-
-#terminal {
-  position: absolute;
-  top: 30px;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  background-color: #000;
-} */
-
 iframe {
   position: absolute;
   top: 0px;
@@ -47,4 +34,100 @@ iframe {
   width: calc(100% - 201px);
   height: 100%;
   border: none;
+}
+
+/*----------------------------------------------------------------------------*/
+
+.button {
+  border-radius: 5px;
+  background-color: #1D63ED;
+  height: 40px;
+  width: 200px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: .15s all;
+}
+
+.button:hover {
+  background-color: #3391EE;
+}
+
+.button > p {
+  font-size: 16px;
+  width: 100%;
+  padding-top: 8px;
+  text-align: center;
+  transition: .15s all;
+  font-weight: 450;
+  color: #fff;
+  margin: 0;
+}
+
+/*----------------------------------------------------------------------------*/
+
+.alert_body .input_style {
+  background-color: #141B1F;
+  height: 34px;
+  border: 1px solid #4E6A81;
+  border-radius: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #FFFFFF;
+}
+
+.alert_body .input_style:focus{
+  outline: none;
+  border: 1px solid #1D63ED;
+}
+
+.alert_body .input_style::placeholder {
+  color: #ADBECB;
+}
+
+.alert_body .name {
+  position: absolute;
+  top: -40px;
+  font-size: 1.2em;
+}
+
+.alert_body hr {
+  width: 100%;
+  margin: 0px;
+  border: none;
+  border-bottom: 1px solid #384047;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.alert_body .input_warning {
+  border: 1px solid #D1334C;
+}
+
+/*----------------------------------------------------------------------------*/
+
+.alert_body #name {
+  width: calc(100% - 35px);
+  margin-bottom: 10px;
+}
+
+.alert_body #host {
+  width: calc(70% - 35px);
+  margin-bottom: 10px;
+}
+
+.alert_body #port {
+  margin-left: 10px;
+  width: calc(27.8% - 35px);
+  margin-bottom: 10px;
+}
+
+.alert_body #login {
+  margin-bottom: 10px;
+}
+
+.alert_body .submit {
+  position: absolute;
+  right: 35px;
+  bottom: 35px;
+  width: 100px;
 }

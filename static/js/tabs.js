@@ -17,9 +17,11 @@ function select_tab(id) {
   }
 }
 
-function append_tab(name, id="", selected=false) {
+function append_tab(data, id="", selected=false) {
+  console.log(data);
   append_to_ul("tabs", `
-    <p>${name}</p>
+    <p class="name">${data.name}</p>
+    <p class="host">${data.host}:${data.port}</p>
     <div>
       <img src="./static/img/cross.svg">
     </div>
@@ -27,12 +29,7 @@ function append_tab(name, id="", selected=false) {
     select_tab(id);
   }, id + "_menu", className=(selected)? "selected": "");
   append_to_ul("tabs", ``, undefined, "", "line");
-  append_to_ul("terminal_list", `<iframe src="ssh.html" style="display: none" id="${id + "_body"}"></div>`);
-  // var iframe = document.getElementById(id + "_body");
-  // iframe.onload = function () {
-  //   const iframeWin = iframe.contentWindow
-  //   iframeWin.require = window.require
-  // }
+  append_to_ul("terminal_list", `<iframe src="ssh.html?id=${id - 1}" style="display: none" id="${id + "_body"}"></div>`);
 }
 
 function read() {
@@ -44,13 +41,12 @@ function read() {
       TABS.push({
         "id": `${++i}`
       });
-      append_tab(el.name, TABS[TABS.length - 1].id);
+      append_tab(el, TABS[TABS.length - 1].id);
 
     } catch (e) {
       console.warn(e);
     }
   }
-  console.log(TABS[0].id);
   select_tab(TABS[0].id);
 }
 
