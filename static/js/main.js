@@ -22,13 +22,13 @@ function openModal(modalId) {
 }
 
 // добавить элемент в список (ul)
-function append_to_ul(id, content, onclick=undefined, className="") {
+function append_to_ul(id, content, onclick=undefined, item_id="", className="") {
   var ul = document.getElementById(id);
 
   var li = document.createElement("li");
-  console.log(className);
   li.innerHTML = content;
   li.className = className;
+  li.setAttribute("id", item_id);
   if (onclick)
     li.onclick = onclick;
 

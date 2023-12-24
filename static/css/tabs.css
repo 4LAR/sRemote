@@ -43,7 +43,7 @@
 .tabs > li > p {
   margin: 5px 0px;
   padding: 0px;
-  padding-left: 10px;
+  padding-left: 11px;
   width: 90%;
   text-align: center;
   color: #6B727D;
@@ -54,6 +54,7 @@
 
 .tabs > li.selected > p {
   color: #D7DAE0;
+  padding-left: 10px;
 }
 
 .tabs > li > div {
