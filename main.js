@@ -33,10 +33,10 @@ const createWindow = () => {
   top.win.loadFile('index.html')
   top.win.removeMenu()
 
-  top.win.on("close", ev => {
-    top.win.hide();
-    ev.preventDefault();
-  });
+  // top.win.on("close", ev => {
+  //   top.win.hide();
+  //   ev.preventDefault();
+  // });
 
   if (DEBUG) {
     top.win.on("ready-to-show", () => {
@@ -60,15 +60,11 @@ app.whenReady().then(() => {
   createWindow()
 })
 
-if (module.hot) {
-  module.hot.accept();
-}
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
 
-app.on("before-quit", ev => {
-  top.win.removeAllListeners("close");
-  top = null;
-
-  if (process.platform !== 'darwin') app.quit()
-});
-
+app.on('closed', () => app.quit());
 /*----------------------------------------------------------------------------*/
