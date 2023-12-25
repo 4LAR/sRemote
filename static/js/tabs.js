@@ -60,7 +60,23 @@ function append_tab(data, id="", selected=false) {
 }
 
 function read() {
-  var config_file = JSON.parse(JSON.stringify(require(`./${CONNECTIONS_FILE}`)));
+  var config_file;
+  try {
+    config_file = JSON.parse(JSON.stringify(require(`./${CONNECTIONS_FILE}`)));
+  } catch (e) {
+    config_file = {
+      "connections": []
+    }
+    fs.writeFile(
+      `./${CONNECTIONS_FILE}`,
+      JSON.stringify(
+        config_file,
+        null,
+        2
+      ),
+      (err) => err && console.error(err)
+    );
+  }
 
   let i = 0;
   for (const el of config_file["connections"]) {
@@ -75,7 +91,8 @@ function read() {
       console.warn(e);
     }
   }
-  select_tab(TABS[0].id);
+  if (TABS.length > 0)
+    select_tab(TABS[0].id);
 }
 
 read();
