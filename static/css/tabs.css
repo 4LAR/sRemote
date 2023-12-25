@@ -78,31 +78,50 @@
 .tabs > li > p.name {
   position: absolute;
   top: 0px;
-  left: 35px;
+  left: 39px;
 }
 
 .tabs > li > p.host {
   position: absolute;
   top: 20px;
-  left: 35px;
+  left: 39px;
   opacity: .8;
   font-size: .9em;
 }
 
-
 .tabs > li.selected > p {
   color: #D7DAE0;
-  left: 32px;
+  left: 36px;
 }
 
-.tabs > li > div {
+/* -------------------------------------------------------------------------- */
+
+.tabs > li > div.edit {
   position: absolute;
+  bottom: 3px;
+  right: 25px;
+}
+
+.tabs > li:hover > div.edit:hover {
+  background-color: #568AF2;
+}
+
+.tabs > li > div.delete {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+}
+
+.tabs > li:hover > div.delete:hover {
+  background-color: #D1334C;
+}
+
+/* -------------------------------------------------------------------------- */
+
+.tabs > li > div {
   display: block;
-  /* background-color: #21252B; */
   width: 18px;
   height: 18px;
-  top: 6px;
-  left: 6px;
   border-radius: 2px;
   opacity: .0;
   transition: .1s all;
@@ -117,23 +136,44 @@
   left: 3px;
 }
 
-.tabs > li:hover > div {
-  opacity: 1;
+.tabs > li > img {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 5px;
+  left: 6px;
 }
 
-.tabs > li.selected:hover > div {
-  /* background-color: #282C34; */
-  left: 6px;
+.tabs > li.selected > img {
+  left: 3px;
+}
+
+.tabs > li:hover > div {
+  opacity: 1;
 }
 
 .tabs > li.selected:hover > div > img {
   filter: invert(.8);
 }
 
-.tabs > li:hover > div:hover {
-  background-color: #568AF2;
-}
-
 .tabs > li:hover > div:hover > img {
   filter: invert(0.15);
+}
+
+/* -------------------------------------------------------------------------- */
+
+.status_none {
+  filter: invert(.4);
+}
+
+.status_warning {
+  filter: invert(33%) sepia(15%) saturate(5269%) hue-rotate(317deg) brightness(92%) contrast(104%);
+}
+
+.status_loading {
+  filter: invert(66%) sepia(78%) saturate(2342%) hue-rotate(347deg) brightness(99%) contrast(88%);
+}
+
+.status_run {
+  filter: invert(50%) sepia(35%) saturate(6992%) hue-rotate(144deg) brightness(94%) contrast(101%);
 }

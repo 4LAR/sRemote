@@ -2,6 +2,14 @@
 const CONNECTIONS_FILE = "connections.json"
 var TABS = [];
 var SELECTED = 0;
+
+const STATUS_LIST = [
+  "status_none",
+  "status_warning",
+  "status_loading",
+  "status_run"
+]
+
 function select_tab(id) {
   var i = 0;
   for (const el of TABS) {
@@ -17,12 +25,19 @@ function select_tab(id) {
   }
 }
 
+function update_status(id, status) {
+  document.getElementById(id + "_status").className = STATUS_LIST[status];
+}
+
 function append_tab(data, id="", selected=false) {
-  console.log(data);
   append_to_ul("tabs", `
+    <img id="${id + "_status"}" class="status_none" src="./static/img/terminal.svg">
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
-    <div>
+    <div class="edit">
+      <img src="./static/img/edit.svg">
+    </div>
+    <div class="delete">
       <img src="./static/img/cross.svg">
     </div>
   `, function() {
@@ -30,6 +45,7 @@ function append_tab(data, id="", selected=false) {
   }, id + "_menu", className=(selected)? "selected": "");
   append_to_ul("tabs", ``, undefined, "", "line");
   append_to_ul("terminal_list", `<iframe src='ssh.html?data=${JSON.stringify(data)}&id=${id}' style="display: none" id="${id + "_body"}"></div>`);
+  document.getElementById(id + "_body").contentWindow.update_status = update_status;
 }
 
 function read() {

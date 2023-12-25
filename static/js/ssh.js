@@ -2,7 +2,10 @@ const { Client } = require('ssh2');
 
 const CONNECTIONS_FILE = "connections.json"
 var config = JSON.parse(get_arg("data"));
+var id = get_arg("id");
 const conn = new Client();
+
+update_status(id, 2);
 
 const term = new Terminal({
   cursorBlink: true,
@@ -60,7 +63,10 @@ conn.on('ready', () => {
     document.addEventListener("DOMContentLoaded", function() {
       fitToscreen();
     });
+    update_status(id, 3);
   });
+}).on('error', function(err){
+  update_status(id, 1);
 }).connect({
   host: config.host,
   port: config.port,
