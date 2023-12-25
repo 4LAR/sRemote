@@ -131,3 +131,4 @@ dist
 SSH-win32-x64/*
 build.bat
 run.bat
+connections.json

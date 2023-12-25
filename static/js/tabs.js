@@ -38,20 +38,30 @@ function update_status(id, status) {
   document.getElementById(id + "_status").className = STATUS_LIST[status];
 }
 
-function append_tab(data, id="", selected=false) {
-  append_to_ul("tabs", `
+function generate_tab_by_data(data, id="") {
+  return `
     <img id="${id + "_status"}" class="status_none" src="./static/img/terminal.svg">
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
-    <div class="edit">
+    <div class="edit" onclick="alert_edit_connection(${id})">
       <img src="./static/img/edit.svg">
     </div>
     <div class="delete" onclick="alert_delete_connection(${id})">
       <img src="./static/img/cross.svg">
     </div>
-  `, function() {
-    select_tab(id);
-  }, id + "_menu", className=(selected)? "selected": "");
+  `;
+}
+
+function append_tab(data, id="") {
+  append_to_ul(
+    "tabs",
+    generate_tab_by_data(data, id),
+    function() {
+      select_tab(id);
+    },
+    id + "_menu",
+    className=""
+  );
   append_to_ul("tabs", ``, undefined, id + "_line", "line");
   append_to_ul("terminal_list", `
     <iframe src='ssh.html?data=${JSON.stringify(data)}&id=${id}' style="display: none" id="${id + "_body"}"></div>
@@ -86,6 +96,8 @@ function read() {
         "name": el.name,
         "host": el.host,
         "port": el.port,
+        "username": el.username,
+        "password": el.password,
         "search": el.name + el.host + ":" + el.port
       });
       append_tab(el, TABS[TABS.length - 1].id);
