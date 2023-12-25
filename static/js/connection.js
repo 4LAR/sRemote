@@ -61,7 +61,7 @@ function create_connection() {
 
     try {
       TABS.push({
-        "id": `${Number(TABS[TABS.length - 1].id) + 1}`,
+        "id": `${(TABS.length > 0)? (Number(TABS[TABS.length - 1].id) + 1): "1"}`,
         "name": name.value,
         "host": host.value,
         "port": port.value,
