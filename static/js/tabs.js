@@ -29,7 +29,7 @@ function append_tab(data, id="", selected=false) {
     select_tab(id);
   }, id + "_menu", className=(selected)? "selected": "");
   append_to_ul("tabs", ``, undefined, "", "line");
-  append_to_ul("terminal_list", `<iframe src="ssh.html?id=${id - 1}" style="display: none" id="${id + "_body"}"></div>`);
+  append_to_ul("terminal_list", `<iframe src='ssh.html?data=${JSON.stringify(data)}&id=${id}' style="display: none" id="${id + "_body"}"></div>`);
 }
 
 function read() {

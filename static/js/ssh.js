@@ -1,7 +1,7 @@
 const { Client } = require('ssh2');
 
 const CONNECTIONS_FILE = "connections.json"
-var config = JSON.parse(JSON.stringify(require(`./${CONNECTIONS_FILE}`))).connections[Number(get_arg("id"))];
+var config = JSON.parse(get_arg("data"));
 const conn = new Client();
 
 const term = new Terminal({
