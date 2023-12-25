@@ -83,7 +83,10 @@ function read() {
     try {
       TABS.push({
         "id": `${++i}`,
-        "name": el.name
+        "name": el.name,
+        "host": el.host,
+        "port": el.port,
+        "search": el.name + el.host + ":" + el.port
       });
       append_tab(el, TABS[TABS.length - 1].id);
 
@@ -96,3 +99,36 @@ function read() {
 }
 
 read();
+
+function search() {
+  var search = document.getElementById("search").value.toLowerCase();
+  if (search.length < 1) {
+    for (const el of TABS) {
+      openModal(el.id + "_menu");
+      openModal(el.id + "_line");
+    }
+    closeModal("toolBar_info");
+    return;
+  }
+  let count_found = 0;
+  for (const el of TABS) {
+    var search_item = el.search.toLowerCase();
+    if (search_item.indexOf(search) > -1) {
+      count_found++;
+      openModal(el.id + "_menu");
+      openModal(el.id + "_line");
+    } else {
+      closeModal(el.id + "_menu");
+      closeModal(el.id + "_line");
+    }
+  }
+  if (count_found < 1) {
+    openModal("toolBar_info");
+    document.getElementById("toolBar_info").innerHTML = "No connections found";
+  } else {
+    closeModal("toolBar_info");
+  }
+}
+
+// document.getElementById("search").addEventListener("keyup", function() {debounce(search, 100)});
+document.getElementById("search").onkeyup = debounce(search, 250);

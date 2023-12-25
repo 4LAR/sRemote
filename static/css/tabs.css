@@ -23,6 +23,34 @@
   filter: invert(1);
 }
 
+.toolBar > input {
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  background-color: #141B1F;
+  height: 22px;
+  width: 155px;
+  border: 1px solid #1C262D;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #FFFFFF;
+}
+
+.toolBar > input:focus{
+  outline: none;
+  border: 1px solid #1D63ED;
+}
+
+.toolBar_info {
+  display: none;
+  position: absolute;
+  top: 60px;
+  left: 0px;
+  width: 200px;
+  text-align: center;
+}
+
 /*----------------------------------------------------------------------------*/
 
 .tabs {
