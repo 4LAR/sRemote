@@ -1,11 +1,7 @@
 
-function open_alert(html, big=false) {
+function open_alert(html, type="alert") {
   document.getElementById("alert_body").innerHTML = html;
-  if (big) {
-    document.getElementById("alert").className = "big_alert";
-  } else {
-    document.getElementById("alert").className = "alert";
-  }
+  document.getElementById("alert").className = type;
 
   openModal('bg_alert');
   openModal('alert');

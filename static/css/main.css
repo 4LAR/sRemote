@@ -46,6 +46,9 @@ iframe {
   box-sizing: border-box;
   cursor: pointer;
   transition: .15s all;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 }
 
 .button:hover {
@@ -88,6 +91,7 @@ iframe {
   position: absolute;
   top: -40px;
   font-size: 1.2em;
+  color: #FFFFFF;
 }
 
 .alert_body hr {
@@ -130,4 +134,33 @@ iframe {
   right: 35px;
   bottom: 35px;
   width: 100px;
+}
+
+/*----------------------------------------------------------------------------*/
+
+.alert_body .name_delete {
+  position: absolute;
+  left: 15px;
+  top: -40px;
+  font-size: 1.2em;
+  color: #FFFFFF;
+}
+
+.alert_body .delete_info {
+  position: absolute;
+  left: 15px;
+  width: calc(100% - 30px);
+  color: #A3B4C0;
+}
+
+.alert_body .delete {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 130px;
+  background-color: #D1334C;
+}
+
+.alert_body .delete:hover {
+  background-color: #DD4659;
 }

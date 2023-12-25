@@ -66,6 +66,21 @@
   height: 400px;
 }
 
+.delete_alert {
+  position: fixed;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -80%);
+  width: 550px;
+  background-color: #1C262D;
+  border-radius: 5px;
+  z-index: 5;
+  box-shadow: 0px 4px 27px 11px rgba(0, 0, 0, 0.02);
+  border: 1px solid #2D404E;
+  height: 170px;
+}
+
 .big_alert {
   position: fixed;
   display: none;

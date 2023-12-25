@@ -10,6 +10,15 @@ const STATUS_LIST = [
   "status_run"
 ]
 
+function get_index_by_id(id) {
+  var i = 0;
+  for (const el of TABS) {
+    if (el.id == id)
+      return i;
+    i++;
+  }
+}
+
 function select_tab(id) {
   var i = 0;
   for (const el of TABS) {
@@ -37,14 +46,16 @@ function append_tab(data, id="", selected=false) {
     <div class="edit">
       <img src="./static/img/edit.svg">
     </div>
-    <div class="delete">
+    <div class="delete" onclick="alert_delete_connection(${id})">
       <img src="./static/img/cross.svg">
     </div>
   `, function() {
     select_tab(id);
   }, id + "_menu", className=(selected)? "selected": "");
-  append_to_ul("tabs", ``, undefined, "", "line");
-  append_to_ul("terminal_list", `<iframe src='ssh.html?data=${JSON.stringify(data)}&id=${id}' style="display: none" id="${id + "_body"}"></div>`);
+  append_to_ul("tabs", ``, undefined, id + "_line", "line");
+  append_to_ul("terminal_list", `
+    <iframe src='ssh.html?data=${JSON.stringify(data)}&id=${id}' style="display: none" id="${id + "_body"}"></div>
+  `, undefined, id + "_li", "");
   document.getElementById(id + "_body").contentWindow.update_status = update_status;
 }
 
@@ -55,7 +66,8 @@ function read() {
   for (const el of config_file["connections"]) {
     try {
       TABS.push({
-        "id": `${++i}`
+        "id": `${++i}`,
+        "name": el.name
       });
       append_tab(el, TABS[TABS.length - 1].id);
 
@@ -67,8 +79,3 @@ function read() {
 }
 
 read();
-
-// document.getElementById("tabs").addEventListener("wheel", function (e) {
-//   console.log(e);
-//   document.getElementById("tabs").scrollLeft += (e.deltaY || e.detail || e.wheelDelta);
-// });
