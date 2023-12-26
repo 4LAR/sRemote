@@ -23,18 +23,13 @@
   },
   "build": {
     "appId": "sRemote",
-    "dmg": {
-      "title": "SSH Terminal"
-    },
-    "linux": {
-      "target": [
-        "AppImage",
-        "deb"
-      ]
-    },
     "win": {
-      "target": "NSIS",
+      "target": "portable",
       "icon": "logo.ico"
+    },
+    "portable": {
+      "unicode": false,
+      "artifactName": "sRemote.exe"
     }
   }
 }
