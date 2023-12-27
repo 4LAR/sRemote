@@ -36,6 +36,8 @@ term.loadAddon(new SearchAddon.SearchAddon());
 
 term.open(document.getElementById("terminal"));
 fit.fit();
+term.resize(15, 50);
+fit.fit();
 
 conn.on('ready', () => {
   console.log('Client :: ready');
@@ -51,6 +53,8 @@ conn.on('ready', () => {
     term.onData((data) => {
       stream.write(data);
     });
+
+    fitToscreen();
 
     function fitToscreen() {
       fit.fit();

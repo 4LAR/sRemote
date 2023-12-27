@@ -115,7 +115,7 @@ function read() {
     select_tab(TABS[0].id);
 }
 
-read();
+document.addEventListener("DOMContentLoaded", read);
 
 function search() {
   var search = document.getElementById("search").value.toLowerCase();
