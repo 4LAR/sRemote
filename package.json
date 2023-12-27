@@ -1,27 +1,36 @@
 {
   "name": "sRemote",
   "version": "0.1.0",
-  "description": "",
+  "description": "SSH Terminal",
   "main": "main.js",
   "author": "100LAR STUDIO",
   "license": "ISC",
   "devDependencies": {
     "electron": "^26.6.2",
     "electron-builder": "^24.9.1",
-    "electron-packager": "^17.1.2",
     "electron-reloader": "^1.2.3",
     "ssh2": "^1.15.0"
   },
   "dependencies": {
-    "discord-rpc": "^4.0.1",
-    "electron-reload": "^2.0.0-alpha.1"
+    "electron-is-packaged": "^1.0.2",
+    "electron-root-path": "^1.1.0",
+    "ssh2": "^1.15.0"
   },
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder",
-    "dist2": "electron-packager ."
+    "dist": "electron-builder"
   },
   "build": {
+    "asar": true,
+    "files": [
+      "static/",
+      "index.html",
+      "ssh.html",
+      "logo.svg",
+      "logo.png",
+      "logo.ico",
+      "main.js"
+    ],
     "appId": "sRemote",
     "win": {
       "target": "portable",

@@ -35,7 +35,7 @@ function create_connection() {
   }
   if (error_flag) return;
 
-  fs.readFile(`./${CONNECTIONS_FILE}`, 'utf8', (err, data) => {
+  fs.readFile(CONNECTIONS_FILE, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return;
@@ -50,7 +50,7 @@ function create_connection() {
     });
 
     fs.writeFile(
-      `./${CONNECTIONS_FILE}`,
+      CONNECTIONS_FILE,
       JSON.stringify(
         config_file,
         null,
@@ -96,7 +96,7 @@ function alert_delete_connection(id) {
 
 function delete_connection(id) {
   var index = get_index_by_id(id);
-  fs.readFile(`./${CONNECTIONS_FILE}`, 'utf8', (err, data) => {
+  fs.readFile(CONNECTIONS_FILE, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return;
@@ -104,7 +104,7 @@ function delete_connection(id) {
     const config_file = JSON.parse(data)
     config_file.connections.splice(index, 1);
     fs.writeFile(
-      `./${CONNECTIONS_FILE}`,
+      CONNECTIONS_FILE,
       JSON.stringify(
         config_file,
         null,
@@ -162,7 +162,7 @@ function edit_connection(id) {
   }
   if (error_flag) return;
 
-  fs.readFile(`./${CONNECTIONS_FILE}`, 'utf8', (err, data) => {
+  fs.readFile(CONNECTIONS_FILE, 'utf8', (err, data) => {
     if (err) {
       console.error(err);
       return;
@@ -177,7 +177,7 @@ function edit_connection(id) {
     };
 
     fs.writeFile(
-      `./${CONNECTIONS_FILE}`,
+      CONNECTIONS_FILE,
       JSON.stringify(
         config_file,
         null,

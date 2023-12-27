@@ -1,7 +1,11 @@
 
-const CONNECTIONS_FILE = "connections.json"
+// const rootPath = require('electron-root-path').rootPath;
+const isPackaged = require('electron-is-packaged').isPackaged;
+
+const CONNECTIONS_FILE = `${(isPackaged)? process.env.PORTABLE_EXECUTABLE_DIR + "/": "./"}connections.json`
 var TABS = [];
 var SELECTED = 0;
+console.log(CONNECTIONS_FILE);
 
 const STATUS_LIST = [
   "status_none",
@@ -72,13 +76,14 @@ function append_tab(data, id="") {
 function read() {
   var config_file;
   try {
-    config_file = JSON.parse(JSON.stringify(require(`./${CONNECTIONS_FILE}`)));
+    config_file = JSON.parse(JSON.stringify(require(CONNECTIONS_FILE)));
   } catch (e) {
+    console.log(e);
     config_file = {
       "connections": []
     }
     fs.writeFile(
-      `./${CONNECTIONS_FILE}`,
+      `${CONNECTIONS_FILE}`,
       JSON.stringify(
         config_file,
         null,

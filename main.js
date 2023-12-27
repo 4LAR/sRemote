@@ -1,5 +1,4 @@
 const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain} = require("electron");
-const fs = require('fs');
 const path = require('path');
 
 let win;
@@ -26,7 +25,7 @@ const createWindow = () => {
     minWidth:(DEBUG)? 1150: 900,
     height: 600,
     minHeight:600,
-    icon: 'logo.png',
+    icon: path.join(__dirname, 'logo.ico'),
     resizable: true
   })
 
@@ -67,4 +66,5 @@ app.on('window-all-closed', () => {
 })
 
 app.on('closed', () => app.quit());
+
 /*----------------------------------------------------------------------------*/
