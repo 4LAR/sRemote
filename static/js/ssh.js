@@ -3,9 +3,13 @@ const { Client } = require('ssh2');
 const CONNECTIONS_FILE = "connections.json"
 var config = JSON.parse(get_arg("data"));
 var id = get_arg("id");
-const conn = new Client();
 
-update_status(id, 2);
+function assembly_error(err) {
+  for (const key of Object.keys(err)) {
+    console.log(key, err[key]);
+  }
+  console.log("----------------");
+}
 
 const term = new Terminal({
   cursorBlink: true,
@@ -39,44 +43,64 @@ fit.fit();
 term.resize(15, 50);
 fit.fit();
 
-conn.on('ready', () => {
-  console.log('Client :: ready');
-  conn.shell((err, stream) => {
-    if (err) throw err;
-    stream.on('close', () => {
-      console.log('Stream :: close');
-      conn.end();
-    }).on('data', (data) => {
-      term.write(data)
-    });
+var conn = undefined;
 
-    term.onData((data) => {
-      stream.write(data);
-    });
+function create_connection() {
+  update_status(id, 2);
+  conn = new Client();
+  conn.on('ready', () => {
+    console.log('Client :: ready');
+    conn.shell((err, stream) => {
+      if (err) throw err;
+      stream.on('close', () => {
+        console.log('Stream :: close');
+        conn.end();
+      }).on('data', (data) => {
+        term.write(data)
+      });
 
-    fitToscreen();
+      term.onData((data) => {
+        stream.write(data);
+      });
 
-    function fitToscreen() {
-      fit.fit();
-      stream.setWindow(term.rows, term.cols);
-    }
-
-    const wait_ms = 50;
-    window.onresize = debounce(fitToscreen, wait_ms);
-
-    document.addEventListener("DOMContentLoaded", function() {
       fitToscreen();
+
+      function fitToscreen() {
+        fit.fit();
+        stream.setWindow(term.rows, term.cols);
+      }
+
+      const wait_ms = 50;
+      window.onresize = debounce(fitToscreen, wait_ms);
+
+      document.addEventListener("DOMContentLoaded", function() {
+        fitToscreen();
+      });
+      update_status(id, 3);
     });
-    update_status(id, 3);
+  }).on('error', function(err){
+    // console.log(id, err, typeof(err), Object.keys(err));
+    assembly_error(err);
+    update_status(id, 1);
+  }).connect({
+    host: config.host,
+    port: config.port,
+    username: config.username,
+    password: config.password
   });
-}).on('error', function(err){
-  update_status(id, 1);
-}).connect({
-  host: config.host,
-  port: config.port,
-  username: config.username,
-  password: config.password
-});
+}
+
+function reconnect() {
+  conn.end();
+
+  term.writeln("");
+  term.writeln("");
+  term.writeln("");
+
+  setTimeout(() => {
+    create_connection();
+  }, 100);
+}
 
 function customKeyEventHandler(e) {
   if (e.type !== "keydown") {
@@ -98,3 +122,5 @@ function customKeyEventHandler(e) {
   }
   return true;
 }
+
+create_connection();

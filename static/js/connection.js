@@ -84,14 +84,17 @@ function create_connection() {
 
 /*----------------------------------------------------------------------------*/
 
-function alert_delete_connection(id) {
+function alert_delete_connection(id, event) {
   open_alert(`
     <p class="name_delete">Delete connection?</p>
     <p class="delete_info">The '${TABS[get_index_by_id(id)].name}' connection is selected for deletion. The current session with this connection will be terminated.</p>
     <div class="button delete" onclick="delete_connection(${id})">
       <p>Delete forever</p>
     </div>
-  `, "delete_alert")
+  `, "delete_alert");
+  if (event) {
+    event.stopPropagation();
+  }
 }
 
 function delete_connection(id) {
@@ -126,7 +129,7 @@ function delete_connection(id) {
 
 /*----------------------------------------------------------------------------*/
 
-function alert_edit_connection(id) {
+function alert_edit_connection(id, event) {
   var index = get_index_by_id(id);
   open_alert(`
     <p class="name">Edit connection</p>
@@ -140,7 +143,10 @@ function alert_edit_connection(id) {
     <div class="button submit" onclick="edit_connection(${id})">
       <p>Save</p>
     </div>
-  `, "alert")
+  `, "alert");
+  if (event) {
+    event.stopPropagation();
+  }
 }
 
 function edit_connection(id) {

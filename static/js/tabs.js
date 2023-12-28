@@ -47,10 +47,13 @@ function generate_tab_by_data(data, id="") {
     <img id="${id + "_status"}" class="status_none" src="./static/img/terminal.svg">
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
-    <div class="edit" onclick="alert_edit_connection(${id})">
+    <div class="reconnect" onclick="reconnect(${id}, event)">
+      <img src="./static/img/reload.svg">
+    </div>
+    <div class="edit" onclick="alert_edit_connection(${id}, event)">
       <img src="./static/img/edit.svg">
     </div>
-    <div class="delete" onclick="alert_delete_connection(${id})">
+    <div class="delete" onclick="alert_delete_connection(${id}, event)">
       <img src="./static/img/cross.svg">
     </div>
   `;
@@ -144,6 +147,13 @@ function search() {
     document.getElementById("toolBar_info").innerHTML = "No connections found";
   } else {
     closeModal("toolBar_info");
+  }
+}
+
+function reconnect(id, event) {
+  document.getElementById(id + "_body").contentWindow.reconnect();
+  if (event) {
+    event.stopPropagation();
   }
 }
 

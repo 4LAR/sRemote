@@ -124,6 +124,16 @@
 
 /* -------------------------------------------------------------------------- */
 
+.tabs > li > div.reconnect {
+  position: absolute;
+  bottom: 3px;
+  right: 47px;
+}
+
+.tabs > li:hover > div.reconnect:hover {
+  background-color: #568AF2;
+}
+
 .tabs > li > div.edit {
   position: absolute;
   bottom: 3px;
