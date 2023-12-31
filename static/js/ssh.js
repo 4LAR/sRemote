@@ -1,5 +1,7 @@
 const { Client } = require('ssh2');
 
+const wait_ms = 50;
+
 const CONNECTIONS_FILE = "connections.json"
 var config = JSON.parse(get_arg("data"));
 var id = get_arg("id");
@@ -35,7 +37,7 @@ term.attachCustomKeyEventHandler(customKeyEventHandler);
 
 const fit = new FitAddon.FitAddon();
 term.loadAddon(fit);
-term.loadAddon(new WebLinksAddon.WebLinksAddon());
+// term.loadAddon(new WebLinksAddon.WebLinksAddon());
 term.loadAddon(new SearchAddon.SearchAddon());
 
 term.open(document.getElementById("terminal"));
@@ -44,7 +46,7 @@ term.resize(15, 50);
 fit.fit();
 
 var conn = undefined;
-
+var connected_flag = false;
 function create_connection() {
   update_status(id, 2);
   conn = new Client();
@@ -54,6 +56,8 @@ function create_connection() {
       if (err) throw err;
       stream.on('close', () => {
         console.log('Stream :: close');
+        update_status(id, 0);
+        connected_flag = false;
         conn.end();
       }).on('data', (data) => {
         term.write(data)
@@ -70,18 +74,18 @@ function create_connection() {
         stream.setWindow(term.rows, term.cols);
       }
 
-      const wait_ms = 50;
       window.onresize = debounce(fitToscreen, wait_ms);
 
       document.addEventListener("DOMContentLoaded", function() {
         fitToscreen();
       });
+      connected_flag = true;
       update_status(id, 3);
     });
   }).on('error', function(err){
-    // console.log(id, err, typeof(err), Object.keys(err));
     assembly_error(err);
     update_status(id, 1);
+    connected_flag = false;
   }).connect({
     host: config.host,
     port: config.port,
