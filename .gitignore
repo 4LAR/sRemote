@@ -134,3 +134,4 @@ run.bat
 connections.json
 sRemote-win32-x64/*
 package-lock.json
+settings.ini

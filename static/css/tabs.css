@@ -5,8 +5,8 @@
   left: 0px;
   width: 200px;
   height: 30px;
-  border-bottom: 1px solid #1C262D;
-  border-right: 1px solid #1C262D;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
 }
 
 .toolBar > img {
@@ -30,7 +30,7 @@
   background-color: #141B1F;
   height: 22px;
   width: 155px;
-  border: 1px solid #1C262D;
+  border: 1px solid var(--border-color);
   border-radius: 3px;
   padding-left: 5px;
   padding-right: 5px;
@@ -53,17 +53,43 @@
 
 /*----------------------------------------------------------------------------*/
 
+.bottomBar {
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  height: 25px;
+  width: 200px;
+  border-top: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+.bottomBar > img {
+  position: absolute;
+  left: 6px;
+  top: 4px;
+  width: 17px;
+  filter: invert(.6);
+  transition: .1s all;
+  cursor: pointer;
+}
+
+.bottomBar > img:hover {
+  filter: invert(1);
+}
+
+/*----------------------------------------------------------------------------*/
+
 .tabs {
   position: fixed;
   top: 31px;
   left: 0px;
   width: 200px;
-  height: calc(100% - 31px);
+  height: calc(100% - 62px);
   margin: 0px;
   overflow-y: scroll;
   overflow-x: hidden;
-  border-right: 1px solid #1C262D;
-  background-color: #080B0E;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--bg-color);
 }
 
 .tabs::-webkit-scrollbar {
@@ -80,7 +106,7 @@
 
 .tabs > li.line {
   margin-top: 0px;
-  border-bottom: 1px solid #1C262D;
+  border-bottom: 1px solid var(--border-color);
   height: 0px;
 }
 
@@ -100,7 +126,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: #6B727D;
+  color: var(--tabs-font-color);
 }
 
 .tabs > li > p.name {
@@ -118,7 +144,7 @@
 }
 
 .tabs > li.selected > p {
-  color: #D7DAE0;
+  color: var(--tabs-selected-font-color);
   left: 36px;
 }
 
@@ -131,7 +157,7 @@
 }
 
 .tabs > li:hover > div.reconnect:hover {
-  background-color: #568AF2;
+  background-color: var(--tabs-button-color);
 }
 
 .tabs > li > div.edit {
@@ -141,7 +167,7 @@
 }
 
 .tabs > li:hover > div.edit:hover {
-  background-color: #568AF2;
+  background-color: var(--tabs-button-color);
 }
 
 .tabs > li > div.delete {
@@ -151,7 +177,7 @@
 }
 
 .tabs > li:hover > div.delete:hover {
-  background-color: #D1334C;
+  background-color: var(--tabs-delete-button-color);
 }
 
 /* -------------------------------------------------------------------------- */

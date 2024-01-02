@@ -1,6 +1,28 @@
 
+:root {
+  --bg-color: #080B0E;
+  --border-color: #1C262D;
+  --tabs-font-color: #6B727D;
+  --tabs-selected-font-color: #D7DAE0;
+  --tabs-button-color: #568AF2;
+  --tabs-delete-button-color: #D1334C;
+  --input-warning-color: #D1334C;
+}
+
+[data-theme = "light"] {
+  --bg-color: #fff;
+  --border-color: #1C262D;
+  --tabs-font-color: #6B727D;
+  --tabs-selected-font-color: #D7DAE0;
+  --tabs-button-color: #568AF2;
+  --tabs-delete-button-color: #D1334C;
+  --input-warning-color: #D1334C;
+}
+
+/*----------------------------------------------------------------------------*/
+
 body {
-  background-color: #080B0E;
+  background-color: var(--bg-color);
   font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
   font-size: 14px;
   line-height: 1.5;
@@ -21,10 +43,6 @@ ul {
   padding-left: 0;
 }
 
-p {
-  color: #D7DAE0;
-}
-
 /*----------------------------------------------------------------------------*/
 
 iframe {
@@ -34,6 +52,23 @@ iframe {
   width: calc(100% - 201px);
   height: 100%;
   border: none;
+}
+
+/*----------------------------------------------------------------------------*/
+
+.scroll_style::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scroll_style::-webkit-scrollbar-track {
+  border-radius: 2px;
+  background: #2C3236;
+}
+
+.scroll_style::-webkit-scrollbar-thumb {
+  background-color: #4E6A81;
+  border-radius: 2px;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -63,6 +98,32 @@ iframe {
   transition: .15s all;
   font-weight: 450;
   color: #fff;
+  margin: 0;
+}
+
+/*----------------------------------------------------------------------------*/
+
+.not_active_button {
+  border-radius: 5px;
+  background-color: #31373A;
+  height: 40px;
+  width: 200px;
+  box-sizing: border-box;
+  cursor: default;
+  transition: .15s all;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+.not_active_button > p {
+  font-size: 16px;
+  width: 100%;
+  padding-top: 8px;
+  text-align: center;
+  transition: .15s all;
+  font-weight: 450;
+  color: #667375;
   margin: 0;
 }
 
@@ -104,7 +165,7 @@ iframe {
 }
 
 .alert_body .input_warning {
-  border: 1px solid #D1334C;
+  border: 1px solid var(--input-warning-color);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -158,9 +219,29 @@ iframe {
   right: 20px;
   bottom: 20px;
   width: 130px;
-  background-color: #D1334C;
+  background-color: var(--tabs-delete-button-color);
 }
 
 .alert_body .delete:hover {
   background-color: #DD4659;
+}
+
+/*----------------------------------------------------------------------------*/
+
+.alert_body .name_settings {
+  position: absolute;
+  left: 30px;
+  top: -40px;
+  font-size: 1.2em;
+  color: #FFFFFF;
+}
+
+.alert_body hr.hr_settings {
+  width: calc(100% + 40px);
+  margin: 0px;
+  border: none;
+  border-bottom: 1px solid #384047;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  margin-left: -20px;
 }

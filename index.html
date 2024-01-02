@@ -8,6 +8,7 @@
     <link rel="stylesheet" href = "./static/css/main.css"/>
     <link rel="stylesheet" href = "./static/css/tabs.css"/>
     <link rel="stylesheet" href = "./static/css/alert.css"/>
+    <!-- <link rel="stylesheet" href = "./static/css/checkbox.css"/> -->
   </head>
   <body class="scroll_style">
     <div class="body">
@@ -16,6 +17,13 @@
     <div class="toolBar">
       <input id="search" type="text" placeholder="search">
       <img src="./static/img/add.svg" onclick="alert_create_connection()">
+    </div>
+    <div class="bottomBar">
+      <img src="./static/img/settings.svg" onclick="alert_settings()">
+      <div class="warnings" id="warnings_bg">
+        <img src="" alt="">
+        <p id="warnings_count">2</p>
+      </div>
     </div>
     <ul id="tabs" class="tabs block_select"></ul>
     <p id="toolBar_info" class="toolBar_info"></p>
@@ -33,6 +41,7 @@
   <script type="text/javascript" src="./static/js/libs/xterm-addon-web-links.js"></script>
   <script type="text/javascript" src="./static/js/main.js"></script>
   <script type="text/javascript" src="./static/js/alert.js"></script>
+  <script type="text/javascript" src="./static/js/settings.js"></script>
   <script type="text/javascript" src="./static/js/tabs.js"></script>
   <script type="text/javascript" src="./static/js/connection.js"></script>
 </html>
