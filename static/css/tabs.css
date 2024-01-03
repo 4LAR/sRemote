@@ -14,32 +14,32 @@
   right: 8px;
   top: 8px;
   width: 15px;
-  filter: invert(.6);
+  filter: invert(var(--invert-buttons));
   transition: .1s all;
   cursor: pointer;
 }
 
 .toolBar > img:hover {
-  filter: invert(1);
+  filter: invert(var(--invert-buttons-hover));
 }
 
 .toolBar > input {
   position: absolute;
   left: 2px;
   top: 2px;
-  background-color: #141B1F;
+  background-color: var(--input-bg);
   height: 22px;
   width: 155px;
   border: 1px solid var(--border-color);
   border-radius: 3px;
   padding-left: 5px;
   padding-right: 5px;
-  color: #FFFFFF;
+  color: var(--alert-font-color);
 }
 
 .toolBar > input:focus{
   outline: none;
-  border: 1px solid #1D63ED;
+  border: 1px solid var(--input-focus);
 }
 
 .toolBar_info {
@@ -68,13 +68,13 @@
   left: 6px;
   top: 4px;
   width: 17px;
-  filter: invert(.6);
+  filter: invert(var(--invert-buttons));
   transition: .1s all;
   cursor: pointer;
 }
 
 .bottomBar > img:hover {
-  filter: invert(1);
+  filter: invert(var(--invert-buttons-hover));
 }
 
 /*----------------------------------------------------------------------------*/
@@ -112,8 +112,8 @@
 
 .tabs > li.selected {
   width: calc(100% - 3px);
-  border-left: 3px solid #3391EE;
-  background-color: #141B1F;
+  border-left: 3px solid var(--select-color);
+  background-color: var(--input-bg);
 }
 
 .tabs > li > p {
@@ -177,7 +177,7 @@
 }
 
 .tabs > li:hover > div.delete:hover {
-  background-color: var(--tabs-delete-button-color);
+  background-color: var(--delete-button-color);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -195,7 +195,7 @@
   position: absolute;
   width: 12px;
   height: 12px;
-  filter: invert(.4);
+  filter: invert(var(--tabs-invert-buttons));
   top: 3px;
   left: 3px;
 }
@@ -217,11 +217,11 @@
 }
 
 .tabs > li.selected:hover > div > img {
-  filter: invert(.8);
+  filter: invert(var(--tabs-invert-selected-buttons));
 }
 
 .tabs > li:hover > div:hover > img {
-  filter: invert(0.15);
+  filter: invert(var(--tabs-invert-selected-buttons-hover));
 }
 
 /* -------------------------------------------------------------------------- */

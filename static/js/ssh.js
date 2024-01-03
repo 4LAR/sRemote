@@ -6,6 +6,29 @@ const CONNECTIONS_FILE = "connections.json"
 var config = JSON.parse(get_arg("data"));
 var id = get_arg("id");
 
+const light_thame = {
+  background: '#ffffff',
+  cursor: 'black',
+  selection: '#d3d3d3',
+  black: '#000000',
+  red: '#ff0000',
+  green: '#008000',
+  yellow: '#ffd700',
+  blue: '#0000ff',
+  magenta: '#ff00ff',
+  cyan: '#00ffff',
+  white: '#ffffff',
+  brightBlack: '#808080',
+  brightRed: '#ff0000',
+  brightGreen: '#008000',
+  brightYellow: '#ffd700',
+  brightBlue: '#0000ff',
+  brightMagenta: '#ff00ff',
+  brightCyan: '#00ffff',
+  brightWhite: '#ffffff',
+  foreground: "#000000"
+}
+
 function assembly_error(err) {
   for (const key of Object.keys(err)) {
     console.log(key, err[key]);
@@ -15,23 +38,16 @@ function assembly_error(err) {
 
 const term = new Terminal({
   cursorBlink: true,
-  macOptionIsMeta: true,
-  theme: {
-    // foreground: '#d2d2d2',
-    // background: '#282C34',
-    // cursor: '#adadad',
-    // black: '#000000',
-    // red: '#d81e00',
-    // green: '#5ea702',
-    // yellow: '#cfae00',
-    // blue: '#427ab3',
-    // magenta: '#89658e',
-    // cyan: '#00a7aa',
-    // white: '#ABB2BF',
-    // brightBlack: '#686a66',
-    // brightRed: '#f54235'
+  macOptionIsMeta: true
+});
+
+ipcRenderer.on('get-config-response', (event, response) => {
+  if (response.General.thame == 'light') {
+    term.setOption('theme', light_thame);
   }
 });
+
+ipcRenderer.send('get-config');
 
 term.attachCustomKeyEventHandler(customKeyEventHandler);
 
