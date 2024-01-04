@@ -30,6 +30,17 @@ function select_tab(id) {
       SELECTED = i
       document.getElementById(el.id + "_menu").className = "selected";
       openModal(el.id + "_body");
+      if (!SETTINGS_DICT["Connections"]["autoConnect"]) {
+        var iframe = document.getElementById(id + "_body");
+        if (iframe.contentWindow.create_connection !== undefined) {
+          if (iframe.contentWindow.first_connect)
+            iframe.contentWindow.create_connection();
+        } else {
+          iframe.contentWindow.onload = function() {
+            iframe.contentWindow.create_connection();
+          };
+        }
+      }
     } else {
       document.getElementById(el.id + "_menu").className = "";
       closeModal(el.id + "_body");

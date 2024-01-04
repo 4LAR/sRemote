@@ -31,6 +31,7 @@
       "logo.svg",
       "logo.png",
       "logo.ico",
+      "settings.js",
       "main.js"
     ],
     "appId": "sRemote",

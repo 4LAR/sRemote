@@ -58,7 +58,7 @@ class Settings {
       for (const section in this.options) {
         for (const parameter in this.options[section]) {
           const parameterBuf = config[section][parameter];
-          if (parameterBuf) {
+          if (parameterBuf !== undefined) {
             this.setSettings(section, parameter, parameterBuf);
           } else {
             errorBool = true;

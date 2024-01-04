@@ -100,7 +100,9 @@ fit.fit();
 
 var conn = undefined;
 var connected_flag = false;
+var first_connect = true;
 function create_connection() {
+  first_connect = false;
   update_status(id, 2);
   conn = new Client();
   conn.on('ready', () => {
@@ -193,4 +195,7 @@ function customKeyEventHandler(e) {
   return true;
 }
 
-create_connection();
+console.log(config["Connections"]["autoConnect"]);
+if (config["Connections"]["autoConnect"]) {
+  create_connection();
+}

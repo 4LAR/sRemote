@@ -8,6 +8,7 @@ function settings_change(e) {
   } else {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = document.getElementById(e.target.id).checked;
   }
+  console.log(SETTINGS_DICT);
   settings_changed = true;
   document.getElementById("settings_save_button").className = "button save";
 }
