@@ -12,11 +12,15 @@ function settings_change(e) {
   document.getElementById("settings_save_button").className = "button save";
 }
 
+var first_get_config_flag = true;
 ipcRenderer.on('get-config-response', (event, response) => {
   SETTINGS_DICT = response;
 
-  set_thame(SETTINGS_DICT["General"]["thame"]);
-  read();
+  if (first_get_config_flag) {
+    set_thame(SETTINGS_DICT["General"]["thame"]);
+    read();
+    first_get_config_flag = false;
+  }
 });
 
 ipcRenderer.on('get-system-thame-response', (event, response) => {

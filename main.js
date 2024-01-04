@@ -1,4 +1,5 @@
 const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain, systemPreferences} = require("electron");
+const AutoLaunch = require('auto-launch');
 const path = require('path');
 
 const Settings_module = require('./settings');
@@ -8,6 +9,25 @@ let win;
 let top = {};
 
 const DEBUG = true;
+
+const appLauncher = new AutoLaunch({
+  name: 'sRemote', // Название вашего приложения
+});
+
+appLauncher.isEnabled().then((isEnabled) => {
+  console.log("AutoStart:", isEnabled);
+  if (settings.options["General"]["autoStart"]) {
+    if (!isEnabled) {
+      appLauncher.enable();
+      console.log("AutoStart enabled");
+    }
+  } else {
+    if (isEnabled) {
+      appLauncher.disable();
+      console.log("AutoStart disabled");
+    }
+  }
+});
 
 try {
   require('electron-reloader')(module, {
