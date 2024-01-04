@@ -45,25 +45,38 @@ function alert_settings() {
     <div class="settings_body scroll_style" onchange="settings_change(event)">
       <p class="settings_h">General</p>
 
-      <input type="checkbox" id="settings_General_autoStart">
-      <label for="settings_General_autoStart">Start sRemote when you sign in to your computer</label>
-      <br><br>
+      <div class="checkbox" for="settings_General_autoStart">
+        <input type="checkbox" id="settings_General_autoStart">
+        <label for="settings_General_autoStart">Start sRemote when you sign in to your computer</label>
+      </div>
 
-      <input type="checkbox" id="settings_General_keepBackground">
-      <label for="settings_General_keepBackground">Keep sRemote running in the background</label>
+      <div class="checkbox" for="settings_General_keepBackground">
+        <input type="checkbox" id="settings_General_keepBackground">
+        <label for="settings_General_keepBackground">Keep sRemote running in the background</label>
+      </div>
 
       <p class="info_settings">Choose theme for sRemote</p>
-      <input type="radio" id="settings_General_thame_light" name="test">
-      <label for="settings_General_thame_light">Light</label>
-      <input type="radio" id="settings_General_thame_dark" name="test">
-      <label for="settings_General_thame_dark">Dark</label>
-      <!-- <input type="radio" id="settings_General_thame_system" name="test">
+      <div class="settings_one_line">
+        <div class="checkbox-round" for="settings_General_thame_light">
+          <input type="radio" id="settings_General_thame_light" name="thame">
+          <label for="settings_General_thame_light">Light</label>
+        </div>
+        <div class="checkbox-round" for="settings_General_thame_dark">
+          <input type="radio" id="settings_General_thame_dark" name="thame">
+          <label for="settings_General_thame_dark">Dark</label>
+        </div>
+      </div>
+
+
+      <!-- <input type="radio" id="settings_General_thame_system">
       <label for="settings_General_thame_system">Use system settings</label> -->
 
       <p class="settings_h">Connections</p>
 
-      <input type="checkbox" id="settings_Connections_autoConnect">
-      <label for="settings_Connections_autoConnect">Automatically connect to all networks upon application startup</label>
+      <div class="checkbox" for="settings_Connections_autoConnect">
+        <input type="checkbox" id="settings_Connections_autoConnect">
+        <label for="settings_Connections_autoConnect">Automatically connect to all networks upon application startup</label>
+      </div>
 
     </div>
     <div class="settings_buttons_bar">
@@ -72,7 +85,6 @@ function alert_settings() {
       </div>
     </div>
   `, "settings_alert", function() {get_config()});
-
   document.getElementById("settings_General_autoStart").checked = SETTINGS_DICT["General"]["autoStart"];
   document.getElementById("settings_General_keepBackground").checked = SETTINGS_DICT["General"]["keepBackground"];
 
@@ -84,3 +96,4 @@ function alert_settings() {
 }
 
 get_config();
+// alert_settings();

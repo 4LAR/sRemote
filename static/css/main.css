@@ -30,6 +30,9 @@
   --tabs-invert-selected-buttons-hover: .15;
   --invert-buttons: .6;
   --invert-buttons-hover: 1;
+  --checkbox-border-color: #94ABBC;
+  --checkbox-selected-color: #3391EE;
+  --checkbox-bg-color: #ffffff15;
 }
 
 [data-theme = "light"] {
@@ -63,6 +66,9 @@
   --tabs-invert-selected-buttons-hover: .9;
   --invert-buttons: .6;
   --invert-buttons-hover: .4;
+  --checkbox-border-color: #94ABBC;
+  --checkbox-selected-color: #3391EE;
+  --checkbox-bg-color: #00000015;
 }
 
 /*----------------------------------------------------------------------------*/

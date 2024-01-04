@@ -37,6 +37,10 @@
       "target": "portable",
       "icon": "logo.ico"
     },
+    "linux": {
+      "target": "portable",
+      "icon": "logo.ico"
+    },
     "portable": {
       "unicode": false,
       "artifactName": "sRemote.exe"

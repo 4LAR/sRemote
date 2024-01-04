@@ -154,10 +154,20 @@
 .settings_alert .settings_h {
   color: var(--alert-font-color);
   font-size: 1.2em;
+  margin-bottom: 0px;
 }
 
 .settings_alert label, .settings_alert input {
   cursor: pointer;
+}
+
+.settings_one_line {
+  margin-top: -15px;
+}
+
+.settings_one_line > div {
+  display: inline-block;
+  margin-right: 40px;
 }
 
 .alert_body .save {
