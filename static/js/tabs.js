@@ -71,7 +71,7 @@ function append_tab(data, id="") {
   );
   append_to_ul("tabs", ``, undefined, id + "_line", "line");
   append_to_ul("terminal_list", `
-    <iframe src='ssh.html?data=${JSON.stringify(data)}&id=${id}' style="display: none" id="${id + "_body"}"></div>
+    <iframe src='ssh.html?data=${JSON.stringify(data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}' style="display: none" id="${id + "_body"}"></div>
   `, undefined, id + "_li", "");
   document.getElementById(id + "_body").contentWindow.update_status = update_status;
 }
@@ -117,8 +117,6 @@ function read() {
   if (TABS.length > 0)
     select_tab(TABS[0].id);
 }
-
-document.addEventListener("DOMContentLoaded", read);
 
 function search() {
   var search = document.getElementById("search").value.toLowerCase();

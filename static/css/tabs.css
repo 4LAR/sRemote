@@ -10,26 +10,46 @@
 }
 
 .toolBar > img {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  width: 15px;
   filter: invert(var(--invert-buttons));
   transition: .1s all;
   cursor: pointer;
+}
+
+.toolBar > img.add {
+  width: 15px;
+  position: absolute;
+  right: 7px;
+  top: 7.5px;
+}
+
+.toolBar > img.settings {
+  width: 18px;
+  position: absolute;
+  left: 6px;
+  top: 6px;
 }
 
 .toolBar > img:hover {
   filter: invert(var(--invert-buttons-hover));
 }
 
+.bottomBar > img {
+  position: fixed;
+  left: 6px;
+  top: 7px;
+  width: 17px;
+  filter: invert(var(--invert-buttons));
+  transition: .1s all;
+  cursor: pointer;
+}
+
 .toolBar > input {
   position: absolute;
-  left: 2px;
+  left: 30px;
   top: 2px;
   background-color: var(--input-bg);
   height: 22px;
-  width: 155px;
+  width: 130px;
   border: 1px solid var(--border-color);
   border-radius: 3px;
   padding-left: 5px;
@@ -53,38 +73,12 @@
 
 /*----------------------------------------------------------------------------*/
 
-.bottomBar {
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  height: 25px;
-  width: 200px;
-  border-top: 1px solid var(--border-color);
-  border-right: 1px solid var(--border-color);
-}
-
-.bottomBar > img {
-  position: absolute;
-  left: 6px;
-  top: 4px;
-  width: 17px;
-  filter: invert(var(--invert-buttons));
-  transition: .1s all;
-  cursor: pointer;
-}
-
-.bottomBar > img:hover {
-  filter: invert(var(--invert-buttons-hover));
-}
-
-/*----------------------------------------------------------------------------*/
-
 .tabs {
   position: fixed;
   top: 31px;
   left: 0px;
   width: 200px;
-  height: calc(100% - 62px);
+  height: calc(100% - 23px);
   margin: 0px;
   overflow-y: scroll;
   overflow-x: hidden;

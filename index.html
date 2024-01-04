@@ -21,14 +21,8 @@
     </div>
     <div class="toolBar">
       <input id="search" type="text" placeholder="search">
-      <img src="./static/img/add.svg" onclick="alert_create_connection()">
-    </div>
-    <div class="bottomBar">
-      <img src="./static/img/settings.svg" onclick="alert_settings()">
-      <div class="warnings" id="warnings_bg">
-        <img src="" alt="">
-        <p id="warnings_count">2</p>
-      </div>
+      <img class="settings" src="./static/img/settings.svg" onclick="alert_settings()">
+      <img class="add" src="./static/img/add.svg" onclick="alert_create_connection()">
     </div>
     <ul id="tabs" class="tabs block_select"></ul>
     <p id="toolBar_info" class="toolBar_info"></p>
@@ -45,8 +39,8 @@
   <script type="text/javascript" src="./static/js/libs/xterm-addon-search.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-web-links.js"></script>
   <script type="text/javascript" src="./static/js/main.js"></script>
-  <script type="text/javascript" src="./static/js/alert.js"></script>
-  <script type="text/javascript" src="./static/js/settings.js"></script>
   <script type="text/javascript" src="./static/js/tabs.js"></script>
   <script type="text/javascript" src="./static/js/connection.js"></script>
+  <script type="text/javascript" src="./static/js/alert.js"></script>
+  <script type="text/javascript" src="./static/js/settings.js"></script>
 </html>

@@ -16,6 +16,7 @@ ipcRenderer.on('get-config-response', (event, response) => {
   SETTINGS_DICT = response;
 
   set_thame(SETTINGS_DICT["General"]["thame"]);
+  read();
 });
 
 ipcRenderer.on('get-system-thame-response', (event, response) => {

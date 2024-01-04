@@ -201,7 +201,7 @@ function edit_connection(id) {
       TABS[index].search = name.value + host.value + ":" + port.value;
 
       document.getElementById(id + "_menu").innerHTML = generate_tab_by_data(config_file["connections"][index], id);
-      document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(config_file["connections"][index])}&id=${id}' style="display: none" id="${id + "_body"}"></div>`;
+      document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(config_file["connections"][index])}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}' style="display: none" id="${id + "_body"}"></div>`;
       document.getElementById(id + "_body").contentWindow.update_status = update_status;
 
     } catch (e) {

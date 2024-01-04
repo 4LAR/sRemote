@@ -23,6 +23,10 @@ ul {
 
 /*----------------------------------------------------------------------------*/
 
+.body {
+  background-color: var(--terminal-bg);
+}
+
 iframe {
   position: absolute;
   top: 0px;

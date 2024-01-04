@@ -3,7 +3,8 @@ const { Client } = require('ssh2');
 const wait_ms = 50;
 
 const CONNECTIONS_FILE = "connections.json"
-var config = JSON.parse(get_arg("data"));
+var connection_config = JSON.parse(get_arg("data"));
+var config = JSON.parse(get_arg("config"));
 var id = get_arg("id");
 
 const light_thame = {
@@ -42,28 +43,48 @@ function show_font_alert(size) {
   debounce_font_alert();
 }
 
-function assembly_error(err) {
-  for (const key of Object.keys(err)) {
-    console.log(key, err[key]);
-  }
-  console.log("----------------");
-}
-
 const term = new Terminal({
   cursorBlink: true,
   macOptionIsMeta: true
 });
 
-let currentFontSize = term.getOption('fontSize');
-
-ipcRenderer.on('get-config-response', (event, response) => {
-  document.documentElement.setAttribute('data-theme', response.General.thame);
-  if (response.General.thame == 'light') {
-    term.setOption('theme', light_thame);
+function newLine() {
+  const currentRow = term.buffer.active.getLine(term.buffer.cursorY);
+  if (!currentRow?.isWrapped) {
+    term.write('\r\n');
   }
-});
+}
 
-ipcRenderer.send('get-config');
+function printOnNewLine(text) {
+  newLine();
+  term.write(text);
+}
+
+function assembly_error(err) {
+  for (const key of Object.keys(err)) {
+    console.log(key, err[key]);
+  }
+
+  switch (err.level) {
+    case "client-socket":
+      printOnNewLine(`[\x1b[31mERROR\x1b[0m] Failed to connect to the remote server. (${err.code})`);
+      break;
+    case "client-authentication":
+      printOnNewLine(`[\x1b[31mERROR\x1b[0m] Invalid credentials for authentication.`);
+      break;
+    default:
+      printOnNewLine(`[\x1b[31mERROR\x1b[0m] ${err.level}`);
+      break;
+  }
+  console.log("----------------");
+}
+
+document.documentElement.setAttribute('data-theme', config.General.thame);
+if (config.General.thame == 'light') {
+  term.setOption('theme', light_thame);
+}
+
+let currentFontSize = term.getOption('fontSize');
 
 term.attachCustomKeyEventHandler(customKeyEventHandler);
 
@@ -74,7 +95,7 @@ term.loadAddon(new SearchAddon.SearchAddon());
 
 term.open(document.getElementById("terminal"));
 fit.fit();
-term.resize(15, 50);
+term.resize(100, 50);
 fit.fit();
 
 var conn = undefined;
@@ -84,10 +105,12 @@ function create_connection() {
   conn = new Client();
   conn.on('ready', () => {
     console.log('Client :: ready');
+    newLine();
     conn.shell((err, stream) => {
       if (err) throw err;
       stream.on('close', () => {
         console.log('Stream :: close');
+        printOnNewLine(`[\x1b[31mERROR\x1b[0m] Remote host terminated an existing connection.`);
         update_status(id, 0);
         connected_flag = false;
         conn.end();
@@ -131,19 +154,18 @@ function create_connection() {
     update_status(id, 1);
     connected_flag = false;
   }).connect({
-    host: config.host,
-    port: config.port,
-    username: config.username,
-    password: config.password
+    host: connection_config.host,
+    port: connection_config.port,
+    username: connection_config.username,
+    password: connection_config.password
   });
 }
 
 function reconnect() {
-  conn.end();
-
-  term.writeln("");
-  term.writeln("");
-  term.writeln("");
+  if (conn) {
+    conn.end();
+    printOnNewLine("[\x1b[34mINFO\x1b[0m] RECONNECTING...");
+  }
 
   setTimeout(() => {
     create_connection();
