@@ -33,3 +33,15 @@ html {
 .xterm-viewport::-webkit-scrollbar-thumb {
   background: var(--highlight);
 }
+
+.font_size {
+  display: none;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  background-color: var(--font-alert-bg);
+  color: #fff;
+  padding: 10px;
+  margin: 0px;
+  border-radius: 0 0 0 8px;
+}

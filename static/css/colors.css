@@ -32,6 +32,7 @@
   --checkbox-border-color: #94ABBC;
   --checkbox-selected-color: #3391EE;
   --checkbox-bg-color: #ffffff15;
+  --font-alert-bg: #ffffff15;
 }
 
 [data-theme = "light"] {
@@ -68,4 +69,5 @@
   --checkbox-border-color: #94ABBC;
   --checkbox-selected-color: #3391EE;
   --checkbox-bg-color: #00000015;
+  --font-alert-bg: #000000A0;
 }

@@ -29,6 +29,19 @@ const light_thame = {
   foreground: "#000000"
 }
 
+var debounce_font_alert = undefined;
+
+function close_font_alert() {
+  closeModal("font_size");
+}
+
+function show_font_alert(size) {
+  openModal("font_size");
+  document.getElementById("font_size").innerHTML = `font-size: ${size}px`;
+  debounce_font_alert = debounce(close_font_alert, 1000);
+  debounce_font_alert();
+}
+
 function assembly_error(err) {
   for (const key of Object.keys(err)) {
     console.log(key, err[key]);
@@ -44,6 +57,7 @@ const term = new Terminal({
 let currentFontSize = term.getOption('fontSize');
 
 ipcRenderer.on('get-config-response', (event, response) => {
+  document.documentElement.setAttribute('data-theme', response.General.thame);
   if (response.General.thame == 'light') {
     term.setOption('theme', light_thame);
   }
@@ -105,9 +119,10 @@ function create_connection() {
           currentFontSize = Math.max(8, Math.min(24, currentFontSize));
           term.setOption('fontSize', currentFontSize);
           fitToscreen();
+          show_font_alert(currentFontSize);
         }
       });
-      
+
       connected_flag = true;
       update_status(id, 3);
     });
