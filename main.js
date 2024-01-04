@@ -19,6 +19,7 @@ const DEBUG = true;
 
 const appLauncher = new AutoLaunch({
   name: 'sRemote', // Название вашего приложения
+  path: `${(isPackaged)? process.env.PORTABLE_EXECUTABLE_DIR + "/" + app.getName() + ".exe": app.getPath('exe')}`
 });
 
 appLauncher.isEnabled().then((isEnabled) => {
@@ -87,7 +88,11 @@ const createWindow = () => {
   }
 
   ipcMain.on('relaunch', () => {
-    app.relaunch();
+    if (isPackaged) {
+      app.relaunch({ execPath: process.env.PORTABLE_EXECUTABLE_FILE });
+    } else {
+      app.relaunch();
+    }
     app.quit();
   });
 
