@@ -1,0 +1,41 @@
+.delete_alert {
+  position: fixed;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -80%);
+  width: 550px;
+  background-color: var(--alert-bg-color);
+  border-radius: 5px;
+  z-index: 5;
+  box-shadow: 0px 4px 27px 11px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--alert-border-color);
+  height: 170px;
+}
+
+.alert_body .name_delete {
+  position: absolute;
+  left: 15px;
+  top: -40px;
+  font-size: 1.2em;
+  color: var(--alert-font-color);
+}
+
+.alert_body .delete_info {
+  position: absolute;
+  left: 15px;
+  width: calc(100% - 30px);
+  color: var(--alert-info-color);
+}
+
+.alert_body .delete {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 130px;
+  background-color: var(--delete-button-color);
+}
+
+.alert_body .delete:hover {
+  background-color: var(--delete-hover-button-color);
+}

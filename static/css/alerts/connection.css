@@ -1,0 +1,42 @@
+
+.alert {
+  position: fixed;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -51%);
+  width: 550px;
+  background-color: var(--alert-bg-color);
+  border-radius: 5px;
+  z-index: 5;
+  box-shadow: 0px 4px 27px 11px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--alert-border-color);
+  height: 400px;
+}
+
+.alert_body #name {
+  width: calc(100% - 35px);
+  margin-bottom: 10px;
+}
+
+.alert_body #host {
+  width: calc(70% - 35px);
+  margin-bottom: 10px;
+}
+
+.alert_body #port {
+  margin-left: 10px;
+  width: calc(27.8% - 35px);
+  margin-bottom: 10px;
+}
+
+.alert_body #login {
+  margin-bottom: 10px;
+}
+
+.alert_body .submit {
+  position: absolute;
+  right: 35px;
+  bottom: 35px;
+  width: 100px;
+}

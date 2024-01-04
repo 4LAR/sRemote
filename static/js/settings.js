@@ -42,7 +42,7 @@ function alert_settings() {
   open_alert(`
     <p class="name_settings">Settings</p>
     <hr class="hr_settings">
-    <div class="settings_body scroll_style" onchange="settings_change(event)">
+    <div class="settings_body scroll_style block_select" onchange="settings_change(event)">
       <p class="settings_h">General</p>
 
       <div class="checkbox" for="settings_General_autoStart">

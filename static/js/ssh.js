@@ -41,6 +41,8 @@ const term = new Terminal({
   macOptionIsMeta: true
 });
 
+let currentFontSize = term.getOption('fontSize');
+
 ipcRenderer.on('get-config-response', (event, response) => {
   if (response.General.thame == 'light') {
     term.setOption('theme', light_thame);
@@ -95,6 +97,17 @@ function create_connection() {
       document.addEventListener("DOMContentLoaded", function() {
         fitToscreen();
       });
+
+      document.addEventListener('wheel', (event) => {
+        if (event.ctrlKey) {
+          const delta = event.deltaY > 0 ? -1 : 1;
+          currentFontSize += delta;
+          currentFontSize = Math.max(8, Math.min(24, currentFontSize));
+          term.setOption('fontSize', currentFontSize);
+          fitToscreen();
+        }
+      });
+      
       connected_flag = true;
       update_status(id, 3);
     });

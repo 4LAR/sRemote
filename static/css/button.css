@@ -1,0 +1,54 @@
+
+.button {
+  border-radius: 5px;
+  background-color: var(--input-focus);
+  height: 40px;
+  width: 200px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: .15s all;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+.button:hover {
+  background-color: var(--button-select-color);
+}
+
+.button > p {
+  font-size: 16px;
+  width: 100%;
+  padding-top: 8px;
+  text-align: center;
+  transition: .15s all;
+  font-weight: 450;
+  color: var(--button-p-color);
+  margin: 0;
+}
+
+/*----------------------------------------------------------------------------*/
+
+.not_active_button {
+  border-radius: 5px;
+  background-color: var(--not-active-button-bg-color);
+  height: 40px;
+  width: 200px;
+  box-sizing: border-box;
+  cursor: default;
+  transition: .15s all;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+.not_active_button > p {
+  font-size: 16px;
+  width: 100%;
+  padding-top: 8px;
+  text-align: center;
+  transition: .15s all;
+  font-weight: 450;
+  color: var(--not-active-button-p-color);
+  margin: 0;
+}
