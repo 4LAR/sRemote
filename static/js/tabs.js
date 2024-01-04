@@ -125,7 +125,7 @@ function read() {
       console.warn(e);
     }
   }
-  if (TABS.length > 0)
+  if (TABS.length > 0 && SETTINGS_DICT["Connections"]["autoConnect"])
     select_tab(TABS[0].id);
 }
 

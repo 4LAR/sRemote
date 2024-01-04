@@ -1,6 +1,7 @@
 const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain, systemPreferences} = require("electron");
 const AutoLaunch = require('auto-launch');
 const path = require('path');
+const isPackaged = require('electron-is-packaged').isPackaged;
 
 const gotTheLock = app.requestSingleInstanceLock();
 
@@ -9,7 +10,7 @@ if (!gotTheLock) {
 }
 
 const Settings_module = require('./settings');
-const settings = new Settings_module();
+const settings = new Settings_module(`${(isPackaged)? process.env.PORTABLE_EXECUTABLE_DIR + "/": "./"}settings.ini`);
 
 let win;
 let top = {};
