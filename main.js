@@ -2,6 +2,12 @@ const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain, systemPreferences} 
 const AutoLaunch = require('auto-launch');
 const path = require('path');
 
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+}
+
 const Settings_module = require('./settings');
 const settings = new Settings_module();
 
