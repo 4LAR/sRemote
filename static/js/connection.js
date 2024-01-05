@@ -35,51 +35,38 @@ function create_connection() {
   }
   if (error_flag) return;
 
-  fs.readFile(CONNECTIONS_FILE, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    const config_file = JSON.parse(data)
-    config_file["connections"].push({
+  var config_file = store.get('connections');
+
+  config_file.push({
+    "name": name.value,
+    "host": host.value,
+    "port": port.value,
+    "username": login.value,
+    "password": password.value
+  });
+
+  store.set('connections', config_file);
+
+  try {
+    TABS.push({
+      "id": `${(TABS.length > 0)? (Number(TABS[TABS.length - 1].id) + 1): "1"}`,
       "name": name.value,
       "host": host.value,
       "port": port.value,
       "username": login.value,
-      "password": password.value
+      "password": password.value,
+      "search": name.value + host.value + ":" + port.value
     });
-
-    fs.writeFile(
-      CONNECTIONS_FILE,
-      JSON.stringify(
-        config_file,
-        null,
-        2
-      ),
-      (err) => err && console.error(err)
+    append_tab(
+      config_file[config_file.length - 1],
+      TABS[TABS.length - 1].id
     );
+  } catch (e) {
+    console.warn(e);
+  }
 
-    try {
-      TABS.push({
-        "id": `${(TABS.length > 0)? (Number(TABS[TABS.length - 1].id) + 1): "1"}`,
-        "name": name.value,
-        "host": host.value,
-        "port": port.value,
-        "username": login.value,
-        "password": password.value,
-        "search": name.value + host.value + ":" + port.value
-      });
-      append_tab(
-        config_file["connections"][config_file["connections"].length - 1],
-        TABS[TABS.length - 1].id
-      );
-    } catch (e) {
-      console.warn(e);
-    }
-
-    select_tab(TABS[TABS.length - 1].id);
-    close_alert();
-  });
+  select_tab(TABS[TABS.length - 1].id);
+  close_alert();
 }
 
 /*----------------------------------------------------------------------------*/
@@ -99,30 +86,15 @@ function alert_delete_connection(id, event) {
 
 function delete_connection(id) {
   var index = get_index_by_id(id);
-  fs.readFile(CONNECTIONS_FILE, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    const config_file = JSON.parse(data)
-    config_file.connections.splice(index, 1);
-    fs.writeFile(
-      CONNECTIONS_FILE,
-      JSON.stringify(
-        config_file,
-        null,
-        2
-      ),
-      (err) => err && console.error(err)
-    );
-  });
+  var config_file = store.get('connections');
+  config_file.splice(index, 1);
+  store.set('connections', config_file);
 
   TABS.splice(index, 1);
   document.getElementById(id + "_menu").remove();
   document.getElementById(id + "_body").remove();
   document.getElementById(id + "_line").remove();
   document.getElementById(id + "_li").remove();
-
 
   close_alert();
 }
@@ -168,47 +140,33 @@ function edit_connection(id) {
   }
   if (error_flag) return;
 
-  fs.readFile(CONNECTIONS_FILE, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    const config_file = JSON.parse(data)
-    config_file["connections"][index] = {
-      "name": name.value,
-      "host": host.value,
-      "port": port.value,
-      "username": login.value,
-      "password": password.value
-    };
+  var config_file = store.get('connections');
+  config_file[index] = {
+    "name": name.value,
+    "host": host.value,
+    "port": port.value,
+    "username": login.value,
+    "password": password.value
+  };
 
-    fs.writeFile(
-      CONNECTIONS_FILE,
-      JSON.stringify(
-        config_file,
-        null,
-        2
-      ),
-      (err) => err && console.error(err)
-    );
+  store.set('connections', config_file);
 
-    try {
-      TABS[index].name = name.value;
-      TABS[index].host = host.value;
-      TABS[index].port = port.value;
-      TABS[index].username = login.value;
-      TABS[index].password = password.value;
-      TABS[index].search = name.value + host.value + ":" + port.value;
+  try {
+    TABS[index].name = name.value;
+    TABS[index].host = host.value;
+    TABS[index].port = port.value;
+    TABS[index].username = login.value;
+    TABS[index].password = password.value;
+    TABS[index].search = name.value + host.value + ":" + port.value;
 
-      document.getElementById(id + "_menu").innerHTML = generate_tab_by_data(config_file["connections"][index], id);
-      document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(config_file["connections"][index])}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}' style="display: none" id="${id + "_body"}"></div>`;
-      document.getElementById(id + "_body").contentWindow.update_status = update_status;
+    document.getElementById(id + "_menu").innerHTML = generate_tab_by_data(config_file[index], id);
+    document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(config_file[index])}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}' style="display: none" id="${id + "_body"}"></div>`;
+    document.getElementById(id + "_body").contentWindow.update_status = update_status;
 
-    } catch (e) {
-      console.warn(e);
-    }
+  } catch (e) {
+    console.warn(e);
+  }
 
-    select_tab(id);
-    close_alert();
-  });
+  select_tab(id);
+  close_alert();
 }

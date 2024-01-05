@@ -2,15 +2,29 @@ const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain, systemPreferences} 
 const AutoLaunch = require('auto-launch');
 const path = require('path');
 const isPackaged = require('electron-is-packaged').isPackaged;
+const Store = require('electron-store');
+Store.initRenderer();
 
 const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
+  console.log("The application is already running.");
   app.quit();
 }
 
+var APP_PATH = undefined;
+if (process.env.PORTABLE_EXECUTABLE_DIR !== undefined) {
+  APP_PATH = process.env.PORTABLE_EXECUTABLE_DIR + "/" + app.getName() + ".exe";
+} else {
+  APP_PATH = app.getPath('exe');
+}
+
+console.log("APP_PATH", APP_PATH);
+// console.log("STORE_PATH", store.path);
+
 const Settings_module = require('./settings');
-const settings = new Settings_module(`${(isPackaged)? process.env.PORTABLE_EXECUTABLE_DIR + "/": "./"}settings.ini`);
+
+const settings = new Settings_module("./settings.ini");
 
 let win;
 let top = {};
@@ -18,8 +32,8 @@ let top = {};
 const DEBUG = true;
 
 const appLauncher = new AutoLaunch({
-  name: 'sRemote', // Название вашего приложения
-  path: `${(isPackaged)? process.env.PORTABLE_EXECUTABLE_DIR + "/" + app.getName() + ".exe": app.getPath('exe')}`
+  name: 'sRemote',
+  path: APP_PATH
 });
 
 appLauncher.isEnabled().then((isEnabled) => {

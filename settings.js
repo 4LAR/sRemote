@@ -1,5 +1,6 @@
-const ini = require('ini');
 const fs = require('fs');
+const Store = require('electron-store');
+const store = new Store();
 
 function randomString(size) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -36,11 +37,11 @@ class Settings {
       config[section] = {};
 
       for (const parameter in this.options[section]) {
-        config[section][parameter] = this.options[section][parameter].toString();
+        config[section][parameter] = this.options[section][parameter];
       }
     }
 
-    fs.writeFileSync(this.path, ini.stringify(config));
+    store.set('settings', config);
   }
 
   setSettings(section, parameter, state) {
@@ -48,11 +49,11 @@ class Settings {
   }
 
   readSettings() {
-    if (!fs.existsSync(this.path)) {
+    if (!store.has('settings')) {
       this.saveSettings();
       this.readSettings();
     } else {
-      const config = ini.parse(fs.readFileSync(this.path, 'utf-8'));
+      const config = store.get('settings');
       let errorBool = false;
 
       for (const section in this.options) {
