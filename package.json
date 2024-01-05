@@ -40,7 +40,8 @@
       "icon": "logo.ico"
     },
     "linux": {
-      "target": "portable",
+      "target": "deb",
+      "category": "Network",
       "icon": "logo.ico"
     },
     "portable": {
