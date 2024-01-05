@@ -1,14 +1,29 @@
 
+function generateRandomName() {
+  const adjectives = ['Red', 'Blue', 'Green', 'Happy', 'Sunny', 'Clever', 'Swift'];
+  const nouns = ['Elephant', 'Mountain', 'Ocean', 'Robot', 'Tree', 'Star', 'Hero'];
+  const randomAdjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const randomNoun = nouns[Math.floor(Math.random() * nouns.length)];
+  const randomName = `${randomAdjective} ${randomNoun}`;
+  return randomName;
+}
+
 function alert_create_connection() {
   open_alert(`
     <p class="name">Create a new connection</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="name">
+    <input id="name" class="input_style" type="text" placeholder="Connection name">
+    <p class="name_info">A random name is generated if you do not provide one.</p>
+    <p class="connection_page_name">Connection</p>
     <input id="host" class="input_style" type="text" placeholder="host">
     <input id="port" class="input_style" type="text" placeholder="port">
+    <p class="port_info">Default port 22</p>
+    <p class="connection_page_name_auth">Authorization data</p>
     <input id="login" class="input_style" type="text" placeholder="login">
-    <br>
     <input id="password" class="input_style" type="password" placeholder="password">
+    <p class="connection_page_name">Command</p>
+    <textarea id="first_command" class="input_style" type="text" placeholder="Command (For example: clear & python3)"></textarea>
+    <p class="first_command_info">Command to be executed on the server after connection (optional).</p>
     <div class="button submit" onclick="create_connection()">
       <p>Create</p>
     </div>
@@ -23,9 +38,10 @@ function create_connection() {
   var port = document.getElementById("port");
   var login = document.getElementById("login");
   var password = document.getElementById("password");
+  var first_command = document.getElementById("first_command");
 
   var error_flag = false;
-  for (const el of [name, host, port, login, password]) {
+  for (const el of [host, login, password]) {
     if (el.value.length < 1) {
       el.className = "input_style input_warning";
       error_flag = true;
@@ -38,11 +54,12 @@ function create_connection() {
   var config_file = store.get('connections');
 
   config_file.push({
-    "name": name.value,
+    "name": (name.value.length > 0)? name.value: generateRandomName(),
     "host": host.value,
-    "port": port.value,
+    "port": (port.value.length > 0)? port.value: "22",
     "username": login.value,
-    "password": password.value
+    "password": password.value,
+    "first_command": btoa(first_command.value)
   });
 
   store.set('connections', config_file);
@@ -55,6 +72,7 @@ function create_connection() {
       "port": port.value,
       "username": login.value,
       "password": password.value,
+      "first_command": btoa(first_command.value),
       "search": name.value + host.value + ":" + port.value
     });
     append_tab(
@@ -102,16 +120,23 @@ function delete_connection(id) {
 /*----------------------------------------------------------------------------*/
 
 function alert_edit_connection(id, event) {
+  console.log(atob(TABS[get_index_by_id(id)].first_command));
   var index = get_index_by_id(id);
   open_alert(`
     <p class="name">Edit connection</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="name" value="${TABS[get_index_by_id(id)].name}">
+    <input id="name" class="input_style" type="text" placeholder="Connection name" value="${TABS[get_index_by_id(id)].name}">
+    <p class="name_info">A random name is generated if you do not provide one.</p>
+    <p class="connection_page_name">Connection</p>
     <input id="host" class="input_style" type="text" placeholder="host" value="${TABS[get_index_by_id(id)].host}">
     <input id="port" class="input_style" type="text" placeholder="port" value="${TABS[get_index_by_id(id)].port}">
+    <p class="port_info">Default port 22</p>
+    <p class="connection_page_name_auth">Authorization data</p>
     <input id="login" class="input_style" type="text" placeholder="login" value="${TABS[get_index_by_id(id)].username}">
-    <br>
-    <input id="password" class="input_style" type="password" placeholder="password" value="${TABS[get_index_by_id(id)].password}">
+    <input id="password" class="input_style" type="password" placeholder="password" placeholder="password" value="${TABS[get_index_by_id(id)].password}">
+    <p class="connection_page_name">Command</p>
+    <textarea id="first_command" class="input_style" type="text" placeholder="Command (For example: clear & python3)" placeholder="password">${atob(TABS[get_index_by_id(id)].first_command)}</textarea>
+    <p class="first_command_info">Command to be executed on the server after connection (optional).</p>
     <div class="button submit" onclick="edit_connection(${id})">
       <p>Save</p>
     </div>
@@ -128,9 +153,10 @@ function edit_connection(id) {
   var port = document.getElementById("port");
   var login = document.getElementById("login");
   var password = document.getElementById("password");
+  var first_command = document.getElementById("first_command");
 
   var error_flag = false;
-  for (const el of [name, host, port, login, password]) {
+  for (const el of [host, login, password]) {
     if (el.value.length < 1) {
       el.className = "input_style input_warning";
       error_flag = true;
@@ -142,21 +168,23 @@ function edit_connection(id) {
 
   var config_file = store.get('connections');
   config_file[index] = {
-    "name": name.value,
+    "name": (name.value.length > 0)? name.value: generateRandomName(),
     "host": host.value,
-    "port": port.value,
+    "port": (port.value.length > 0)? port.value: "22",
     "username": login.value,
-    "password": password.value
+    "password": password.value,
+    "first_command": btoa(first_command.value)
   };
 
   store.set('connections', config_file);
 
   try {
-    TABS[index].name = name.value;
-    TABS[index].host = host.value;
-    TABS[index].port = port.value;
-    TABS[index].username = login.value;
-    TABS[index].password = password.value;
+    TABS[index].name = config_file[index].name;
+    TABS[index].host = config_file[index].host;
+    TABS[index].port = config_file[index].port;
+    TABS[index].username = config_file[index].username;
+    TABS[index].password = config_file[index].password;
+    TABS[index].first_command = config_file[index].first_command;
     TABS[index].search = name.value + host.value + ":" + port.value;
 
     document.getElementById(id + "_menu").innerHTML = generate_tab_by_data(config_file[index], id);

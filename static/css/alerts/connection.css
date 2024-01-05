@@ -11,12 +11,22 @@
   z-index: 5;
   box-shadow: 0px 4px 27px 11px rgba(0, 0, 0, 0.02);
   border: 1px solid var(--alert-border-color);
-  height: 400px;
+  height: 500px;
 }
 
 .alert_body #name {
   width: calc(100% - 35px);
   margin-bottom: 10px;
+}
+
+.alert_body .name_info {
+  margin: 0px;
+  padding: 0px;
+  font-size: .9em;
+  margin-top: -8px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  color: var(--alert-info-color);
 }
 
 .alert_body #host {
@@ -30,8 +40,66 @@
   margin-bottom: 10px;
 }
 
+.alert_body .port_info {
+  margin: 0px;
+  padding: 0px;
+  font-size: .9em;
+  margin-top: -8px;
+  margin-left: 15px;
+  margin-bottom: 10px;
+  width: 95%;
+  text-align: right;
+  color: var(--alert-info-color);
+}
+
 .alert_body #login {
   margin-bottom: 10px;
+  margin-right: 8px;
+  width: 42%;
+}
+
+.alert_body #password {
+  width: 42%;
+}
+
+.alert_body #first_command {
+  width: calc(100% - 35px);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  height: 40px;
+  resize: none;
+}
+
+.alert_body .first_command_info {
+  margin: 0px;
+  padding: 0px;
+  font-size: .9em;
+  margin-top: -2px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  color: var(--alert-info-color);
+}
+
+.alert_body .connection_page_name {
+  margin: 0px;
+  padding: 0px;
+  font-size: .9em;
+  margin-top: 0px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  color: var(--alert-font-color);
+}
+
+.alert_body .connection_page_name_auth {
+  margin: 0px;
+  padding: 0px;
+  font-size: .9em;
+  margin-top: -20px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  color: var(--alert-font-color);
 }
 
 .alert_body .submit {

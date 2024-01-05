@@ -102,6 +102,7 @@ function read() {
   }
 
   let i = 0;
+  var error_flag = false;
   for (const el of config_file) {
     try {
       TABS.push({
@@ -111,16 +112,22 @@ function read() {
         "port": el.port,
         "username": el.username,
         "password": el.password,
+        "first_command": el.first_command,
         "search": el.name + el.host + ":" + el.port
       });
       append_tab(el, TABS[TABS.length - 1].id);
 
     } catch (e) {
       console.warn(e);
+      config_file.splice(i - 1, 1);
+      error_flag = true;
     }
   }
   if (TABS.length > 0 && SETTINGS_DICT["Connections"]["autoConnect"])
     select_tab(TABS[0].id);
+
+  if (error_flag)
+    store.set('connections', config_file);
 }
 
 function search() {

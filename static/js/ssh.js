@@ -124,7 +124,9 @@ function create_connection() {
         stream.write(data);
       });
 
-      fitToscreen();
+      try {
+        fitToscreen();
+      } catch (e) {}
 
       function fitToscreen() {
         fit.fit();
@@ -150,8 +152,14 @@ function create_connection() {
 
       connected_flag = true;
       update_status(id, 3);
+
+      if (connection_config.first_command.length > 0) {
+        stream.write(atob(connection_config.first_command) + "\n");
+      }
+
     });
   }).on('error', function(err){
+    console.log(err);
     assembly_error(err);
     update_status(id, 1);
     connected_flag = false;
