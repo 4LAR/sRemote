@@ -91,9 +91,8 @@
   font-size: 40px;
   color: var(--checkbox-selected-color);
   position: absolute;
-  top: 26.7%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: -22px;
+  left: 0px;
   opacity: 0;
 }
 
