@@ -62,6 +62,11 @@ function alert_settings() {
         <label for="settings_General_keepBackground">Keep sRemote running in the background</label>
       </div>
 
+      <div class="checkbox" for="settings_General_saveWindowState">
+        <input type="checkbox" id="settings_General_saveWindowState">
+        <label for="settings_General_saveWindowState">Save window position on exit</label>
+      </div>
+
       <p class="info_settings">Choose theme for sRemote</p>
       <div class="settings_one_line">
         <div class="checkbox-round" for="settings_General_thame_light">
@@ -97,8 +102,10 @@ function alert_settings() {
       </div>
     </div>
   `, "settings_alert", function() {get_config()});
+
   document.getElementById("settings_General_autoStart").checked = SETTINGS_DICT["General"]["autoStart"];
   document.getElementById("settings_General_keepBackground").checked = SETTINGS_DICT["General"]["keepBackground"];
+  document.getElementById("settings_General_saveWindowState").checked = SETTINGS_DICT["General"]["saveWindowState"];
 
   document.getElementById("settings_General_thame_light").checked = SETTINGS_DICT["General"]["thame"] == "light";
   document.getElementById("settings_General_thame_dark").checked = SETTINGS_DICT["General"]["thame"] == "dark";

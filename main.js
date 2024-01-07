@@ -2,6 +2,7 @@ const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain, systemPreferences} 
 const AutoLaunch = require('auto-launch');
 const path = require('path');
 const isPackaged = require('electron-is-packaged').isPackaged;
+const windowStateKeeper = require('electron-window-state');
 const Store = require('electron-store');
 Store.initRenderer();
 
@@ -29,7 +30,7 @@ const settings = new Settings_module("./settings.ini");
 let win;
 let top = {};
 
-const DEBUG = true;
+const DEBUG = false;
 
 const appLauncher = new AutoLaunch({
   name: 'sRemote',
@@ -61,14 +62,21 @@ try {
 } catch {}
 
 const createWindow = () => {
+  const mainWindowState = windowStateKeeper({
+   defaultWidth: 1000,
+   defaultHeight: 600,
+ });
+
   top.win = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     },
-    width: (DEBUG)? 1250: 1000,
+    x: (settings.options["General"]["saveWindowState"])? mainWindowState.x: undefined,
+    y: (settings.options["General"]["saveWindowState"])? mainWindowState.y: undefined,
+    width: (DEBUG)? 1250: ((settings.options["General"]["saveWindowState"])? mainWindowState.width: 1000),
     minWidth:(DEBUG)? 1250: 1000,
-    height: 600,
+    height: ((settings.options["General"]["saveWindowState"])? mainWindowState.height: 600),
     minHeight: 600,
     icon: path.join(__dirname, 'logo.ico'),
     resizable: true
@@ -102,6 +110,8 @@ const createWindow = () => {
     top.win.on("ready-to-show", () => {
       top.win.webContents.openDevTools();
     });
+  } else if (settings.options["General"]["saveWindowState"]) {
+    mainWindowState.manage(top.win);
   }
 
   // Если пытаемся запустить второй экземпляр, фокусируем основное окно

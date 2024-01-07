@@ -19,7 +19,8 @@ class Settings {
         "General": {
           "autoStart": false,
           "keepBackground": false,
-          "thame": "dark" // light, dark, system
+          "thame": "dark", // light, dark, system
+          "saveWindowState": true
         },
         "Connections": {
           "autoConnect": true,
