@@ -1,6 +1,6 @@
 {
   "name": "sRemote",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "SSH Terminal",
   "main": "main.js",
   "author": "100LAR STUDIO",
@@ -46,7 +46,10 @@
     },
     "portable": {
       "unicode": false,
-      "artifactName": "sRemote.exe"
+      "artifactName": "${productName}-${version}-PORTABLE.${ext}"
+    },
+    "nsis": {
+      "artifactName": "${productName}-${version}-INSTALLER.${ext}"
     }
   }
 }
