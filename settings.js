@@ -22,7 +22,8 @@ class Settings {
           "thame": "dark" // light, dark, system
         },
         "Connections": {
-          "autoConnect": true
+          "autoConnect": true,
+          "readyTimeout": 20000
         }
       };
     }

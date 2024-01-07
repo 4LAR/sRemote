@@ -112,7 +112,7 @@ function create_connection() {
       if (err) throw err;
       stream.on('close', () => {
         console.log('Stream :: close');
-        printOnNewLine(`[\x1b[31mERROR\x1b[0m] Remote host terminated an existing connection.`);
+        printOnNewLine(`[\x1b[34mINFO\x1b[0m] Remote host terminated an existing connection.`);
         update_status(id, 0);
         connected_flag = false;
         conn.end();
@@ -167,7 +167,8 @@ function create_connection() {
     host: connection_config.host,
     port: connection_config.port,
     username: connection_config.username,
-    password: connection_config.password
+    password: connection_config.password,
+    readyTimeout: config.Connections.readyTimeout
   });
 }
 
@@ -203,7 +204,6 @@ function customKeyEventHandler(e) {
   return true;
 }
 
-console.log(config["Connections"]["autoConnect"]);
 if (config["Connections"]["autoConnect"]) {
   create_connection();
 }

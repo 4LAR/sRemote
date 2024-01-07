@@ -5,10 +5,11 @@ var settings_changed = false;
 function settings_change(e) {
   if (e.target.id.split("_")[2] == "thame") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = e.target.id.split("_")[3];
+  } else if (e.target.id.split("_")[2] == "readyTimeout") {
+    SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
   } else {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = document.getElementById(e.target.id).checked;
   }
-  console.log(SETTINGS_DICT);
   settings_changed = true;
   document.getElementById("settings_save_button").className = "button save";
 }
@@ -84,6 +85,11 @@ function alert_settings() {
         <label for="settings_Connections_autoConnect">Automatically connect to all networks upon application startup</label>
       </div>
 
+      <div class="number">
+        <input type="number" class="input_style" id="settings_Connections_readyTimeout">
+        <label for="settings_Connections_readyTimeout">How long (in milliseconds) to wait for the SSH handshake to complete.</label>
+      </div>
+
     </div>
     <div class="settings_buttons_bar">
       <div id="settings_save_button" class="not_active_button save" onclick="save_settings()">
@@ -99,6 +105,7 @@ function alert_settings() {
   // document.getElementById("settings_General_thame_system").checked = SETTINGS_DICT["General"]["thame"] == "system";
 
   document.getElementById("settings_Connections_autoConnect").checked = SETTINGS_DICT["Connections"]["autoConnect"];
+  document.getElementById("settings_Connections_readyTimeout").value = SETTINGS_DICT["Connections"]["readyTimeout"];
 }
 
 get_config();
