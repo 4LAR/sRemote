@@ -93,6 +93,9 @@ const createWindow = () => {
     ]);
     top.tray.setToolTip("sRemote");
     top.tray.setContextMenu(menu);
+    top.tray.on('click', () => {
+      top.win.show();
+    });
   }
 
   if (DEBUG) {
