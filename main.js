@@ -101,6 +101,16 @@ const createWindow = () => {
     });
   }
 
+  // Если пытаемся запустить второй экземпляр, фокусируем основное окно
+  app.on('second-instance', () => {
+    if (top.win) {
+      top.win.show()
+      if (top.win.isMinimized())
+        top.win.restore();
+      top.win.focus();
+    }
+  });
+
   ipcMain.on('relaunch', () => {
     if (isPackaged) {
       app.relaunch({ execPath: process.env.PORTABLE_EXECUTABLE_FILE });
