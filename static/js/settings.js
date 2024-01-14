@@ -7,6 +7,8 @@ function settings_change(e) {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = e.target.id.split("_")[3];
   } else if (e.target.id.split("_")[2] == "readyTimeout") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
+  } if (e.target.id.split("_")[2] == "maxCacheData") {
+    SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
   } else {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = document.getElementById(e.target.id).checked;
   }
@@ -95,6 +97,16 @@ function alert_settings() {
         <label for="settings_Connections_readyTimeout">How long (in milliseconds) to wait for the SSH handshake to complete.</label>
       </div>
 
+      <div class="checkbox" for="settings_Connections_cacheData">
+        <input type="checkbox" id="settings_Connections_cacheData">
+        <label for="settings_Connections_cacheData">Cache data from the terminal</label>
+      </div>
+
+      <div class="number">
+        <input type="number" class="input_style" id="settings_Connections_maxCacheData">
+        <label for="settings_Connections_maxCacheData">Terminal cache size (in bytes).</label>
+      </div>
+
     </div>
     <div class="settings_buttons_bar">
       <div id="settings_save_button" class="not_active_button save" onclick="save_settings()">
@@ -113,6 +125,8 @@ function alert_settings() {
 
   document.getElementById("settings_Connections_autoConnect").checked = SETTINGS_DICT["Connections"]["autoConnect"];
   document.getElementById("settings_Connections_readyTimeout").value = SETTINGS_DICT["Connections"]["readyTimeout"];
+  document.getElementById("settings_Connections_cacheData").checked = SETTINGS_DICT["Connections"]["cacheData"];
+  document.getElementById("settings_Connections_maxCacheData").value = SETTINGS_DICT["Connections"]["maxCacheData"];
 }
 
 get_config();

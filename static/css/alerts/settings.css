@@ -11,6 +11,7 @@
 }
 
 .settings_body {
+  position: relative;
   overflow-y: scroll;
   height: calc(100% - 70px);
   width: 100%;

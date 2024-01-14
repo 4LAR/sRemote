@@ -24,7 +24,9 @@ class Settings {
         },
         "Connections": {
           "autoConnect": true,
-          "readyTimeout": 20000
+          "readyTimeout": 20000,
+          "cacheData": false,
+          "maxCacheData": 5000
         }
       };
     }

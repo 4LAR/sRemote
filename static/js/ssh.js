@@ -3,10 +3,69 @@ const { readFileSync } = require('fs');
 
 const wait_ms = 50;
 
+/*----------------------------------------------------------------------------*/
+
 const CONNECTIONS_FILE = "connections.json"
 var connection_config = JSON.parse(get_arg("data"));
 var config = JSON.parse(get_arg("config"));
 var id = get_arg("id");
+
+/*----------------------------------------------------------------------------*/
+var data_path = get_arg("data_path");
+
+const CACHE_PATH = `${data_path}\\terminal_cache\\${btoa(connection_config.search)}`;
+console.log(CACHE_PATH);
+
+if (config["Connections"]["cacheData"]) {
+  const folderPath = data_path + "\\terminal_cache";
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdir(folderPath, (err) => {
+      if (err) {
+        console.error('Error creating folder:', err);
+      } else {
+        console.log('Folder created successfully!');
+      }
+    });
+  } else {
+    console.log('Folder already exists.');
+  }
+}
+
+/*----------------------------------------------------------------------------*/
+
+function add_cache(newData) {
+  // Читаем текущие данные из файла, если файл существует
+  let existingData = '';
+  if (fs.existsSync(CACHE_PATH)) {
+    existingData = fs.readFileSync(CACHE_PATH, 'utf-8');
+  }
+
+  // Объединяем существующие данные с новыми данными
+  const combinedData = existingData + newData;
+
+  // Если общий объем данных превышает 5000 байт, обрезаем лишнее
+  if (combinedData.length > config["Connections"]["maxCacheData"]) {
+    const startIndex = combinedData.length - config["Connections"]["maxCacheData"];
+    existingData = combinedData.slice(startIndex);
+  } else {
+    existingData = combinedData;
+  }
+
+  // Записываем данные обратно в файл
+  fs.writeFileSync(CACHE_PATH, existingData);
+}
+
+function read_cache() {
+  try {
+    const fileContents = fs.readFileSync(CACHE_PATH, 'utf-8');
+    return fileContents
+  } catch (e) {
+    return ""
+  }
+
+}
+
+/*----------------------------------------------------------------------------*/
 
 const light_thame = {
   background: '#ffffff',
@@ -48,6 +107,11 @@ const term = new Terminal({
   cursorBlink: true,
   macOptionIsMeta: true
 });
+
+if (config["Connections"]["cacheData"]) {
+  term.write(read_cache());
+  printOnNewLine(`[\x1b[34mINFO\x1b[0m] Restore cache data.`);
+}
 
 function newLine() {
   const currentRow = term.buffer.active.getLine(term.buffer.cursorY);
@@ -119,7 +183,9 @@ function create_connection() {
           connected_flag = false;
           conn.end();
         }).on('data', (data) => {
-          term.write(data)
+          term.write(data);
+          if (config["Connections"]["cacheData"])
+            add_cache(data);
         });
 
         term.onData((data) => {
@@ -176,18 +242,10 @@ function create_connection() {
     printOnNewLine(`[\x1b[31mERROR\x1b[0m] ${e}`);
     update_status(id, 1);
     connected_flag = false;
+    console.error();(e);
   }
 
 }
-
-console.log({
-  host: connection_config.host,
-  port: connection_config.port,
-  username: connection_config.username,
-  password: (!connection_config.auth_scheme || connection_config.auth_scheme == "lap")? connection_config.password: undefined,
-  privateKey: (connection_config.auth_scheme == "lak")? connection_config.privateKey: undefined,
-  readyTimeout: config.Connections.readyTimeout
-});
 
 function reconnect() {
   if (conn) {

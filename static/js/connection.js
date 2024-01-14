@@ -143,7 +143,7 @@ function save_data_connection(id, edit_flag=false) {
       TABS[index].search = insert_data.name + insert_data.host + ":" + insert_data.port;
 
       document.getElementById(id + "_menu").innerHTML = generate_tab_by_data(insert_data, id);
-      document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}' style="display: none" id="${id + "_body"}"></div>`;
+      document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}&data_path=${path.dirname(store.path)}' style="display: none" id="${id + "_body"}"></div>`;
       document.getElementById(id + "_body").contentWindow.update_status = update_status;
 
     } catch (e) {

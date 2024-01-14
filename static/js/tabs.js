@@ -82,7 +82,7 @@ function append_tab(data, id="") {
   );
   append_to_ul("tabs", ``, undefined, id + "_line", "line");
   append_to_ul("terminal_list", `
-    <iframe src='ssh.html?data=${JSON.stringify(data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}' style="display: none" id="${id + "_body"}"></div>
+    <iframe src='ssh.html?data=${JSON.stringify(data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}&data_path=${path.dirname(store.path)}' style="display: none" id="${id + "_body"}"></div>
   `, undefined, id + "_li", "");
   document.getElementById(id + "_body").contentWindow.update_status = update_status;
 }
@@ -117,7 +117,7 @@ function read() {
         "first_command": el.first_command || "",
         "search": el.name + el.host + ":" + el.port
       });
-      append_tab(el, TABS[TABS.length - 1].id);
+      append_tab(TABS[TABS.length - 1], TABS[TABS.length - 1].id);
 
     } catch (e) {
       console.warn(e);
