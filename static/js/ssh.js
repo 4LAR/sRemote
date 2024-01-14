@@ -1,4 +1,5 @@
 const { Client } = require('ssh2');
+const { readFileSync } = require('fs');
 
 const wait_ms = 50;
 
@@ -105,72 +106,88 @@ function create_connection() {
   first_connect = false;
   update_status(id, 2);
   conn = new Client();
-  conn.on('ready', () => {
-    console.log('Client :: ready');
-    newLine();
-    conn.shell((err, stream) => {
-      if (err) throw err;
-      stream.on('close', () => {
-        console.log('Stream :: close');
-        printOnNewLine(`[\x1b[34mINFO\x1b[0m] Remote host terminated an existing connection.`);
-        update_status(id, 0);
-        connected_flag = false;
-        conn.end();
-      }).on('data', (data) => {
-        term.write(data)
-      });
+  try {
+    conn.on('ready', () => {
+      console.log('Client :: ready');
+      newLine();
+      conn.shell((err, stream) => {
+        if (err) throw err;
+        stream.on('close', () => {
+          console.log('Stream :: close');
+          printOnNewLine(`[\x1b[34mINFO\x1b[0m] Remote host terminated an existing connection.`);
+          update_status(id, 0);
+          connected_flag = false;
+          conn.end();
+        }).on('data', (data) => {
+          term.write(data)
+        });
 
-      term.onData((data) => {
-        stream.write(data);
-      });
+        term.onData((data) => {
+          stream.write(data);
+        });
 
-      try {
-        fitToscreen();
-      } catch (e) {}
-
-      function fitToscreen() {
-        fit.fit();
-        stream.setWindow(term.rows, term.cols);
-      }
-
-      window.onresize = debounce(fitToscreen, wait_ms);
-
-      document.addEventListener("DOMContentLoaded", function() {
-        fitToscreen();
-      });
-
-      document.addEventListener('wheel', (event) => {
-        if (event.ctrlKey) {
-          const delta = event.deltaY > 0 ? -1 : 1;
-          currentFontSize += delta;
-          currentFontSize = Math.max(8, Math.min(24, currentFontSize));
-          term.setOption('fontSize', currentFontSize);
+        try {
           fitToscreen();
-          show_font_alert(currentFontSize);
+        } catch (e) {}
+
+        function fitToscreen() {
+          fit.fit();
+          stream.setWindow(term.rows, term.cols);
         }
+
+        window.onresize = debounce(fitToscreen, wait_ms);
+
+        document.addEventListener("DOMContentLoaded", function() {
+          fitToscreen();
+        });
+
+        document.addEventListener('wheel', (event) => {
+          if (event.ctrlKey) {
+            const delta = event.deltaY > 0 ? -1 : 1;
+            currentFontSize += delta;
+            currentFontSize = Math.max(8, Math.min(24, currentFontSize));
+            term.setOption('fontSize', currentFontSize);
+            fitToscreen();
+            show_font_alert(currentFontSize);
+          }
+        });
+
+        connected_flag = true;
+        update_status(id, 3);
+
+        if (connection_config.first_command.length > 0) {
+          stream.write(atob(connection_config.first_command) + "\n");
+        }
+
       });
-
-      connected_flag = true;
-      update_status(id, 3);
-
-      if (connection_config.first_command.length > 0) {
-        stream.write(atob(connection_config.first_command) + "\n");
-      }
-
+    }).on('error', function(err){
+      assembly_error(err);
+      update_status(id, 1);
+      connected_flag = false;
+    }).connect({
+      host: connection_config.host,
+      port: connection_config.port,
+      username: connection_config.username,
+      password: (!connection_config.auth_scheme || connection_config.auth_scheme == "lap")? connection_config.password: undefined,
+      privateKey: (connection_config.auth_scheme == "lak")? readFileSync(connection_config.privateKey): undefined,
+      readyTimeout: config.Connections.readyTimeout
     });
-  }).on('error', function(err){
-    console.log(err);
-    assembly_error(err);
+  } catch (e) {
+    printOnNewLine(`[\x1b[31mERROR\x1b[0m] ${e}`);
     update_status(id, 1);
     connected_flag = false;
-  }).connect({
-    host: connection_config.host,
-    port: connection_config.port,
-    username: connection_config.username,
-    password: connection_config.password,
-    readyTimeout: config.Connections.readyTimeout
-  });
+  }
+
 }
+
+console.log({
+  host: connection_config.host,
+  port: connection_config.port,
+  username: connection_config.username,
+  password: (!connection_config.auth_scheme || connection_config.auth_scheme == "lap")? connection_config.password: undefined,
+  privateKey: (connection_config.auth_scheme == "lak")? connection_config.privateKey: undefined,
+  readyTimeout: config.Connections.readyTimeout
+});
 
 function reconnect() {
   if (conn) {

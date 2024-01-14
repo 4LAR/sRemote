@@ -61,7 +61,7 @@ function generate_tab_by_data(data, id="") {
     <div class="reconnect" onclick="reconnect(${id}, event)">
       <img src="./static/img/reload.svg">
     </div>
-    <div class="edit" onclick="alert_edit_connection(${id}, event)">
+    <div class="edit" onclick="alert_create_edit_connection(${id}, event, true)">
       <img src="./static/img/edit.svg">
     </div>
     <div class="delete" onclick="alert_delete_connection(${id}, event)">
@@ -107,12 +107,14 @@ function read() {
     try {
       TABS.push({
         "id": `${++i}`,
-        "name": el.name,
-        "host": el.host,
-        "port": el.port,
-        "username": el.username,
-        "password": el.password,
-        "first_command": el.first_command,
+        "name": el.name || "TEST",
+        "host": el.host || "0.0.0.0",
+        "port": el.port || "22",
+        "auth_scheme": el.auth_scheme || "lap",
+        "username": el.username || "user",
+        "password": el.password || "password",
+        "privateKey": el.privateKey || "",
+        "first_command": el.first_command || "",
         "search": el.name + el.host + ":" + el.port
       });
       append_tab(el, TABS[TABS.length - 1].id);

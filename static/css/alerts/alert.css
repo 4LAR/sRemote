@@ -77,6 +77,16 @@
   color: var(--alert-font-color);
 }
 
+.alert_body .input_style {
+  background-color: var(--input-bg);
+  height: 34px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: var(--alert-font-color);
+}
+
 .alert_body .input_style:focus{
   outline: none;
   border: 1px solid var(--input-focus);

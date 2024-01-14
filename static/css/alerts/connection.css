@@ -52,7 +52,7 @@
   color: var(--alert-info-color);
 }
 
-.alert_body #login {
+.alert_body #login_lap, #login_lak {
   margin-bottom: 10px;
   margin-right: 8px;
   width: 42%;
@@ -60,6 +60,11 @@
 
 .alert_body #password {
   width: 42%;
+}
+
+.alert_body #privateKey {
+  width: 34.8%;
+  padding-right: 50px;
 }
 
 .alert_body #first_command {
@@ -94,7 +99,6 @@
 .alert_body .connection_page_name_auth {
   margin: 0px;
   padding: 0px;
-  font-size: .9em;
   margin-top: -20px;
   margin-left: 5px;
   margin-bottom: 10px;
@@ -107,4 +111,62 @@
   right: 35px;
   bottom: 35px;
   width: 100px;
+}
+
+.alert_body .connection_auth_scheme {
+  position: absolute;
+  height: 30px;
+  margin-left: 134px;
+  margin-top: -35.5px;
+  padding-right: 15px;
+  padding-left: 2px;
+  padding-right: 2px;
+  font-size: 1.1em;
+  color: var(--alert-font-color);
+  background-color: var(--alert-bg-color);
+  border: none;
+  text-decoration: underline var(--input-border-color);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.alert_body .connection_auth_scheme:focus{
+  outline: none;
+}
+
+#auth_scheme_input_lak {
+  position: relative;
+}
+
+#auth_scheme_input_lak > .option {
+  cursor: pointer;
+}
+
+#auth_scheme_input_lak > .option > p {
+  position: absolute;
+  top: -40px;
+  right: 20px;
+  font-size: 2em;
+  color: var(--input-border-color);
+  transition: .15s all;
+}
+
+#auth_scheme_input_lak > .option > div {
+  position: absolute;
+  top: 1px;
+  right: 12px;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  transition: .15s all;
+  opacity: .5;
+}
+
+#auth_scheme_input_lak > .option:hover > div {
+  background-color: var(--input-border-color);
+}
+
+#auth_scheme_input_lak > .option:hover > p {
+  color: var(--input-focus);
 }
