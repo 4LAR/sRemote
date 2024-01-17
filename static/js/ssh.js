@@ -8,13 +8,13 @@ const wait_ms = 50;
 const CONNECTIONS_FILE = "connections.json"
 var connection_config = JSON.parse(get_arg("data"));
 var config = JSON.parse(get_arg("config"));
-var id = get_arg("id");
+var group_id = get_arg("group_id");
+var item_id = get_arg("item_id");
 
 /*----------------------------------------------------------------------------*/
 var data_path = get_arg("data_path");
 
 const CACHE_PATH = `${data_path}\\terminal_cache\\${btoa(connection_config.search)}`;
-console.log(CACHE_PATH);
 
 if (config["Connections"]["cacheData"]) {
   const folderPath = data_path + "\\terminal_cache";
@@ -168,7 +168,7 @@ var connected_flag = false;
 var first_connect = true;
 function create_connection() {
   first_connect = false;
-  update_status(id, 2);
+  update_status(group_id, item_id, 2);
   conn = new Client();
   try {
     conn.on('ready', () => {
@@ -179,7 +179,7 @@ function create_connection() {
         stream.on('close', () => {
           console.log('Stream :: close');
           printOnNewLine(`[\x1b[34mINFO\x1b[0m] Remote host terminated an existing connection.`);
-          update_status(id, 0);
+          update_status(group_id, item_id, 0);
           connected_flag = false;
           conn.end();
         }).on('data', (data) => {
@@ -219,7 +219,7 @@ function create_connection() {
         });
 
         connected_flag = true;
-        update_status(id, 3);
+        update_status(group_id, item_id, 3);
 
         if (connection_config.first_command.length > 0) {
           stream.write(atob(connection_config.first_command) + "\n");
@@ -228,7 +228,7 @@ function create_connection() {
       });
     }).on('error', function(err){
       assembly_error(err);
-      update_status(id, 1);
+      update_status(group_id, item_id, 1);
       connected_flag = false;
     }).connect({
       host: connection_config.host,
@@ -240,7 +240,7 @@ function create_connection() {
     });
   } catch (e) {
     printOnNewLine(`[\x1b[31mERROR\x1b[0m] ${e}`);
-    update_status(id, 1);
+    update_status(group_id, item_id, 1);
     connected_flag = false;
     console.error();(e);
   }

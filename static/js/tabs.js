@@ -1,12 +1,11 @@
 
+//
 const Store = require('electron-store');
 const store = new Store();
-console.log(store.store);
-console.log(store.path);
 
-var TABS = [];
-var SELECTED = 0;
+var TABS = []; //
 
+//
 const STATUS_LIST = [
   "status_none",
   "status_warning",
@@ -14,81 +13,142 @@ const STATUS_LIST = [
   "status_run"
 ]
 
-function get_index_by_id(id) {
-  var i = 0;
-  for (const el of TABS) {
-    if (el.id == id)
-      return i;
-    i++;
+//
+function get_index_group_by_id(group_id) {
+  var real_group_id = 0;
+  for (const group of TABS) {
+    if (group.id == group_id)
+      return real_group_id;
+    real_group_id++;
   }
 }
 
-function select_tab(id) {
-  var i = 0;
-  for (const el of TABS) {
-    if (el.id == id) {
-      SELECTED = i
-      document.getElementById(el.id + "_menu").className = "selected";
-      openModal(el.id + "_body");
-      if (!SETTINGS_DICT["Connections"]["autoConnect"]) {
-        var iframe = document.getElementById(id + "_body");
-        if (iframe.contentWindow.create_connection !== undefined) {
-          if (iframe.contentWindow.first_connect)
-            iframe.contentWindow.create_connection();
-        } else {
-          iframe.contentWindow.onload = function() {
-            iframe.contentWindow.create_connection();
-          };
-        }
+//
+function get_indexes_by_id(group_id, item_id) {
+  var real_group_id = 0;
+  var real_item_id = 0;
+  for (const group of TABS) {
+    for (const item of group.items) {
+      if (group.id == group_id && item.id == item_id) {
+        return [real_group_id, real_item_id];
       }
-    } else {
-      document.getElementById(el.id + "_menu").className = "";
-      closeModal(el.id + "_body");
+      real_item_id++;
     }
-    i++;
+    real_group_id++;
   }
 }
 
-function update_status(id, status) {
-  document.getElementById(id + "_status").className = STATUS_LIST[status];
+//
+function select_item(group_id, item_id) {
+  for (const group of TABS) {
+    for (const item of group.items) {
+      //
+      if (group.id == group_id && item.id == item_id) {
+        document.getElementById(`item_${group.id}_${item.id}`).className = "selected";
+        openModal(`iframe_${group.id}_${item.id}`);
+        //
+        if (!SETTINGS_DICT["Connections"]["autoConnect"]) {
+          var iframe = document.getElementById(`iframe_${group.id}_${item.id}`);
+          if (iframe.contentWindow.create_connection !== undefined) {
+            if (iframe.contentWindow.first_connect)
+              iframe.contentWindow.create_connection();
+          } else {
+            iframe.contentWindow.onload = function() {
+              iframe.contentWindow.create_connection();
+            };
+          }
+        }
+      } else {
+        document.getElementById(`item_${group.id}_${item.id}`).className = "";
+        closeModal(`iframe_${group.id}_${item.id}`);
+      }
+    }
+  }
 }
 
-function generate_tab_by_data(data, id="") {
+//
+function update_status(group_id, item_id, status) {
+  document.getElementById(`status_${group_id}_${item_id}`).className = STATUS_LIST[status];
+}
+
+//
+function open_group(group_id) {
+  if (TABS[group_id].open_flag) {
+    document.getElementById(`group_${group_id}`).className = "group";
+  } else {
+    document.getElementById(`group_${group_id}`).className = "group selected";
+  }
+  TABS[group_id].open_flag = !TABS[group_id].open_flag;
+}
+
+//
+function generate_item_by_data(data, group_id, item_id="") {
   return `
-    <img id="${id + "_status"}" class="status_none" src="./static/img/terminal.svg">
+    <img id="status_${group_id}_${item_id}" class="status_none" src="./static/img/terminal.svg">
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
-    <div class="reconnect" onclick="reconnect(${id}, event)">
+    <div class="reconnect" onclick="reconnect(${group_id}, ${item_id}, event)">
       <img src="./static/img/reload.svg">
     </div>
-    <div class="edit" onclick="alert_create_edit_connection(${id}, event, true)">
+    <div class="edit" onclick="alert_create_edit_connection(${group_id}, ${item_id}, event, true)">
       <img src="./static/img/edit.svg">
     </div>
-    <div class="delete" onclick="alert_delete_connection(${id}, event)">
+    <!--<div class="delete" onclick="alert_delete_connection(${item_id}, event)">
       <img src="./static/img/cross.svg">
-    </div>
+    </div>-->
   `;
 }
 
-function append_tab(data, id="") {
-  append_to_ul(
-    "tabs",
-    generate_tab_by_data(data, id),
-    function() {
-      select_tab(id);
-    },
-    id + "_menu",
-    className=""
-  );
-  append_to_ul("tabs", ``, undefined, id + "_line", "line");
-  append_to_ul("terminal_list", `
-    <iframe src='ssh.html?data=${JSON.stringify(data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}&data_path=${path.dirname(store.path)}' style="display: none" id="${id + "_body"}"></div>
-  `, undefined, id + "_li", "");
-  document.getElementById(id + "_body").contentWindow.update_status = update_status;
+//
+function generate_group_data(data, id="") {
+  return `
+    <img class="dropdown" src="./static/img/dropdown.svg">
+    <p>${data.name}</p>
+    <div class="hitbox" onclick="open_group(${id})"></div>
+    <img class="more" src="./static/img/edit.svg">
+    <img class="add" src="./static/img/add.svg">
+    <div class="line"></div>
+    <ul class="tabs_items" id="items_${id}"></ul>
+  `
 }
 
+//
+function append_item(data, group_id, item_id) {
+  // добавляем кнопку с соеденением
+  append_to_ul(
+    `items_${group_id}`,
+    generate_item_by_data(data, group_id, item_id),
+    function() {
+      select_item(group_id, item_id);
+    },
+    `item_${group_id}_${item_id}`,
+    className=""
+  );
+  // добавляем линию для разделения сединений
+  append_to_ul(
+    `items_${group_id}`,
+    ``,
+    undefined,
+    `line_${group_id}_${item_id}`,
+    "line"
+  );
+  //
+  append_to_ul(
+    "terminal_list", `
+      <iframe src='ssh.html?data=${JSON.stringify(data)}&config=${JSON.stringify(SETTINGS_DICT)}&group_id=${group_id}&item_id=${item_id}&data_path=${path.dirname(store.path)}' style="display: none" id="iframe_${group_id}_${item_id}"></div>
+    `,
+    undefined,
+    `li_${group_id}_${item_id}`,
+    ""
+  );
+  //
+  document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.update_status = update_status;
+}
+
+//
 function read() {
   var config_file;
+  //
   if (store.has('connections')) {
     try {
       config_file = store.get('connections');
@@ -101,73 +161,52 @@ function read() {
     store.set('connections', config_file);
   }
 
-  let i = 0;
-  var error_flag = false;
-  for (const el of config_file) {
-    try {
-      TABS.push({
-        "id": `${++i}`,
-        "name": el.name || "TEST",
-        "host": el.host || "0.0.0.0",
-        "port": el.port || "22",
-        "auth_scheme": el.auth_scheme || "lap",
-        "username": el.username || "user",
-        "password": el.password || "password",
-        "privateKey": el.privateKey || "",
-        "first_command": el.first_command || "",
-        "search": el.name + el.host + ":" + el.port
+  var group_id = -1;
+  //
+  for (const group of config_file) {
+    group_id++;
+    //
+    TABS.push({
+      "id": group_id,
+      "open_flag": false,
+      "items": []
+    });
+
+    // добавляем кнопку с группой
+    append_to_ul(
+      "tabs",
+      generate_group_data(group, group_id),
+      undefined,
+      `group_${group_id}`,
+      className="group"
+    );
+
+    var item_id = -1;
+    //
+    for (const item of group.items) {
+      item_id++;
+      //
+      TABS[group_id].items.push({
+        "id": item_id,
+        "name": item.name || "TEST",
+        "host": item.host || "0.0.0.0",
+        "port": item.port || "22",
+        "auth_scheme": item.auth_scheme || "lap",
+        "username": item.username || "user",
+        "password": item.password || "password",
+        "privateKey": item.privateKey || "",
+        "first_command": item.first_command || "",
+        "search": item.name + item.host + ":" + item.port
       });
-      append_tab(TABS[TABS.length - 1], TABS[TABS.length - 1].id);
-
-    } catch (e) {
-      console.warn(e);
-      config_file.splice(i - 1, 1);
-      error_flag = true;
+      //
+      append_item(item, group_id, item_id);
     }
-  }
-  if (TABS.length > 0 && SETTINGS_DICT["Connections"]["autoConnect"])
-    select_tab(TABS[0].id);
-
-  if (error_flag)
-    store.set('connections', config_file);
-}
-
-function search() {
-  var search = document.getElementById("search").value.toLowerCase();
-  if (search.length < 1) {
-    for (const el of TABS) {
-      openModal(el.id + "_menu");
-      openModal(el.id + "_line");
-    }
-    closeModal("toolBar_info");
-    return;
-  }
-  let count_found = 0;
-  for (const el of TABS) {
-    var search_item = el.search.toLowerCase();
-    if (search_item.indexOf(search) > -1) {
-      count_found++;
-      openModal(el.id + "_menu");
-      openModal(el.id + "_line");
-    } else {
-      closeModal(el.id + "_menu");
-      closeModal(el.id + "_line");
-    }
-  }
-  if (count_found < 1) {
-    openModal("toolBar_info");
-    document.getElementById("toolBar_info").innerHTML = "No connections found";
-  } else {
-    closeModal("toolBar_info");
   }
 }
 
-function reconnect(id, event) {
-  document.getElementById(id + "_body").contentWindow.reconnect();
+function reconnect(group_id, item_id, event) {
+  document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.reconnect();
   if (event) {
     event.stopPropagation();
   }
 }
-
-// document.getElementById("search").addEventListener("keyup", function() {debounce(search, 100)});
-document.getElementById("search").onkeyup = debounce(search, 250);

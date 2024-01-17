@@ -1,77 +1,155 @@
 
-.toolBar {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 200px;
-  height: 30px;
-  border-bottom: 1px solid var(--border-color);
-  border-right: 1px solid var(--border-color);
-}
-
-.toolBar > img {
-  filter: invert(var(--invert-buttons));
-  transition: .1s all;
-  cursor: pointer;
-}
-
-.toolBar > img.add {
-  width: 15px;
-  position: absolute;
-  right: 7px;
-  top: 7.5px;
-}
-
-.toolBar > img.settings {
-  width: 18px;
-  position: absolute;
-  left: 6px;
-  top: 6px;
-}
-
-.toolBar > img:hover {
-  filter: invert(var(--invert-buttons-hover));
-}
-
-.bottomBar > img {
-  position: fixed;
-  left: 6px;
-  top: 7px;
-  width: 17px;
-  filter: invert(var(--invert-buttons));
-  transition: .1s all;
-  cursor: pointer;
-}
-
-.toolBar > input {
-  position: absolute;
-  left: 30px;
-  top: 2px;
-  background-color: var(--input-bg);
-  height: 22px;
-  width: 130px;
-  border: 1px solid var(--border-color);
-  border-radius: 3px;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: var(--alert-font-color);
-}
-
-.toolBar > input:focus{
-  outline: none;
-  border: 1px solid var(--input-focus);
-}
-
-.toolBar_info {
-  display: none;
-  position: absolute;
-  top: 60px;
-  left: 0px;
-  width: 200px;
-  text-align: center;
-}
 
 /*----------------------------------------------------------------------------*/
+
+.tabs_items {
+  top: 31px;
+  left: 0px;
+  width: 200px;
+  height: calc(100% - 23px);
+  margin: 0px;
+  /* padding-top: 25px; */
+  /* margin-top: 25px; */
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+}
+
+.tabs_items::-webkit-scrollbar {
+  display: none;
+}
+
+.tabs_items > li {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  height: 40px;
+}
+
+.tabs_items > li.line {
+  margin-top: 0px;
+  border-bottom: 1px solid var(--border-color);
+  height: 0px;
+}
+
+.tabs_items > li.selected {
+  width: calc(100% - 3px);
+  border-left: 3px solid var(--select-color);
+  background-color: var(--input-bg);
+}
+
+.tabs_items > li > p {
+  position: absolute;
+  left: 35px;
+  margin: 0;
+  padding: 0px;
+  width: calc(100% - 40px);
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--tabs-font-color);
+}
+
+.tabs_items > li > p.name {
+  position: absolute;
+  top: 0px;
+  left: 39px;
+}
+
+.tabs_items > li > p.host {
+  position: absolute;
+  top: 20px;
+  left: 39px;
+  opacity: .8;
+  font-size: .9em;
+}
+
+.tabs_items > li.selected > p {
+  color: var(--tabs-selected-font-color);
+  left: 36px;
+}
+
+/* -------------------------------------------------------------------------- */
+
+.tabs_items > li > div.reconnect {
+  position: absolute;
+  bottom: 3px;
+  /* right: 47px; */
+  right: 25px;
+}
+
+.tabs_items > li:hover > div.reconnect:hover {
+  background-color: var(--tabs-button-color);
+}
+
+.tabs_items > li > div.edit {
+  position: absolute;
+  bottom: 3px;
+  /* right: 25px; */
+  right: 3px;
+}
+
+.tabs_items > li:hover > div.edit:hover {
+  background-color: var(--tabs-button-color);
+}
+
+.tabs_items > li > div.delete {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+}
+
+.tabs_items > li:hover > div.delete:hover {
+  background-color: var(--delete-button-color);
+}
+
+/* -------------------------------------------------------------------------- */
+
+.tabs_items > li > div {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  opacity: .0;
+  transition: .1s all;
+}
+
+.tabs_items > li > div > img {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  filter: invert(var(--tabs-invert-buttons));
+  top: 3px;
+  left: 3px;
+}
+
+.tabs_items > li > img {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 5px;
+  left: 6px;
+}
+
+.tabs_items > li.selected > img {
+  left: 3px;
+}
+
+.tabs_items > li:hover > div {
+  opacity: 1;
+}
+
+.tabs_items > li.selected:hover > div > img {
+  filter: invert(var(--tabs-invert-selected-buttons));
+}
+
+.tabs_items > li:hover > div:hover > img {
+  filter: invert(var(--tabs-invert-selected-buttons-hover));
+}
+
+/* -------------------------------------------------------------------------- */
 
 .tabs {
   position: fixed;
@@ -90,132 +168,95 @@
   display: none;
 }
 
-.tabs > li {
-  /* margin-top: -5px; */
+.tabs > li.group {
   position: relative;
-  width: 100%;
-  cursor: pointer;
-  height: 40px;
-}
-
-.tabs > li.line {
-  margin-top: 0px;
-  border-bottom: 1px solid var(--border-color);
-  height: 0px;
-}
-
-.tabs > li.selected {
-  width: calc(100% - 3px);
-  border-left: 3px solid var(--select-color);
-  background-color: var(--input-bg);
-}
-
-.tabs > li > p {
-  position: absolute;
-  left: 35px;
-  margin: 0;
-  padding: 0px;
-  width: calc(100% - 40px);
-  text-align: left;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: var(--tabs-font-color);
-}
-
-.tabs > li > p.name {
-  position: absolute;
-  top: 0px;
-  left: 39px;
-}
-
-.tabs > li > p.host {
-  position: absolute;
-  top: 20px;
-  left: 39px;
-  opacity: .8;
-  font-size: .9em;
-}
-
-.tabs > li.selected > p {
-  color: var(--tabs-selected-font-color);
-  left: 36px;
-}
-
-/* -------------------------------------------------------------------------- */
-
-.tabs > li > div.reconnect {
-  position: absolute;
-  bottom: 3px;
-  right: 47px;
-}
-
-.tabs > li:hover > div.reconnect:hover {
-  background-color: var(--tabs-button-color);
-}
-
-.tabs > li > div.edit {
-  position: absolute;
-  bottom: 3px;
-  right: 25px;
-}
-
-.tabs > li:hover > div.edit:hover {
-  background-color: var(--tabs-button-color);
-}
-
-.tabs > li > div.delete {
-  position: absolute;
-  bottom: 3px;
-  right: 3px;
-}
-
-.tabs > li:hover > div.delete:hover {
-  background-color: var(--delete-button-color);
-}
-
-/* -------------------------------------------------------------------------- */
-
-.tabs > li > div {
   display: block;
-  width: 18px;
-  height: 18px;
-  border-radius: 2px;
-  opacity: .0;
+  padding-top: 25px;
   transition: .1s all;
 }
 
-.tabs > li > div > img {
+.tabs > li.group > ul {
+  height: 0px;
+  transition: .2s all;
+}
+
+.tabs > li.group.selected > ul {
+  height: auto;
+}
+
+.tabs > li.group.selected > img.dropdown {
+  /* filter: invert(var(--invert-buttons-hover)); */
+  transform: rotate(0deg);
+}
+
+.tabs > li.group > .hitbox {
   position: absolute;
-  width: 12px;
-  height: 12px;
-  filter: invert(var(--tabs-invert-buttons));
-  top: 3px;
-  left: 3px;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 25px;
+  opacity: 0;
+  cursor: pointer;
 }
 
-.tabs > li > img {
+.tabs > li.group > .line {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabs > li.group > img {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  top: 5px;
-  left: 6px;
+  filter: invert(var(--invert-buttons));
+  top: 4.5px;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  transform: rotate(-90deg);
+  transition: .1s all;
 }
 
-.tabs > li.selected > img {
-  left: 3px;
+.tabs > li.group > p {
+  position: absolute;
+  top: 2px;
+  left: 35px;
+  margin: 0;
+  padding: 0px;
+  color: var(--tabs-selected-font-color);
 }
 
-.tabs > li:hover > div {
+.tabs > li.group > img.more {
+  position: absolute;
+  top: 4.5px;
+  left: 145px;
+  width: 15px;
+  height: 15px;
+  opacity: .0;
+  transform: rotate(0deg);
+}
+
+.tabs > li.group:hover > img.more {
   opacity: 1;
 }
 
-.tabs > li.selected:hover > div > img {
-  filter: invert(var(--tabs-invert-selected-buttons));
+.tabs > li.group:hover > img.more:hover {
+  filter: invert(var(--invert-buttons-hover));
 }
 
-.tabs > li:hover > div:hover > img {
-  filter: invert(var(--tabs-invert-selected-buttons-hover));
+.tabs > li.group > img.add {
+  position: absolute;
+  top: 4.5px;
+  left: 175px;
+  width: 15px;
+  height: 15px;
+  opacity: .0;
+  transform: rotate(0deg);
+}
+
+.tabs > li.group:hover > img.add {
+  opacity: 1;
+}
+
+.tabs > li.group:hover > img.add:hover {
+  filter: invert(var(--invert-buttons-hover));
 }
 
 /* -------------------------------------------------------------------------- */

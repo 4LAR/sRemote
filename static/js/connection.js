@@ -24,7 +24,7 @@ function change_auth_scheme() {
   }
 }
 
-function alert_create_edit_connection(id, event, edit_flag=false) {
+function alert_create_edit_connection(group_id, item_id, event, edit_flag=false) {
   open_alert(`
     <p class="name">${(edit_flag)? "Edit connection": "Create a new connection"}</p>
     <hr>
@@ -56,26 +56,26 @@ function alert_create_edit_connection(id, event, edit_flag=false) {
     <p class="connection_page_name">Command</p>
     <textarea id="first_command" class="input_style" type="text" placeholder="Command (For example: clear & python3)"></textarea>
     <p class="first_command_info">Command to be executed on the server after connection (optional).</p>
-    <div class="button submit" onclick="${(edit_flag)? `save_data_connection(${id}, true)`: "save_data_connection()"}">
+    <div class="button submit" onclick="${(edit_flag)? `save_data_connection(${group_id}, ${item_id}, true)`: "save_data_connection()"}">
       <p>${(edit_flag)? "Save": "Create"}</p>
     </div>
   `, "alert")
 
   if (edit_flag) {
-    document.getElementById("name").value = TABS[get_index_by_id(id)].name;
-    document.getElementById("host").value = TABS[get_index_by_id(id)].host;
-    document.getElementById("port").value = TABS[get_index_by_id(id)].port;
-    document.getElementById("auth_scheme").value = TABS[get_index_by_id(id)].auth_scheme;
+    var index = get_indexes_by_id(group_id, item_id);
+    document.getElementById("name").value = TABS[index[0]].items[index[1]].name;
+    document.getElementById("host").value = TABS[index[0]].items[index[1]].host;
+    document.getElementById("port").value = TABS[index[0]].items[index[1]].port;
+    document.getElementById("auth_scheme").value = TABS[index[0]].items[index[1]].auth_scheme;
     change_auth_scheme();
-    console.log(TABS[get_index_by_id(id)].auth_scheme);
-    if (TABS[get_index_by_id(id)].auth_scheme == "lap") {
-      document.getElementById("login_lap").value = TABS[get_index_by_id(id)].username;
-      document.getElementById("password").value = TABS[get_index_by_id(id)].password;
-    } else if (TABS[get_index_by_id(id)].auth_scheme == "lak") {
-      document.getElementById("login_lak").value = TABS[get_index_by_id(id)].username;
-      document.getElementById("privateKey").value = TABS[get_index_by_id(id)].privateKey;
+    if (TABS[index[0]].items[index[1]].auth_scheme == "lap") {
+      document.getElementById("login_lap").value = TABS[index[0]].items[index[1]].username;
+      document.getElementById("password").value = TABS[index[0]].items[index[1]].password;
+    } else if (TABS[index[0]].items[index[1]].auth_scheme == "lak") {
+      document.getElementById("login_lak").value = TABS[index[0]].items[index[1]].username;
+      document.getElementById("privateKey").value = TABS[index[0]].items[index[1]].privateKey;
     }
-    document.getElementById("first_command").value = atob(TABS[get_index_by_id(id)].first_command);
+    document.getElementById("first_command").value = atob(TABS[index[0]].items[index[1]].first_command);
   }
 
   document.getElementById('PrivateKeyInput').addEventListener('change', (event) => {
@@ -92,7 +92,7 @@ function alert_create_edit_connection(id, event, edit_flag=false) {
 
 // alert_create_edit_connection(undefined, undefined, false);
 
-function save_data_connection(id, edit_flag=false) {
+function save_data_connection(group_id, item_id, edit_flag=false) {
   var name = document.getElementById("name");
   var host = document.getElementById("host");
   var port = document.getElementById("port");
@@ -128,29 +128,32 @@ function save_data_connection(id, edit_flag=false) {
   var config_file = store.get('connections');
 
   if (edit_flag) {
-    var index = get_index_by_id(id);
-    config_file[index] = insert_data;
+    var index = get_indexes_by_id(group_id, item_id);
+    config_file[index[0]].items[index[1]] = insert_data;
 
     try {
-      TABS[index].name = insert_data.name;
-      TABS[index].host = insert_data.host;
-      TABS[index].port = insert_data.port;
-      TABS[index].auth_scheme = insert_data.auth_scheme;
-      TABS[index].username = insert_data.username;
-      TABS[index].password = insert_data.password;
-      TABS[index].privateKey = insert_data.privateKey;
-      TABS[index].first_command = insert_data.first_command;
-      TABS[index].search = insert_data.name + insert_data.host + ":" + insert_data.port;
+      TABS[index[0]].items[index[1]].name = insert_data.name;
+      TABS[index[0]].items[index[1]].host = insert_data.host;
+      TABS[index[0]].items[index[1]].port = insert_data.port;
+      TABS[index[0]].items[index[1]].auth_scheme = insert_data.auth_scheme;
+      TABS[index[0]].items[index[1]].username = insert_data.username;
+      TABS[index[0]].items[index[1]].password = insert_data.password;
+      TABS[index[0]].items[index[1]].privateKey = insert_data.privateKey;
+      TABS[index[0]].items[index[1]].first_command = insert_data.first_command;
+      TABS[index[0]].items[index[1]].search = insert_data.name + insert_data.host + ":" + insert_data.port;
 
-      document.getElementById(id + "_menu").innerHTML = generate_tab_by_data(insert_data, id);
-      document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}&data_path=${path.dirname(store.path)}' style="display: none" id="${id + "_body"}"></div>`;
-      document.getElementById(id + "_body").contentWindow.update_status = update_status;
+      // document.getElementById(id + "_menu").innerHTML = generate_tab_by_data(insert_data, id);
+      // document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}&data_path=${path.dirname(store.path)}' style="display: none" id="${id + "_body"}"></div>`;
+      // document.getElementById(id + "_body").contentWindow.update_status = update_status;
+      document.getElementById(`item_${group_id}_${item_id}`).innerHTML = generate_item_by_data(insert_data, group_id, item_id);
+      document.getElementById(`li_${group_id}_${item_id}`).innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&group_id=${group_id}&item_id=${item_id}&data_path=${path.dirname(store.path)}' style="display: none" id="iframe_${group_id}_${item_id}"></div>`;
+      document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.update_status = update_status;
 
     } catch (e) {
       console.warn(e);
     }
 
-    select_tab(id);
+    select_item(group_id, item_id);
   } else {
     config_file.push(insert_data);
 
@@ -185,6 +188,7 @@ function save_data_connection(id, edit_flag=false) {
 
 /*----------------------------------------------------------------------------*/
 
+//
 function alert_delete_connection(id, event) {
   open_alert(`
     <p class="name_delete">Delete connection?</p>
@@ -198,17 +202,20 @@ function alert_delete_connection(id, event) {
   }
 }
 
-function delete_connection(id) {
-  var index = get_index_by_id(id);
+//
+function delete_connection(group_id, item_id) {
+  var index = get_indexes_by_id(group_id, item_id);
   var config_file = store.get('connections');
-  config_file.splice(index, 1);
+  config_file[index[0]].items.splice(index[1], 1);
   store.set('connections', config_file);
 
-  TABS.splice(index, 1);
-  document.getElementById(id + "_menu").remove();
-  document.getElementById(id + "_body").remove();
-  document.getElementById(id + "_line").remove();
-  document.getElementById(id + "_li").remove();
+  TABS[index[0]].splice(index[1], 1);
+  document.getElementById(`item_${group_id}_${item_id}`).remove();
+  document.getElementById(`iframe_${group_id}_${item_id}`).remove();
+  document.getElementById(`line_${group_id}_${item_id}`).remove();
+  document.getElementById(`li_${group_id}_${item_id}`).remove();
 
   close_alert();
 }
+
+/*----------------------------------------------------------------------------*/
