@@ -70,12 +70,17 @@ function update_status(group_id, item_id, status) {
 
 //
 function open_group(group_id) {
-  if (TABS[group_id].open_flag) {
+  var index = get_index_group_by_id(group_id);
+  if (TABS[index].open_flag) {
     document.getElementById(`group_${group_id}`).className = "group";
   } else {
     document.getElementById(`group_${group_id}`).className = "group selected";
   }
-  TABS[group_id].open_flag = !TABS[group_id].open_flag;
+  TABS[index].open_flag = !TABS[index].open_flag;
+
+  var config_file = store.get('connections');
+  config_file[index].open_flag = TABS[index].open_flag;
+  store.set('connections', config_file);
 }
 
 //
@@ -119,14 +124,14 @@ function generate_group_data(data, id="") {
 }
 
 //
-function append_group(data, group_id) {
+function append_group(data, group_id, selected=false) {
   // добавляем кнопку с группой
   append_to_ul(
     "tabs",
     generate_group_data(data, group_id),
     undefined,
     `group_${group_id}`,
-    className="group"
+    className=(selected)? "group selected": "group"
   );
 }
 
@@ -187,11 +192,11 @@ function read() {
     TABS.push({
       "id": group_id,
       "name": group.name,
-      "open_flag": false,
+      "open_flag": group.open_flag || false,
       "items": []
     });
 
-    append_group(group, group_id);
+    append_group(group, group_id, group.open_flag);
 
     var item_id = -1;
     //

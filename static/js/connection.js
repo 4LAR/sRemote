@@ -277,6 +277,7 @@ function save_data_group(group_id, edit_flag=false) {
 
       config_file.push({
         "name": insert_data.name,
+        "open_flag": false,
         "items": []
       });
 
