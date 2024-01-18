@@ -56,13 +56,18 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
     <p class="connection_page_name">Command</p>
     <textarea id="first_command" class="input_style" type="text" placeholder="Command (For example: clear & python3)"></textarea>
     <p class="first_command_info">Command to be executed on the server after connection (optional).</p>
-    <div class="button submit" onclick="${(edit_flag)? `save_data_connection(${group_id}, ${item_id}, true)`: "save_data_connection()"}">
+    <div class="button submit" onclick="${(edit_flag)? `save_data_connection(${group_id}, ${item_id}, true)`: `save_data_connection(${group_id})`}">
       <p>${(edit_flag)? "Save": "Create"}</p>
     </div>
+    ${(edit_flag)? `<div class="button predelete" onclick="alert_delete_connection(${group_id}, ${item_id})">
+      <p>Delete</p>
+    </div>`: ""}
   `, "alert")
 
   if (edit_flag) {
     var index = get_indexes_by_id(group_id, item_id);
+    console.log(TABS[index[0]]);
+    console.log(index[1]);
     document.getElementById("name").value = TABS[index[0]].items[index[1]].name;
     document.getElementById("host").value = TABS[index[0]].items[index[1]].host;
     document.getElementById("port").value = TABS[index[0]].items[index[1]].port;
@@ -142,9 +147,6 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
       TABS[index[0]].items[index[1]].first_command = insert_data.first_command;
       TABS[index[0]].items[index[1]].search = insert_data.name + insert_data.host + ":" + insert_data.port;
 
-      // document.getElementById(id + "_menu").innerHTML = generate_tab_by_data(insert_data, id);
-      // document.getElementById(id + "_li").innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&id=${id}&data_path=${path.dirname(store.path)}' style="display: none" id="${id + "_body"}"></div>`;
-      // document.getElementById(id + "_body").contentWindow.update_status = update_status;
       document.getElementById(`item_${group_id}_${item_id}`).innerHTML = generate_item_by_data(insert_data, group_id, item_id);
       document.getElementById(`li_${group_id}_${item_id}`).innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&group_id=${group_id}&item_id=${item_id}&data_path=${path.dirname(store.path)}' style="display: none" id="iframe_${group_id}_${item_id}"></div>`;
       document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.update_status = update_status;
@@ -155,11 +157,12 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
 
     select_item(group_id, item_id);
   } else {
-    config_file.push(insert_data);
+    var index = get_index_group_by_id(group_id);
+    config_file[index].items.push(insert_data);
 
     try {
-      TABS.push({
-        "id": `${(TABS.length > 0)? (Number(TABS[TABS.length - 1].id) + 1): "1"}`,
+      TABS[index].items.push({
+        "id": `${(TABS[index].items.length > 0)? (Number(TABS[index].items[TABS[index].items.length - 1].id) + 1): "1"}`,
         "name": insert_data.name,
         "host": insert_data.host,
         "port": insert_data.port,
@@ -170,15 +173,17 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
         "first_command": insert_data.first_command,
         "search": insert_data.name + insert_data.host + ":" + insert_data.port
       });
-      append_tab(
-        config_file[config_file.length - 1],
-        TABS[TABS.length - 1].id
-      );
+      var new_item_id = TABS[index].items[TABS[index].items.length - 1].id;
+      append_item(
+        config_file[index].items[config_file[index].items.length - 1],
+        group_id,
+        new_item_id
+      )
     } catch (e) {
       console.warn(e);
     }
 
-    select_tab(TABS[TABS.length - 1].id);
+    select_item(group_id, new_item_id);
   }
 
   store.set('connections', config_file);
@@ -189,14 +194,17 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
 /*----------------------------------------------------------------------------*/
 
 //
-function alert_delete_connection(id, event) {
+function alert_delete_connection(group_id, item_id, event) {
+  var index = get_indexes_by_id(group_id, item_id);
   open_alert(`
     <p class="name_delete">Delete connection?</p>
-    <p class="delete_info">The '${TABS[get_index_by_id(id)].name}' connection is selected for deletion. The current session with this connection will be terminated.</p>
-    <div class="button delete" onclick="delete_connection(${id})">
+    <p class="delete_info">The '${TABS[index[0]].items[index[1]].name}' connection is selected for deletion. The current session with this connection will be terminated.</p>
+    <div class="button delete" onclick="delete_connection(${group_id}, ${item_id})">
       <p>Delete forever</p>
     </div>
-  `, "delete_alert");
+  `, "delete_alert", function() {
+    alert_create_edit_connection(group_id, item_id, undefined, true);
+  });
   if (event) {
     event.stopPropagation();
   }
@@ -209,13 +217,124 @@ function delete_connection(group_id, item_id) {
   config_file[index[0]].items.splice(index[1], 1);
   store.set('connections', config_file);
 
-  TABS[index[0]].splice(index[1], 1);
+  TABS[index[0]].items.splice(index[1], 1);
   document.getElementById(`item_${group_id}_${item_id}`).remove();
   document.getElementById(`iframe_${group_id}_${item_id}`).remove();
   document.getElementById(`line_${group_id}_${item_id}`).remove();
   document.getElementById(`li_${group_id}_${item_id}`).remove();
 
+  close_alert(false);
+}
+
+/*----------------------------------------------------------------------------*/
+
+function alert_edit_create_group(group_id, event, edit_flag=false) {
+  open_alert(`
+    <p class="name">${(edit_flag)? "Edit group": "Create a new group"}</p>
+    <hr>
+    <input id="name" class="input_style" type="text" placeholder="Group name">
+    <p class="name_info">A random name is generated if you do not provide one.</p>
+    <div class="button submit" onclick="${(edit_flag)? `save_data_group(${group_id}, true)`: `save_data_group()`}">
+      <p>${(edit_flag)? "Save": "Create"}</p>
+    </div>
+    ${(edit_flag)? `<div class="button predelete" onclick="alert_delete_group(${group_id})">
+      <p>Delete</p>
+    </div>`: ""}
+  `, "alert_group");
+
+  if (edit_flag) {
+    var index = get_index_group_by_id(group_id);
+    console.log(TABS[index]);
+    document.getElementById("name").value = TABS[index].name;
+  }
+
+  if (event) {
+    event.stopPropagation();
+  }
+}
+
+function save_data_group(group_id, edit_flag=false) {
+  var name = document.getElementById("name");
+  var config_file = store.get('connections');
+  if (edit_flag) {
+    var index = get_index_group_by_id(group_id);
+    try {
+      TABS[index].name = name.value;
+      document.getElementById(`group_${group_id}`).getElementsByTagName('p')[0].innerHTML = name.value;
+
+      config_file[index].name = name.value;
+    } catch (e) {
+      console.warn(e);
+    }
+  } else {
+    try {
+      var insert_data = {
+        "id": (TABS.length > 0)? (Number(TABS[TABS.length - 1].id) + 1): 0,
+        "name": (name.value.length > 0)? name.value: generateRandomName(),
+        "open_flag": false,
+        "items": []
+      };
+
+      config_file.push({
+        "name": insert_data.name,
+        "items": []
+      });
+
+      TABS.push(insert_data)
+      append_to_ul(
+        "tabs",
+        generate_group_data(insert_data, insert_data.id),
+        undefined,
+        `group_${insert_data.id}`,
+        className="group"
+      );
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+  store.set('connections', config_file);
   close_alert();
 }
 
 /*----------------------------------------------------------------------------*/
+
+function alert_delete_group(group_id, event) {
+  var index = get_index_group_by_id(group_id);
+  open_alert(`
+    <p class="name_delete">Delete group?</p>
+    <p class="delete_info">The '${TABS[index].name}' group is selected for deletion. All current sessions within this group will be terminated.</p>
+    <div class="button delete" onclick="delete_group(${group_id})">
+      <p>Delete forever</p>
+    </div>
+  `, "delete_alert", function() {
+    alert_edit_create_group(group_id, undefined, true);
+  });
+  if (event) {
+    event.stopPropagation();
+  }
+}
+
+function delete_group(group_id) {
+  var index = get_index_group_by_id(group_id);
+  var config_file = store.get('connections');
+  for (const item of TABS[index].items) {
+    try {
+      var index_item = get_indexes_by_id(group_id, item.id);
+      config_file[index].items.splice(index[1], 1);
+      TABS[index].items.splice(index_item[1], 1);
+
+      document.getElementById(`item_${group_id}_${item.id}`).remove();
+      document.getElementById(`iframe_${group_id}_${item.id}`).remove();
+      document.getElementById(`line_${group_id}_${item.id}`).remove();
+      document.getElementById(`li_${group_id}_${item.id}`).remove();
+    } catch (e) {
+      console.warn(e)
+    }
+  }
+  TABS.splice(index, 1);
+  config_file.splice(index, 1);
+  store.set('connections', config_file);
+  document.getElementById(`group_${group_id}`).remove();
+
+  close_alert(true);
+}

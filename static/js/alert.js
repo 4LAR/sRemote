@@ -11,11 +11,11 @@ function open_alert(html, type="alert", onclose=undefined) {
   openModal('alert');
 }
 
-function close_alert() {
+function close_alert(onclose=true) {
   closeModal('bg_alert');
   closeModal('alert');
 
-  if (onclose_alert_function) {
+  if (onclose_alert_function && onclose) {
     onclose_alert_function();
   }
 }

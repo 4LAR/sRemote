@@ -14,6 +14,21 @@
   height: 500px;
 }
 
+.alert_group {
+  position: fixed;
+  display: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -80%);
+  width: 550px;
+  background-color: var(--alert-bg-color);
+  border-radius: 5px;
+  z-index: 5;
+  box-shadow: 0px 4px 27px 11px rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--alert-border-color);
+  height: 200px;
+}
+
 .alert_body #name {
   width: calc(100% - 35px);
   margin-bottom: 10px;
@@ -111,6 +126,18 @@
   right: 35px;
   bottom: 35px;
   width: 100px;
+}
+
+.alert_body .predelete {
+  position: absolute;
+  left: 35px;
+  bottom: 35px;
+  width: 100px;
+  background-color: var(--delete-button-color);
+}
+
+.alert_body .predelete:hover {
+  background-color: var(--delete-hover-button-color);
 }
 
 .alert_body .connection_auth_scheme {

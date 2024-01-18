@@ -25,16 +25,13 @@ function get_index_group_by_id(group_id) {
 
 //
 function get_indexes_by_id(group_id, item_id) {
-  var real_group_id = 0;
+  var real_group_id = get_index_group_by_id(group_id);
   var real_item_id = 0;
-  for (const group of TABS) {
-    for (const item of group.items) {
-      if (group.id == group_id && item.id == item_id) {
-        return [real_group_id, real_item_id];
-      }
-      real_item_id++;
+  for (const item of TABS[real_group_id].items) {
+    if (item.id == item_id) {
+      return [real_group_id, real_item_id];
     }
-    real_group_id++;
+    real_item_id++;
   }
 }
 
@@ -93,7 +90,7 @@ function generate_item_by_data(data, group_id, item_id="") {
     <div class="edit" onclick="alert_create_edit_connection(${group_id}, ${item_id}, event, true)">
       <img src="./static/img/edit.svg">
     </div>
-    <!--<div class="delete" onclick="alert_delete_connection(${item_id}, event)">
+    <!--<div class="delete" onclick="alert_delete_connection(${group_id}, ${item_id}, event)">
       <img src="./static/img/cross.svg">
     </div>-->
   `;
@@ -104,12 +101,26 @@ function generate_group_data(data, id="") {
   return `
     <img class="dropdown" src="./static/img/dropdown.svg">
     <p>${data.name}</p>
-    <div class="hitbox" onclick="open_group(${id})"></div>
-    <img class="more" src="./static/img/edit.svg">
-    <img class="add" src="./static/img/add.svg">
+    <div class="hitbox" onclick="open_group(${id})">
+
+    </div>
+    <img class="more" src="./static/img/edit.svg" onclick="alert_edit_create_group(${id}, event, true)">
+    <img class="add" src="./static/img/add.svg" onclick="alert_create_edit_connection(${id}, undefined, event, false)">
     <div class="line"></div>
     <ul class="tabs_items" id="items_${id}"></ul>
   `
+}
+
+//
+function append_group(data, group_id) {
+  // добавляем кнопку с группой
+  append_to_ul(
+    "tabs",
+    generate_group_data(data, group_id),
+    undefined,
+    `group_${group_id}`,
+    className="group"
+  );
 }
 
 //
@@ -168,18 +179,12 @@ function read() {
     //
     TABS.push({
       "id": group_id,
+      "name": group.name,
       "open_flag": false,
       "items": []
     });
 
-    // добавляем кнопку с группой
-    append_to_ul(
-      "tabs",
-      generate_group_data(group, group_id),
-      undefined,
-      `group_${group_id}`,
-      className="group"
-    );
+    append_group(group, group_id);
 
     var item_id = -1;
     //
