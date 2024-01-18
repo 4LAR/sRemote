@@ -184,40 +184,44 @@ function read() {
     store.set('connections', config_file);
   }
 
-  var group_id = -1;
-  //
-  for (const group of config_file) {
-    group_id++;
+  try {
+    var group_id = -1;
     //
-    TABS.push({
-      "id": group_id,
-      "name": group.name,
-      "open_flag": group.open_flag || false,
-      "items": []
-    });
-
-    append_group(group, group_id, group.open_flag);
-
-    var item_id = -1;
-    //
-    for (const item of group.items) {
-      item_id++;
+    for (const group of config_file) {
+      group_id++;
       //
-      TABS[group_id].items.push({
-        "id": item_id,
-        "name": item.name || "TEST",
-        "host": item.host || "0.0.0.0",
-        "port": item.port || "22",
-        "auth_scheme": item.auth_scheme || "lap",
-        "username": item.username || "user",
-        "password": item.password || "password",
-        "privateKey": item.privateKey || "",
-        "first_command": item.first_command || "",
-        "search": item.name + item.host + ":" + item.port
+      TABS.push({
+        "id": group_id,
+        "name": group.name,
+        "open_flag": group.open_flag || false,
+        "items": []
       });
+
+      append_group(group, group_id, group.open_flag);
+
+      var item_id = -1;
       //
-      append_item(item, group_id, item_id);
+      for (const item of group.items) {
+        item_id++;
+        //
+        TABS[group_id].items.push({
+          "id": item_id,
+          "name": item.name || "TEST",
+          "host": item.host || "0.0.0.0",
+          "port": item.port || "22",
+          "auth_scheme": item.auth_scheme || "lap",
+          "username": item.username || "user",
+          "password": item.password || "password",
+          "privateKey": item.privateKey || "",
+          "first_command": item.first_command || "",
+          "search": item.name + item.host + ":" + item.port
+        });
+        //
+        append_item(item, group_id, item_id);
+      }
     }
+  } catch (e) {
+    store.set('connections', []);
   }
 }
 
