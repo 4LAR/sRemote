@@ -337,5 +337,5 @@ function delete_group(group_id) {
   store.set('connections', config_file);
   document.getElementById(`group_${group_id}`).remove();
 
-  close_alert(true);
+  close_alert(false);
 }

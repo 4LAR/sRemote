@@ -222,6 +222,7 @@ function read() {
     }
   } catch (e) {
     store.set('connections', []);
+    ipcRenderer.send('relaunch');
   }
 }
 
