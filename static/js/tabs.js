@@ -104,8 +104,6 @@ function generate_group_data(data, id="") {
     <div class="hitbox" onclick="open_group(${id})">
 
     </div>
-    <!--<img class="more" src="./static/img/edit.svg" onclick="alert_edit_create_group(${id}, event, true)">
-    <img class="add" src="./static/img/add.svg" onclick="alert_create_edit_connection(${id}, undefined, event, false)">-->
 
     <div class="more group_activity" onclick="alert_edit_create_group(${id}, event, true)">
       <img src="./static/img/edit.svg">
