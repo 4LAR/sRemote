@@ -59,4 +59,5 @@
   left: 0px;
   width: 200px;
   text-align: center;
+  color: var(--alert-font-color);
 }
