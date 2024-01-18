@@ -4,6 +4,7 @@
   --tabs-font-color: #6B727D;
   --tabs-selected-font-color: #D7DAE0;
   --tabs-button-color: #568AF2;
+  --tabs-good-color: #00A58C;
   --delete-button-color: #D1334C;
   --delete-hover-button-color: #DD4659;
   --input-warning-color: #D1334C;
@@ -42,6 +43,7 @@
   --tabs-font-color: #505968;
   --tabs-selected-font-color: #000000;
   --tabs-button-color: #1D63ED;
+  --tabs-good-color: #00A58C;
   --delete-button-color: #D1334C;
   --delete-hover-button-color: #DD4659;
   --input-warning-color: #D1334C;

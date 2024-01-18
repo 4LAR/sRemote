@@ -100,14 +100,23 @@ function generate_item_by_data(data, group_id, item_id="") {
 function generate_group_data(data, id="") {
   return `
     <img class="dropdown" src="./static/img/dropdown.svg">
-    <p>${data.name}</p>
+    <p class="group_name">${data.name}</p>
     <div class="hitbox" onclick="open_group(${id})">
 
     </div>
-    <img class="more" src="./static/img/edit.svg" onclick="alert_edit_create_group(${id}, event, true)">
-    <img class="add" src="./static/img/add.svg" onclick="alert_create_edit_connection(${id}, undefined, event, false)">
+    <!--<img class="more" src="./static/img/edit.svg" onclick="alert_edit_create_group(${id}, event, true)">
+    <img class="add" src="./static/img/add.svg" onclick="alert_create_edit_connection(${id}, undefined, event, false)">-->
+
+    <div class="more group_activity" onclick="alert_edit_create_group(${id}, event, true)">
+      <img src="./static/img/edit.svg">
+    </div>
+    <div class="add group_activity" onclick="alert_create_edit_connection(${id}, undefined, event, false)">
+      <img src="./static/img/add.svg">
+    </div>
+
     <div class="line"></div>
     <ul class="tabs_items" id="items_${id}"></ul>
+    <p class="empty_group">empty</p>
   `
 }
 

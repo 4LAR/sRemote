@@ -76,8 +76,7 @@
 .tabs_items > li > div.reconnect {
   position: absolute;
   bottom: 3px;
-  /* right: 47px; */
-  right: 25px;
+  right: 3px;
 }
 
 .tabs_items > li:hover > div.reconnect:hover {
@@ -87,8 +86,7 @@
 .tabs_items > li > div.edit {
   position: absolute;
   bottom: 3px;
-  /* right: 25px; */
-  right: 3px;
+  right: 25px;
 }
 
 .tabs_items > li:hover > div.edit:hover {
@@ -151,6 +149,70 @@
 
 /* -------------------------------------------------------------------------- */
 
+.tabs > li > div.group_activity {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  opacity: .0;
+  transition: .1s all;
+}
+
+.tabs > li > div.group_activity > img {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  filter: invert(var(--tabs-invert-selected-buttons));
+  top: 3px;
+  left: 3px;
+}
+
+.tabs > li > img {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 5px;
+  left: 6px;
+}
+
+.tabs > li.selected > img {
+  left: 3px;
+}
+
+.tabs > li:hover > div.group_activity {
+  opacity: 1;
+}
+
+.tabs > li:hover > div:hover > img {
+  filter: invert(var(--tabs-invert-selected-buttons-hover));
+}
+
+/* -------------------------------------------------------------------------- */
+
+.tabs > li > div.more {
+  position: absolute;
+  top: 4px;
+  right: 25px;
+  cursor: pointer;
+}
+
+.tabs > li:hover > div.more:hover {
+  background-color: var(--tabs-button-color);
+}
+
+.tabs > li > div.add {
+  position: absolute;
+  top: 4px;
+  right: 3px;
+  cursor: pointer;
+}
+
+.tabs > li:hover > div.add:hover {
+  background-color: var(--tabs-good-color);
+}
+
+/* -------------------------------------------------------------------------- */
+
 .tabs {
   position: fixed;
   top: 31px;
@@ -166,6 +228,20 @@
 
 .tabs::-webkit-scrollbar {
   display: none;
+}
+
+.empty {
+  display: none;
+  position: absolute;
+  left: 0px;
+  width: 200px;
+  top: 30px;
+  color: var(--tabs-selected-font-color);
+  text-align: center;
+}
+
+.tabs:empty ~ .empty {
+  display: block;
 }
 
 .tabs > li.group {
@@ -184,8 +260,22 @@
   height: auto;
 }
 
+.tabs > li.group > p.empty_group {
+  position: inherit;
+  margin: 0px;
+  padding: 5px 0px;
+  text-align: center;
+  display: none;
+  width: 100%;
+  color: var(--tabs-selected-font-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tabs > li.group.selected > ul:empty ~ .empty_group {
+  display: block;
+}
+
 .tabs > li.group.selected > img.dropdown {
-  /* filter: invert(var(--invert-buttons-hover)); */
   transform: rotate(0deg);
 }
 
@@ -214,7 +304,7 @@
   transition: .1s all;
 }
 
-.tabs > li.group > p {
+.tabs > li.group > p.group_name {
   position: absolute;
   top: 2px;
   left: 35px;
@@ -228,12 +318,8 @@
   text-overflow: ellipsis;
 }
 
-.tabs > li.group > p.empty {
-  position: inherit;
-}
-
-.tabs > li.group:hover > p {
-  width: calc(100% - 95px);
+.tabs > li.group:hover > p.group_name {
+  width: calc(100% - 90px);
 }
 
 .tabs > li.group > img.more {
