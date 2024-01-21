@@ -1,4 +1,4 @@
-![image](https://github.com/4LAR/sRemote/assets/18627440/8ec20a7b-10c1-4cb4-9120-25113e50731b)
+![image](https://github.com/4LAR/sRemote/assets/18627440/b4439967-85bc-49c1-853e-f832deb2494a)
 
 ## Overview
 SSH Terminal with tabs created using ElectronJS (https://github.com/electron/electron) and ssh2 (https://github.com/mscdex/ssh2).
