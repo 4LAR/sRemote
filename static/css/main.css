@@ -24,7 +24,11 @@ ul {
 /*----------------------------------------------------------------------------*/
 
 .body {
+  position: absolute;
   background-color: var(--terminal-bg);
+  width: 100%;
+  height: 100%;
+  margin: -8px;
 }
 
 iframe {

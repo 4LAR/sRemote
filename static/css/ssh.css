@@ -9,6 +9,7 @@ html {
   bottom: 0px;
   left: 0px;
   width: 100%;
+  background-color: var(--terminal-bg);
 }
 
 .xterm .xterm-viewport {
