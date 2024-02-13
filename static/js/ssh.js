@@ -113,6 +113,7 @@ if (config["Connections"]["cacheData"]) {
   printOnNewLine(`[\x1b[34mINFO\x1b[0m] Restore cache data.`);
 }
 
+// переносит каретку если строка не пустая
 function newLine() {
   const currentRow = term.buffer.active.getLine(term.buffer.cursorY);
   if (!currentRow?.isWrapped) {
@@ -120,11 +121,13 @@ function newLine() {
   }
 }
 
+// вывод линии в терминал (переносит каретку если строка не пустая)
 function printOnNewLine(text) {
   newLine();
   term.write(text);
 }
 
+// разбор ошибки и вывод её в терминал
 function assembly_error(err) {
   for (const key of Object.keys(err)) {
     console.log(key, err[key]);
@@ -144,6 +147,7 @@ function assembly_error(err) {
   console.log("----------------");
 }
 
+// установка темы выбранной в настройках
 document.documentElement.setAttribute('data-theme', config.General.thame);
 if (config.General.thame == 'light') {
   term.setOption('theme', light_thame);
@@ -163,9 +167,39 @@ fit.fit();
 term.resize(100, 50);
 fit.fit();
 
+/*----------------------------------------------------------------------------*/
+
+var stream = undefined;
 var conn = undefined;
 var connected_flag = false;
 var first_connect = true;
+
+/*----------------------------------------------------------------------------*/
+
+// подгон размера терминала под окно
+function fitToscreen() {
+  fit.fit();
+  if (stream)
+    stream.setWindow(term.rows, term.cols);
+}
+
+// изменение размера шрифта при использовании CTRL + WHEEL
+document.addEventListener('wheel', (event) => {
+  if (event.ctrlKey) {
+    const delta = event.deltaY > 0 ? -1 : 1;
+    currentFontSize += delta;
+    currentFontSize = Math.max(8, Math.min(24, currentFontSize));
+    term.setOption('fontSize', currentFontSize);
+    fitToscreen();
+    show_font_alert(currentFontSize);
+  }
+});
+
+// евент на подгон размера терминала под окно
+window.onresize = debounce(fitToscreen, wait_ms);
+
+/*----------------------------------------------------------------------------*/
+
 function create_connection() {
   first_connect = false;
   update_status(group_id, item_id, 2);
@@ -196,26 +230,8 @@ function create_connection() {
           fitToscreen();
         } catch (e) {}
 
-        function fitToscreen() {
-          fit.fit();
-          stream.setWindow(term.rows, term.cols);
-        }
-
-        window.onresize = debounce(fitToscreen, wait_ms);
-
         document.addEventListener("DOMContentLoaded", function() {
           fitToscreen();
-        });
-
-        document.addEventListener('wheel', (event) => {
-          if (event.ctrlKey) {
-            const delta = event.deltaY > 0 ? -1 : 1;
-            currentFontSize += delta;
-            currentFontSize = Math.max(8, Math.min(24, currentFontSize));
-            term.setOption('fontSize', currentFontSize);
-            fitToscreen();
-            show_font_alert(currentFontSize);
-          }
         });
 
         connected_flag = true;
@@ -247,6 +263,7 @@ function create_connection() {
 
 }
 
+// переподключение
 function reconnect() {
   if (conn) {
     conn.end();
@@ -258,6 +275,7 @@ function reconnect() {
   }, 100);
 }
 
+// копирование вставка
 function customKeyEventHandler(e) {
   if (e.type !== "keydown") {
     return true;
@@ -279,6 +297,7 @@ function customKeyEventHandler(e) {
   return true;
 }
 
+// если нам надо сразу подключаться
 if (config["Connections"]["autoConnect"]) {
   create_connection();
 }
