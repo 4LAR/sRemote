@@ -1,6 +1,6 @@
 
 @font-face {
-    font-family: 'myicon';
+    font-family: 'icon';
     src: url('../font/icon.eot');
     src: url('../font/icon.eot?#iefix') format('embedded-opentype'),
          url('../font/icon.woff') format('woff'),
@@ -9,3 +9,10 @@
     font-weight: normal;
     font-style: normal;
 }
+
+/*
+  .icon-dot:before{content:'\0041';}
+  .icon-marker:before{content:'\0042';}
+  .icon-checkbox-checked:before{content:'\0043';}
+  .icon-checkbox:before{content:'\0044';}
+*/
