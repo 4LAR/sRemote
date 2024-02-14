@@ -66,8 +66,6 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
 
   if (edit_flag) {
     var index = get_indexes_by_id(group_id, item_id);
-    console.log(TABS[index[0]]);
-    console.log(index[1]);
     document.getElementById("name").value = TABS[index[0]].items[index[1]].name;
     document.getElementById("host").value = TABS[index[0]].items[index[1]].host;
     document.getElementById("port").value = TABS[index[0]].items[index[1]].port;
@@ -246,7 +244,6 @@ function alert_edit_create_group(group_id, event, edit_flag=false) {
 
   if (edit_flag) {
     var index = get_index_group_by_id(group_id);
-    console.log(TABS[index]);
     document.getElementById("name").value = TABS[index].name;
   }
 

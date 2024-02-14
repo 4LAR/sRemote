@@ -77,7 +77,6 @@ function auto_height_items(group_id, delta_items=0) {
     delta_pixels = items_list.scrollHeight / ul_length;
   }
 
-  console.log(document.getElementById(`group_${group_id}`).className);
   const isContentVisible = document.getElementById(`group_${group_id}`).className == "group selected";
   items_list.style.height = (isContentVisible)? `${items_list.scrollHeight + ((delta_items !== 0)? (delta_pixels * delta_items): 0)}px`: `0px`;
 }
