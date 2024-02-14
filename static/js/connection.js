@@ -184,6 +184,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
     }
 
     select_item(group_id, new_item_id);
+    auto_height_items(group_id);
   }
 
   store.set('connections', config_file);
@@ -223,6 +224,7 @@ function delete_connection(group_id, item_id) {
   document.getElementById(`line_${group_id}_${item_id}`).remove();
   document.getElementById(`li_${group_id}_${item_id}`).remove();
 
+  auto_height_items(group_id, -1);
   close_alert(false);
 }
 

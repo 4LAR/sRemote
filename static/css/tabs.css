@@ -257,7 +257,8 @@
 }
 
 .tabs > li.group.selected > ul {
-  height: auto;
+  /* max-height: 2000px; */
+  /* height: auto; */
 }
 
 .tabs > li.group > p.empty_group {
@@ -273,6 +274,10 @@
 
 .tabs > li.group.selected > ul:empty ~ .empty_group {
   display: block;
+}
+
+.tabs > li.group > img.dropdown {
+  transition: .2s all;
 }
 
 .tabs > li.group.selected > img.dropdown {
