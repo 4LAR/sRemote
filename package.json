@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "SSH Terminal",
   "main": "main.js",
-  "author": "100LAR STUDIO",
+  "author": "100LAR STUDIO <nikitstolarov@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "electron": "^26.6.2",
@@ -44,9 +44,12 @@
       "icon": "logo.ico"
     },
     "linux": {
-      "target": "deb",
+      "target": [
+        "snap",
+        "deb"
+      ],
       "category": "Network",
-      "icon": "logo.ico"
+      "icon": "logo.svg"
     },
     "portable": {
       "unicode": false,
