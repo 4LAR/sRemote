@@ -169,7 +169,7 @@ fit.fit();
 
 /*----------------------------------------------------------------------------*/
 
-var stream = undefined;
+var stream_obj = undefined;
 var conn = undefined;
 var connected_flag = false;
 var first_connect = true;
@@ -179,8 +179,9 @@ var first_connect = true;
 // подгон размера терминала под окно
 function fitToscreen() {
   fit.fit();
-  if (stream)
-    stream.setWindow(term.rows, term.cols);
+  console.log(stream_obj);
+  if (stream_obj)
+    stream_obj.setWindow(term.rows, term.cols);
 }
 
 // изменение размера шрифта при использовании CTRL + WHEEL
@@ -210,6 +211,7 @@ function create_connection() {
       newLine();
       conn.shell((err, stream) => {
         if (err) throw err;
+        stream_obj = stream;
         stream.on('close', () => {
           console.log('Stream :: close');
           printOnNewLine(`[\x1b[34mINFO\x1b[0m] Remote host terminated an existing connection.`);
