@@ -1,6 +1,6 @@
 {
   "name": "sRemote",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "SSH Terminal",
   "main": "main.js",
   "author": "100LAR STUDIO <nikitstolarov@gmail.com>",
