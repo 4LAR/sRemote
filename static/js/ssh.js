@@ -173,13 +173,20 @@ var stream_obj = undefined;
 var conn = undefined;
 var connected_flag = false;
 var first_connect = true;
+var status = 0;
+
+/*----------------------------------------------------------------------------*/
+
+function local_update_status(set_status) {
+  status = set_status;
+  update_status(group_id, item_id, status);
+}
 
 /*----------------------------------------------------------------------------*/
 
 // подгон размера терминала под окно
 function fitToscreen() {
   fit.fit();
-  console.log(stream_obj);
   if (stream_obj)
     stream_obj.setWindow(term.rows, term.cols);
 }
@@ -203,7 +210,7 @@ window.onresize = debounce(fitToscreen, wait_ms);
 
 function create_connection() {
   first_connect = false;
-  update_status(group_id, item_id, 2);
+  local_update_status(2);
   conn = new Client();
   try {
     conn.on('ready', () => {
@@ -215,7 +222,7 @@ function create_connection() {
         stream.on('close', () => {
           console.log('Stream :: close');
           printOnNewLine(`[\x1b[34mINFO\x1b[0m] Remote host terminated an existing connection.`);
-          update_status(group_id, item_id, 0);
+          local_update_status(0);
           connected_flag = false;
           conn.end();
         }).on('data', (data) => {
@@ -237,7 +244,7 @@ function create_connection() {
         });
 
         connected_flag = true;
-        update_status(group_id, item_id, 3);
+        local_update_status(3);
 
         if (connection_config.first_command.length > 0) {
           stream.write(atob(connection_config.first_command) + "\n");
@@ -246,7 +253,7 @@ function create_connection() {
       });
     }).on('error', function(err){
       assembly_error(err);
-      update_status(group_id, item_id, 1);
+      local_update_status(1);
       connected_flag = false;
     }).connect({
       host: connection_config.host,
@@ -258,20 +265,29 @@ function create_connection() {
     });
   } catch (e) {
     printOnNewLine(`[\x1b[31mERROR\x1b[0m] ${e}`);
-    update_status(group_id, item_id, 1);
+    local_update_status(1);
     connected_flag = false;
     console.error();(e);
   }
 
 }
 
-// переподключение
-function reconnect() {
+function disconnect() {
   if (conn) {
     conn.end();
-    printOnNewLine("[\x1b[34mINFO\x1b[0m] RECONNECTING...");
+    printOnNewLine("[\x1b[34mINFO\x1b[0m] CLOSE CONNECTION...");
+    local_update_status(0);
   }
+}
 
+function connect() {
+  create_connection();
+  printOnNewLine("[\x1b[34mINFO\x1b[0m] CONNECT...");
+}
+
+// переподключение
+function reconnect() {
+  disconnect();
   setTimeout(() => {
     create_connection();
   }, 100);

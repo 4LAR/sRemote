@@ -63,9 +63,16 @@ function select_item(group_id, item_id) {
   }
 }
 
-//
+// смена индикации статуса подключения
 function update_status(group_id, item_id, status) {
   document.getElementById(`status_${group_id}_${item_id}`).className = STATUS_LIST[status];
+  var button_img = "";
+  if ([0, 1].includes(Number(status))) {
+    button_img = "./static/img/play.svg";
+  } else {
+    button_img = "./static/img/stop.svg";
+  }
+  document.getElementById(`reconnect_${group_id}_${item_id}`).src = button_img;
 }
 
 //
@@ -105,7 +112,7 @@ function generate_item_by_data(data, group_id, item_id="") {
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
     <div class="reconnect" onclick="reconnect(${group_id}, ${item_id}, event)">
-      <img src="./static/img/reload.svg">
+      <img id="reconnect_${group_id}_${item_id}" src="./static/img/stop.svg">
     </div>
     <div class="edit" onclick="alert_create_edit_connection(${group_id}, ${item_id}, event, true)">
       <img src="./static/img/edit.svg">
@@ -243,7 +250,13 @@ function read() {
 }
 
 function reconnect(group_id, item_id, event) {
-  document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.reconnect();
+  var connect_status = document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.status;
+  if ([0, 1].includes(Number(connect_status))) {
+    document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.connect();
+  } else {
+    document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.disconnect();
+  }
+
   if (event) {
     event.stopPropagation();
   }

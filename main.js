@@ -30,7 +30,7 @@ const settings = new Settings_module("./settings.ini");
 let win;
 let top = {};
 
-const DEBUG = false;
+const DEBUG = true;
 
 const appLauncher = new AutoLaunch({
   name: 'sRemote',
