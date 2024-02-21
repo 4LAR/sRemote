@@ -46,14 +46,9 @@ function select_item(group_id, item_id) {
         //
         if (!SETTINGS_DICT["Connections"]["autoConnect"]) {
           var iframe = document.getElementById(`iframe_${group.id}_${item.id}`);
-          if (iframe.contentWindow.create_connection !== undefined) {
-            if (iframe.contentWindow.first_connect)
-              iframe.contentWindow.create_connection();
-          } else {
-            iframe.contentWindow.onload = function() {
-              iframe.contentWindow.create_connection();
-            };
-          }
+          iframe.contentWindow.onload = function() {
+            iframe.contentWindow.create_connection();
+          };
         }
       } else {
         document.getElementById(`item_${group.id}_${item.id}`).className = "";
@@ -112,7 +107,7 @@ function generate_item_by_data(data, group_id, item_id="") {
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
     <div class="reconnect" onclick="reconnect(${group_id}, ${item_id}, event)">
-      <img id="reconnect_${group_id}_${item_id}" src="./static/img/stop.svg">
+      <img id="reconnect_${group_id}_${item_id}" src="./static/img/play.svg">
     </div>
     <div class="edit" onclick="alert_create_edit_connection(${group_id}, ${item_id}, event, true)">
       <img src="./static/img/edit.svg">
