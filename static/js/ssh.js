@@ -276,7 +276,6 @@ function disconnect() {
   if (conn) {
     conn.end();
     printOnNewLine("[\x1b[34mINFO\x1b[0m] CLOSE CONNECTION...");
-    local_update_status(0);
   }
 }
 
