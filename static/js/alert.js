@@ -21,3 +21,9 @@ function close_alert(onclose=true) {
 }
 
 close_alert();
+
+document.addEventListener('keydown', function(event){
+  if (event.keyCode == 27) {
+    close_alert();
+  }
+});
