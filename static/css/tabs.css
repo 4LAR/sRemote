@@ -8,8 +8,6 @@
   width: 200px;
   height: calc(100% - 23px);
   margin: 0px;
-  /* padding-top: 25px; */
-  /* margin-top: 25px; */
   overflow-y: scroll;
   overflow-x: hidden;
   border-right: 1px solid var(--border-color);
@@ -363,6 +361,22 @@
 
 .tabs > li.group:hover > img.add:hover {
   filter: invert(var(--invert-buttons-hover));
+}
+
+.tabs > li.group > div.indicator {
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background-color: var(--select-color);
+  width: 3px;
+  height: 25px;
+  opacity: 1;
+  transition: .1s all;
+}
+
+.tabs > li.group.selected > div.indicator {
+  opacity: 0;
 }
 
 /* -------------------------------------------------------------------------- */

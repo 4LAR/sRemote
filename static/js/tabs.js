@@ -38,11 +38,13 @@ function get_indexes_by_id(group_id, item_id) {
 //
 function select_item(group_id, item_id) {
   for (const group of TABS) {
+    var in_group_flag = false;
     for (const item of group.items) {
       //
       if (group.id == group_id && item.id == item_id) {
         document.getElementById(`item_${group.id}_${item.id}`).className = "selected";
         openModal(`iframe_${group.id}_${item.id}`);
+        in_group_flag = true;
         //
         if (!SETTINGS_DICT["Connections"]["autoConnect"]) {
           var iframe = document.getElementById(`iframe_${group.id}_${item.id}`);
@@ -53,6 +55,11 @@ function select_item(group_id, item_id) {
       } else {
         document.getElementById(`item_${group.id}_${item.id}`).className = "";
         closeModal(`iframe_${group.id}_${item.id}`);
+      }
+      if (in_group_flag) {
+        openModal(`group_indicator_${group.id}`);
+      } else {
+        closeModal(`group_indicator_${group.id}`);
       }
     }
   }
@@ -121,6 +128,7 @@ function generate_item_by_data(data, group_id, item_id="") {
 //
 function generate_group_data(data, id="") {
   return `
+    <div class="indicator" id="group_indicator_${id}"></div>
     <img class="dropdown" src="./static/img/dropdown.svg">
     <p class="group_name">${data.name}</p>
     <div class="hitbox" onclick="open_group(${id})">
