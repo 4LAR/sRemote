@@ -59,6 +59,9 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
     <div class="button submit" onclick="${(edit_flag)? `save_data_connection(${group_id}, ${item_id}, true)`: `save_data_connection(${group_id})`}">
       <p>${(edit_flag)? "Save": "Create"}</p>
     </div>
+    ${(edit_flag)? `<div class="button share" onclick="share(${group_id}, ${item_id})">
+      <p>Share</p>
+    </div>`: ""}
     ${(edit_flag)? `<div class="button predelete" onclick="alert_delete_connection(${group_id}, ${item_id})">
       <p>Delete</p>
     </div>`: ""}
@@ -237,6 +240,9 @@ function alert_edit_create_group(group_id, event, edit_flag=false) {
     <div class="button submit" onclick="${(edit_flag)? `save_data_group(${group_id}, true)`: `save_data_group()`}">
       <p>${(edit_flag)? "Save": "Create"}</p>
     </div>
+    ${(edit_flag)? `<div class="button share" onclick="share(${group_id})">
+      <p>Share</p>
+    </div>`: ""}
     ${(edit_flag)? `<div class="button predelete" onclick="alert_delete_group(${group_id})">
       <p>Delete</p>
     </div>`: ""}

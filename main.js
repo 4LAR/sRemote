@@ -1,4 +1,5 @@
-const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain, systemPreferences} = require("electron");
+const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain, systemPreferences, dialog} = require("electron");
+const fs = require('fs');
 const AutoLaunch = require('auto-launch');
 const path = require('path');
 const isPackaged = require('electron-is-packaged').isPackaged;
@@ -21,7 +22,6 @@ if (process.env.PORTABLE_EXECUTABLE_DIR !== undefined) {
 }
 
 console.log("APP_PATH", APP_PATH);
-// console.log("STORE_PATH", store.path);
 
 const Settings_module = require('./settings');
 
@@ -31,6 +31,8 @@ let win;
 let top = {};
 
 const DEBUG = true;
+
+/*----------------------------------------------------------------------------*/
 
 const appLauncher = new AutoLaunch({
   name: 'sRemote',
@@ -52,6 +54,37 @@ appLauncher.isEnabled().then((isEnabled) => {
   }
 });
 
+/*----------------------------------------------------------------------------*/
+
+ipcMain.on('save-connection-dialog', (event, response) => {
+  dialog.showSaveDialog({
+    title: 'Save Connection',
+    defaultPath: `${response.name}.srem`,
+    filters: [
+      { name: 'Connection File', extensions: ['srem'] },
+      { name: 'All Files', extensions: ['*'] }
+    ]
+  }).then(result => {
+    if (!result.canceled) {
+      const filePath = result.filePath;
+      console.log('Selected file:', filePath);
+
+      const dataToSave = JSON.stringify(response.data);
+      fs.writeFile(filePath, dataToSave, (err) => {
+        if (err) {
+          console.error('Error saving file:', err);
+        } else {
+          console.log('File saved successfully.');
+        }
+      });
+    }
+  }).catch(err => {
+    console.error(err);
+  });
+});
+
+/*----------------------------------------------------------------------------*/
+
 try {
   require('electron-reloader')(module, {
     ignore: [
@@ -60,6 +93,8 @@ try {
     ]
   })
 } catch {}
+
+/*----------------------------------------------------------------------------*/
 
 const createWindow = () => {
   const mainWindowState = windowStateKeeper({
@@ -124,6 +159,7 @@ const createWindow = () => {
     }
   });
 
+  // перезапуск приложения
   ipcMain.on('relaunch', () => {
     if (isPackaged) {
       app.relaunch({ execPath: process.env.PORTABLE_EXECUTABLE_FILE });
@@ -133,10 +169,12 @@ const createWindow = () => {
     app.quit();
   });
 
+  // получить конфиг
   ipcMain.on('get-config', () => {
     top.win.webContents.send('get-config-response', settings.options);
   });
 
+  // обновить конфиг и сохранить в файл
   ipcMain.on('update-config', (event, response) => {
     settings.options = response;
     settings.saveSettings();
@@ -146,6 +184,7 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   createWindow();
+  global.saveConnectionDialog = saveConnectionDialog;
 })
 
 if (!settings.options["General"]["keepBackground"]) {
