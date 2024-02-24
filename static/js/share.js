@@ -26,6 +26,39 @@ function share(group_id, item_id=undefined) {
   });
 }
 
-function import_connection() {
+/*----------------------------------------------------------------------------*/
 
+function import_connection(file_path) {
+  console.log(file_path);
 }
+
+/*----------------------------------------------------------------------------*/
+
+ipcRenderer.on('file-open', (event, file) => {
+  import_connection(file);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const dropZone = document.body;
+
+  dropZone.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+
+  dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+  });
+
+  dropZone.addEventListener('drop', (event) => {
+    event.preventDefault();
+    dropZone.classList.remove('drag-over');
+
+    const files = event.dataTransfer.files;
+
+    if (files.length > 0) {
+      const filePath = files[0].path;
+      import_connection(filePath);
+    }
+  });
+});

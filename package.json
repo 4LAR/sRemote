@@ -1,6 +1,6 @@
 {
   "name": "sRemote",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "SSH Terminal",
   "main": "main.js",
   "author": "100LAR STUDIO <nikitstolarov@gmail.com>",
@@ -34,6 +34,13 @@
       "logo.ico",
       "settings.js",
       "main.js"
+    ],
+    "fileAssociations": [
+      {
+        "ext": ["srem"],
+        "name": "sRemote connection/group File",
+        "role": "SSH Terminal"
+      }
     ],
     "appId": "sRemote",
     "win": {

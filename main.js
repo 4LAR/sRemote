@@ -150,13 +150,24 @@ const createWindow = () => {
   }
 
   // Если пытаемся запустить второй экземпляр, фокусируем основное окно
-  app.on('second-instance', () => {
+  app.on('second-instance', (event, commandLine, workingDirectory) => {
     if (top.win) {
+      if (process.platform === 'win32') {
+        const filePath = commandLine.slice(1)[1];
+        if (filePath) {
+          top.win.webContents.send('file-open', filePath);
+        }
+      }
       top.win.show()
       if (top.win.isMinimized())
         top.win.restore();
       top.win.focus();
     }
+  });
+
+  app.on('open-file', (event, filePath) => {
+    event.preventDefault();
+    top.win.webContents.send('file-open', filePath);
   });
 
   // перезапуск приложения
@@ -179,12 +190,10 @@ const createWindow = () => {
     settings.options = response;
     settings.saveSettings();
   });
-
 }
 
 app.whenReady().then(() => {
   createWindow();
-  global.saveConnectionDialog = saveConnectionDialog;
 })
 
 if (!settings.options["General"]["keepBackground"]) {
