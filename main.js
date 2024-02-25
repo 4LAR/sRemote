@@ -25,7 +25,7 @@ const settings = new Settings_module("./settings.ini");
 let win;
 let top = {};
 
-const DEBUG = true;
+const DEBUG = false;
 
 /*----------------------------------------------------------------------------*/
 
