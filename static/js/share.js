@@ -37,13 +37,21 @@ function alert_import_connection(data) {
       <hr>
       <input id="name" class="input_style" type="text" placeholder="Group name">
       <p class="name_info">A random name is generated if you do not provide one.</p>
-
+      <p class="connection_page_name">Connections in group</p>
+      <ul id="import_items_list" class="scroll_style input_style"></ul>
       <div class="button submit" id="import_button">
         <p>Import</p>
       </div>
     `, "alert_import_group");
 
     document.getElementById("name").value = data.data.name;
+    for (const item of data.data.items) {
+      append_to_ul("import_items_list", `
+        <img class="ico" src="./static/img/terminal.svg">
+        <p class="name">${item.name}</p>
+        <p class="host">${item.host}:${item.port}</p>
+      `)
+    }
     document.getElementById("import_button").onclick = function() {
       import_data(data.type, data.data)
     }
