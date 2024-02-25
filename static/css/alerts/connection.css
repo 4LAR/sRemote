@@ -77,6 +77,18 @@
   width: 42%;
 }
 
+.alert_body #group_name {
+  height: 39px;
+  width: 40%;
+  padding-right: 50px;
+  margin-right: 8px;
+  margin-bottom: 10px;
+}
+
+.alert_body #name_connection {
+  width: 50.3%;
+}
+
 .alert_body #privateKey {
   width: 34.8%;
   padding-right: 50px;

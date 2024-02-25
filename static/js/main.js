@@ -57,4 +57,14 @@ function get_arg(name) {
   return url.searchParams.get(name);
 }
 
+// генерация <select>
+// data = {"name1": "value1", "name2": "value2"}
+function select_generator(data, id="", classList="", selected=0) {
+  var result = "";
+  for (const key in data) {
+    result += `<option value="${data[key]}" ${(selected == data[key])? "selected": ""}>${key}</option>`;
+  }
+  return `<select id="${id}" class="${classList}">${result}</select>`;
+}
+
 /*----------------------------------------------------------------------------*/

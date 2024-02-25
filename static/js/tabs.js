@@ -46,7 +46,8 @@ function select_item(group_id, item_id) {
         openModal(`iframe_${group.id}_${item.id}`);
         in_group_flag = true;
         //
-        if (!SETTINGS_DICT["Connections"]["autoConnect"]) {
+        if (SETTINGS_DICT["Connections"]["autoConnect"]) {
+          console.log("zalupa");
           var iframe = document.getElementById(`iframe_${group.id}_${item.id}`);
           iframe.contentWindow.onload = function() {
             iframe.contentWindow.create_connection();
