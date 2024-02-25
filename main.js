@@ -9,11 +9,6 @@ Store.initRenderer();
 
 const gotTheLock = app.requestSingleInstanceLock();
 
-if (!gotTheLock) {
-  console.log("The application is already running.");
-  app.quit();
-}
-
 var APP_PATH = undefined;
 if (process.env.PORTABLE_EXECUTABLE_DIR !== undefined) {
   APP_PATH = process.env.PORTABLE_EXECUTABLE_DIR + "/" + app.getName() + ".exe";
@@ -192,9 +187,14 @@ const createWindow = () => {
   });
 }
 
-app.whenReady().then(() => {
-  createWindow();
-})
+if (!gotTheLock) {
+  console.log("The application is already running.");
+  app.quit();
+} else {
+  app.whenReady().then(() => {
+    createWindow();
+  })
+}
 
 if (!settings.options["General"]["keepBackground"]) {
   app.on('window-all-closed', () => {
