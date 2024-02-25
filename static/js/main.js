@@ -23,7 +23,7 @@ function openModal(modalId) {
 }
 
 // добавить элемент в список (ul)
-function append_to_ul(id, content, onclick=undefined, item_id="", className="") {
+function append_to_ul(id, content, onclick=undefined, item_id="", className="", ondblclick=undefined) {
   var ul = document.getElementById(id);
 
   var li = document.createElement("li");
@@ -32,6 +32,9 @@ function append_to_ul(id, content, onclick=undefined, item_id="", className="") 
   li.setAttribute("id", item_id);
   if (onclick)
     li.onclick = onclick;
+
+  if (ondblclick)
+    li.ondblclick = ondblclick;
 
   ul.appendChild(li);
 }

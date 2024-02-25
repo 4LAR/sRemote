@@ -171,7 +171,13 @@ function append_item(data, group_id, item_id) {
       select_item(group_id, item_id);
     },
     `item_${group_id}_${item_id}`,
-    className=""
+    className="",
+    function() {
+      var iframe = document.getElementById(`iframe_${group_id}_${item_id}`);
+      if (!iframe.contentWindow.connected_flag) {
+        iframe.contentWindow.connect();
+      }
+    }
   );
   // добавляем линию для разделения сединений
   append_to_ul(
