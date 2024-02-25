@@ -24,6 +24,18 @@ function change_auth_scheme() {
   }
 }
 
+function show_password(id, indicator_id) {
+  var input = document.getElementById(id);
+  var indicator = document.getElementById(indicator_id);
+  if (input.type === "password") {
+    input.type = "text";
+    indicator.src = "./static/img/unsee.svg";
+  } else {
+    input.type = "password";
+    indicator.src = "./static/img/see.svg";
+  }
+}
+
 function alert_create_edit_connection(group_id, item_id, event, edit_flag=false) {
   open_alert(`
     <p class="name">${(edit_flag)? "Edit connection": "Create a new connection"}</p>
@@ -41,7 +53,8 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
     </select>
     <div id="auth_scheme_input_lap">
       <input id="login_lap" class="input_style" type="text" placeholder="login">
-      <input id="password" class="input_style" type="password" placeholder="password">
+      <input id="password" class="input_style" type="password" placeholder="password" style="${!(edit_flag)? "padding-right: 45px": ""}">
+      ${!(edit_flag)? `<img id="see_indicator" class="see" src="./static/img/see.svg" onclick="show_password('password', 'see_indicator')">`: ""}
     </div>
     <div id="auth_scheme_input_lak" style="display: none">
       <input id="login_lak" class="input_style" type="text" placeholder="login">

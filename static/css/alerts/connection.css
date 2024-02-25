@@ -74,7 +74,9 @@
 }
 
 .alert_body #password {
-  width: 42%;
+  width: 48.5%;
+  box-sizing: border-box;
+  height: 39px;
 }
 
 .alert_body #group_name {
@@ -145,6 +147,19 @@
   padding: 0px;
   margin: 0px;
   color: var(--tabs-selected-font-color);
+}
+
+.alert_body img.see {
+  position: absolute;
+  top: 212px;
+  right: 50px;
+  filter: invert(var(--invert-buttons));
+  transition: .1s all;
+  cursor: pointer;
+}
+
+.alert_body img.see:hover {
+  filter: invert(var(--invert-buttons-hover));
 }
 
 .alert_body .first_command_info {
