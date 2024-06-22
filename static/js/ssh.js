@@ -298,13 +298,13 @@ function customKeyEventHandler(e) {
     return true;
   }
   if (e.ctrlKey && e.shiftKey) {
-    const key = e.key.toLowerCase();
-    if (key === "v") {
+    const code = e.code;
+    if (code === "KeyV") {
       navigator.clipboard.readText().then((toPaste) => {
         term.writeText(toPaste);
       });
       return false;
-    } else if (key === "c" || key === "x") {
+    } else if (code === "KeyC" || code === "KeyX") {
       const toCopy = term.getSelection();
       navigator.clipboard.writeText(toCopy);
       term.focus();
