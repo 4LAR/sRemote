@@ -1,0 +1,41 @@
+
+div.left_menu {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 200px;
+  height: 100%;
+  /* transition: .1s all; */
+}
+
+/* div.left_menu > div.hover_hitbox {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 25px;
+  height: 100%;
+  transform: translateX(100%);
+  pointer-events: none;
+}
+
+div.left_menu > div.close_button {
+  position: absolute;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  right: 0px;
+  top: 50%;
+  transform: translate(50%, -50%);
+  background-color: var(--bg-color);
+  border: 1.8px solid var(--border-color);
+  cursor: pointer;
+  transition: .1s all;
+}
+
+div.left_menu:hover div.close_button {
+  display: none;
+}
+
+div.left_menu > div.close_button > img {
+  display: none;
+} */

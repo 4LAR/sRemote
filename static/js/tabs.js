@@ -44,6 +44,8 @@ function select_item(group_id, item_id) {
       if (group.id == group_id && item.id == item_id) {
         document.getElementById(`item_${group.id}_${item.id}`).className = "selected";
         openModal(`iframe_${group.id}_${item.id}`);
+        document.getElementById(`iframe_${group.id}_${item.id}`).contentWindow.addEventListener('keydown', customKeyEventHandler);
+
         in_group_flag = true;
         //
         if (SETTINGS_DICT["Connections"]["autoConnect"]) {
@@ -271,3 +273,38 @@ function reconnect(group_id, item_id, event) {
     event.stopPropagation();
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+var left_menu_flag = true;
+// открытие и закрытие списка с соеденениями
+function left_menu() {
+  left_menu_flag = !left_menu_flag;
+  if (left_menu_flag) {
+    document.getElementById("left_menu").style.left = "0px";
+    document.getElementById("terminal_list").style.left = "201px";
+    document.getElementById("terminal_list").style.width = "calc(100% - 201px)";
+  } else {
+    // document.getElementById("left_menu").style.left = `-${document.getElementById("left_menu").style.width}`;
+    document.getElementById("left_menu").style.left = `-201px`;
+    document.getElementById("terminal_list").style.left = "0px";
+    document.getElementById("terminal_list").style.width = "100%";
+  }
+}
+
+// обработка горячих клавиш
+function customKeyEventHandler(e) {
+  if (e.type !== "keydown") {
+    return true;
+  }
+  if (e.ctrlKey && e.shiftKey) {
+    const code = e.code;
+    if (code === "KeyB") {
+      left_menu();
+      return false;
+    }
+  }
+  return true;
+}
+
+window.addEventListener('keydown', customKeyEventHandler);

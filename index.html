@@ -11,6 +11,7 @@
     <link rel="stylesheet" href = "./static/css/button.css"/>
     <link rel="stylesheet" href = "./static/css/tabs.css"/>
     <link rel="stylesheet" href = "./static/css/toolBar.css"/>
+    <link rel="stylesheet" href = "./static/css/left_menu.css"/>
     <link rel="stylesheet" href = "./static/css/alerts/alert.css"/>
     <link rel="stylesheet" href = "./static/css/alerts/connection.css"/>
     <link rel="stylesheet" href = "./static/css/alerts/delete.css"/>
@@ -20,16 +21,22 @@
   </head>
   <body class="scroll_style">
     <div class="body">
-      <ul id="terminal_list"></ul>
+      <ul id="terminal_list" class="terminal_list"></ul>
     </div>
-    <div class="toolBar">
-      <input id="search" type="text" placeholder="search">
-      <img class="settings" src="./static/img/settings.svg" onclick="alert_settings()">
-      <img class="add" src="./static/img/add.svg" onclick="alert_edit_create_group()">
+    <div class="left_menu" id="left_menu">
+      <!-- <div class="close_button">
+        <img src="./static/img/dropdown.svg">
+      </div>
+      <div class="hover_hitbox"></div> -->
+      <div class="toolBar">
+        <input id="search" type="text" placeholder="search">
+        <img class="settings" src="./static/img/settings.svg" onclick="alert_settings()">
+        <img class="add" src="./static/img/add.svg" onclick="alert_edit_create_group()">
+      </div>
+      <ul id="tabs" class="tabs block_select"></ul>
+      <p class="empty">It's still empty here</p>
+      <p id="toolBar_info" class="toolBar_info"></p>
     </div>
-    <ul id="tabs" class="tabs block_select"></ul>
-    <p class="empty">It's still empty here</p>
-    <p id="toolBar_info" class="toolBar_info"></p>
     <div class="bg_alert" id="bg_alert" onclick="close_alert()"></div>
     <div id="alert">
       <div class="alert_head">

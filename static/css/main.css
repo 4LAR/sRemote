@@ -31,11 +31,21 @@ ul {
   margin: -8px;
 }
 
-iframe {
+.terminal_list {
   position: absolute;
   top: 0px;
   left: 201px;
   width: calc(100% - 201px);
+  height: 100%;
+  margin: 0px;
+  /* transition: .1s all; */
+}
+
+iframe {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
   height: 100%;
   border: none;
 }
