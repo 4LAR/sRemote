@@ -5,7 +5,7 @@ div.left_menu {
   left: 0px;
   width: 200px;
   height: 100%;
-  /* transition: .1s all; */
+  transition: .1s all;
 }
 
 /* div.left_menu > div.hover_hitbox {
