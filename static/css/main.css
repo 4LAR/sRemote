@@ -38,7 +38,7 @@ ul {
   width: calc(100% - 201px);
   height: 100%;
   margin: 0px;
-  transition: .1s all;
+  transition: .2s all;
 }
 
 iframe {

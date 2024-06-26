@@ -282,13 +282,17 @@ function left_menu() {
   left_menu_flag = !left_menu_flag;
   if (left_menu_flag) {
     document.getElementById("left_menu").style.left = "0px";
+    document.getElementById("left_menu").style.border = `1px solid var(--border-color)`;
     document.getElementById("terminal_list").style.left = "201px";
     document.getElementById("terminal_list").style.width = "calc(100% - 201px)";
+    document.getElementById("dropdown_left_menu").style.transform = "rotate(90deg)";
   } else {
     // document.getElementById("left_menu").style.left = `-${document.getElementById("left_menu").style.width}`;
-    document.getElementById("left_menu").style.left = `-201px`;
-    document.getElementById("terminal_list").style.left = "0px";
-    document.getElementById("terminal_list").style.width = "100%";
+    document.getElementById("left_menu").style.left = `-200px`;
+    document.getElementById("left_menu").style.border = `1px solid transparent`;
+    document.getElementById("terminal_list").style.left = "1px";
+    document.getElementById("terminal_list").style.width = "calc(100% - 1px)";
+    document.getElementById("dropdown_left_menu").style.transform = "rotate(-90deg)";
   }
 }
 
