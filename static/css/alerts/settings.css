@@ -135,12 +135,13 @@ ul.settings_list > li > div {
   position: absolute;
   width: 100%;
   height: 100%;
-  opacity: 1;
+  opacity: 0;
+  background-color: var(--alert-font-color);
   /* border-radius: 8px; */
+  transition: .1s all;
 }
 
 ul.settings_list > li:hover > div {
-  background-color: var(--alert-font-color);
   opacity: .08;
 }
 
