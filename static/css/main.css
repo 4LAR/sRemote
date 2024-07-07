@@ -4,6 +4,7 @@ body {
   font-family: -apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif,"Apple Color Emoji";
   font-size: 14px;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
 .block_select {
@@ -65,4 +66,22 @@ iframe {
 .scroll_style::-webkit-scrollbar-thumb {
   background-color: var(--scroll-thumb-bg-color);
   border-radius: 2px;
+}
+
+/*----------------------------------------------------------------------------*/
+
+div.main_loading {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-color);
+  z-index: 99999;
+  transition: .5s all;
+}
+
+div.main_loading.loaded {
+  pointer-events: none;
+  opacity: 0;
 }

@@ -28,7 +28,7 @@
       <div class="close_button" onclick="left_menu()">
         <img id="dropdown_left_menu" src="./static/img/dropdown.svg">
       </div>
-      <div class="toolBar">``
+      <div class="toolBar">
         <input id="search" type="text" placeholder="search">
         <img class="settings" src="./static/img/settings.svg" onclick="alert_settings()">
         <img class="add" src="./static/img/add.svg" onclick="alert_edit_create_group()">
@@ -44,7 +44,9 @@
       </div>
       <div class="alert_body" id="alert_body"></div>
     </div>
+    <div class="main_loading" id="main_loading"></div>
   </body>
+  <script type="text/javascript" src="./static/js/loading.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-fit.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-search.js"></script>

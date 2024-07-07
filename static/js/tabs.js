@@ -255,6 +255,8 @@ function read() {
       }
       auto_height_items(group_id);
     }
+    tabs_loaded_flag = true;
+    close_loading();
   } catch (e) {
     // store.set('connections', []);
     // ipcRenderer.send('relaunch');
@@ -288,7 +290,7 @@ function left_menu() {
     document.getElementById("dropdown_left_menu").style.transform = "rotate(90deg)";
   } else {
     // document.getElementById("left_menu").style.left = `-${document.getElementById("left_menu").style.width}`;
-    document.getElementById("left_menu").style.left = `-200px`;
+    document.getElementById("left_menu").style.left = `-201px`;
     document.getElementById("left_menu").style.border = `1px solid transparent`;
     document.getElementById("terminal_list").style.left = "1px";
     document.getElementById("terminal_list").style.width = "calc(100% - 1px)";
