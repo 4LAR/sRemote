@@ -15,7 +15,7 @@
   overflow-y: scroll;
   height: calc(100% - 70px);
   width: 100%;
-  padding-left: 20%;
+  padding-left: 25%;
   box-sizing: border-box;
   padding-bottom: 15px;
 }
@@ -113,4 +113,55 @@
 
 .settings_body .number > label {
   margin-left: 5px;
+}
+
+/* -------------------------------------------------------------------------- */
+
+ul.settings_list {
+  position: fixed;
+  left: 20px;
+  top: 60px;
+}
+
+ul.settings_list > li {
+  position: relative;
+  width: 200px;
+  height: 40px;
+  /* margin-bottom: 10px; */
+  cursor: pointer;
+}
+
+ul.settings_list > li > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  /* border-radius: 8px; */
+}
+
+ul.settings_list > li:hover > div {
+  background-color: var(--alert-font-color);
+  opacity: .08;
+}
+
+ul.settings_list > li.selected > div {
+  background-color: var(--select-color);
+  opacity: .2;
+}
+
+ul.settings_list > li > p {
+  position: absolute;
+  left: 60px;
+  top: 10px;
+  margin: 0px;
+  /* font-size: 12px; */
+  color: var(--alert-font-color);
+}
+
+ul.settings_list > li > img {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  width: 20px;
+  filter: invert(var(--invert-buttons));
 }

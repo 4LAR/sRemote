@@ -46,65 +46,83 @@ function save_settings() {
   }
 }
 
-
 function alert_settings() {
   open_alert(`
     <p class="name_settings">Settings</p>
     <hr class="hr_settings">
     <div class="settings_body scroll_style block_select" onchange="settings_change(event)">
-      <p class="settings_h">General</p>
+      <ul class="settings_list">
+        <li id="settings_menu_general" onclick="change_settings_page('general')">
+          <div></div>
+          <img src="./static/img/settings/general.svg" alt="">
+          <p>General</p>
+        </li>
+        <li id="settings_menu_account" onclick="change_settings_page('account')">
+          <div></div>
+          <img src="./static/img/settings/account.svg" alt="">
+          <p>Account</p>
+        </li>
+        <li id="settings_menu_connection" onclick="change_settings_page('connection')">
+          <div></div>
+          <img src="./static/img/settings/connection.svg" alt="">
+          <p>Connection</p>
+        </li>
+      </ul>
+      <div id="settings_page_general">
+        <p class="settings_h">General</p>
 
-      <div class="checkbox" for="settings_General_autoStart">
-        <input type="checkbox" id="settings_General_autoStart">
-        <label for="settings_General_autoStart">Start sRemote when you sign in to your computer</label>
-      </div>
-
-      <div class="checkbox" for="settings_General_keepBackground">
-        <input type="checkbox" id="settings_General_keepBackground">
-        <label for="settings_General_keepBackground">Keep sRemote running in the background</label>
-      </div>
-
-      <div class="checkbox" for="settings_General_saveWindowState">
-        <input type="checkbox" id="settings_General_saveWindowState">
-        <label for="settings_General_saveWindowState">Save window position on exit</label>
-      </div>
-
-      <p class="info_settings">Choose theme for sRemote</p>
-      <div class="settings_one_line">
-        <div class="checkbox-round" for="settings_General_thame_light">
-          <input type="radio" id="settings_General_thame_light" name="thame">
-          <label for="settings_General_thame_light">Light</label>
+        <div class="checkbox" for="settings_General_autoStart">
+          <input type="checkbox" id="settings_General_autoStart">
+          <label for="settings_General_autoStart">Start sRemote when you sign in to your computer</label>
         </div>
-        <div class="checkbox-round" for="settings_General_thame_dark">
-          <input type="radio" id="settings_General_thame_dark" name="thame">
-          <label for="settings_General_thame_dark">Dark</label>
+
+        <div class="checkbox" for="settings_General_keepBackground">
+          <input type="checkbox" id="settings_General_keepBackground">
+          <label for="settings_General_keepBackground">Keep sRemote running in the background</label>
+        </div>
+
+        <div class="checkbox" for="settings_General_saveWindowState">
+          <input type="checkbox" id="settings_General_saveWindowState">
+          <label for="settings_General_saveWindowState">Save window position on exit</label>
+        </div>
+
+        <p class="info_settings">Choose theme for sRemote</p>
+        <div class="settings_one_line">
+          <div class="checkbox-round" for="settings_General_thame_light">
+            <input type="radio" id="settings_General_thame_light" name="thame">
+            <label for="settings_General_thame_light">Light</label>
+          </div>
+          <div class="checkbox-round" for="settings_General_thame_dark">
+            <input type="radio" id="settings_General_thame_dark" name="thame">
+            <label for="settings_General_thame_dark">Dark</label>
+          </div>
         </div>
       </div>
-
-
-      <!-- <input type="radio" id="settings_General_thame_system">
-      <label for="settings_General_thame_system">Use system settings</label> -->
-
-      <p class="settings_h">Connections</p>
-
-      <div class="checkbox" for="settings_Connections_autoConnect">
-        <input type="checkbox" id="settings_Connections_autoConnect">
-        <label for="settings_Connections_autoConnect">Automatically connect to all networks upon application startup</label>
+      <div id="settings_page_account">
+        <p class="settings_h">Account</p>
       </div>
+      <div id="settings_page_connection">
+        <p class="settings_h">Connection</p>
 
-      <div class="number">
-        <input type="number" class="input_style" id="settings_Connections_readyTimeout">
-        <label for="settings_Connections_readyTimeout">How long (in milliseconds) to wait for the SSH handshake to complete.</label>
-      </div>
+        <div class="checkbox" for="settings_Connections_autoConnect">
+          <input type="checkbox" id="settings_Connections_autoConnect">
+          <label for="settings_Connections_autoConnect">Automatically connect to all networks upon application startup</label>
+        </div>
 
-      <div class="checkbox" for="settings_Connections_cacheData">
-        <input type="checkbox" id="settings_Connections_cacheData">
-        <label for="settings_Connections_cacheData">Cache data from the terminal</label>
-      </div>
+        <div class="number">
+          <input type="number" class="input_style" id="settings_Connections_readyTimeout">
+          <label for="settings_Connections_readyTimeout">How long (in milliseconds) to wait for the SSH handshake to complete.</label>
+        </div>
 
-      <div class="number">
-        <input type="number" class="input_style" id="settings_Connections_maxCacheData">
-        <label for="settings_Connections_maxCacheData">Terminal cache size (in bytes).</label>
+        <div class="checkbox" for="settings_Connections_cacheData">
+          <input type="checkbox" id="settings_Connections_cacheData">
+          <label for="settings_Connections_cacheData">Cache data from the terminal</label>
+        </div>
+
+        <div class="number">
+          <input type="number" class="input_style" id="settings_Connections_maxCacheData">
+          <label for="settings_Connections_maxCacheData">Terminal cache size (in bytes).</label>
+        </div>
       </div>
 
     </div>
@@ -127,7 +145,26 @@ function alert_settings() {
   document.getElementById("settings_Connections_readyTimeout").value = SETTINGS_DICT["Connections"]["readyTimeout"];
   document.getElementById("settings_Connections_cacheData").checked = SETTINGS_DICT["Connections"]["cacheData"];
   document.getElementById("settings_Connections_maxCacheData").value = SETTINGS_DICT["Connections"]["maxCacheData"];
+  change_settings_page("general");
 }
 
 get_config();
 // alert_settings();
+
+const settings_pages = [
+  "general",
+  "account",
+  "connection"
+];
+
+function change_settings_page(page_name) {
+  for (const page of settings_pages) {
+    if (page == page_name) {
+      document.getElementById(`settings_page_${page}`).style.display = "block";
+      document.getElementById(`settings_menu_${page}`).className = "selected";
+    } else {
+      document.getElementById(`settings_page_${page}`).style.display = "none";
+      document.getElementById(`settings_menu_${page}`).className = "";
+    }
+  }
+}

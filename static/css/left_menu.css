@@ -50,6 +50,11 @@ div.left_menu > div.close_button > img {
   filter: invert(var(--invert-buttons));
   transform: rotate(90deg);
   transition: .1s all;
+  opacity: 0;
+}
+
+div.left_menu:hover div.close_button > img {
+  opacity: 1;
 }
 
 div.left_menu > div.close_button:hover > img {
