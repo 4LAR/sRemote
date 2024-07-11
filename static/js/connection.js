@@ -38,27 +38,27 @@ function show_password(id, indicator_id) {
 
 function alert_create_edit_connection(group_id, item_id, event, edit_flag=false) {
   open_alert(`
-    <p class="name">${(edit_flag)? "Edit connection": "Create a new connection"}</p>
+    <p class="name">${(edit_flag)? localization_dict.edit_connection_title: localization_dict.create_connection_title}</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="Connection name">
-    <p class="name_info">A random name is generated if you do not provide one.</p>
-    <p class="connection_page_name">Connection</p>
-    <input id="host" class="input_style" type="text" placeholder="host">
-    <input id="port" class="input_style" type="text" placeholder="port">
-    <p class="port_info">Default port 22</p>
-    <p class="connection_page_name_auth">Authorization data: </p>
+    <input id="name" class="input_style" type="text" placeholder="${localization_dict.connection_name}">
+    <p class="name_info">${localization_dict.random_name}</p>
+    <p class="connection_page_name">${localization_dict.connection}</p>
+    <input id="host" class="input_style" type="text" placeholder="${localization_dict.host}">
+    <input id="port" class="input_style" type="text" placeholder="${localization_dict.port}">
+    <p class="port_info">${localization_dict.default_port}</p>
+    <p class="connection_page_name_auth">${localization_dict.authorization_data}: </p>
     <select id="auth_scheme" class="connection_auth_scheme" onchange="change_auth_scheme()" tabindex="-1">
-      <option value="lap" selected>login and password</option>
-      <option value="lak">login and privateKey</option>
+      <option value="lap" selected>${localization_dict.login_and_password}</option>
+      <option value="lak">${localization_dict.login_and_privateKey}</option>
     </select>
     <div id="auth_scheme_input_lap">
-      <input id="login_lap" class="input_style" type="text" placeholder="login">
-      <input id="password" class="input_style" type="password" placeholder="password" style="${!(edit_flag)? "padding-right: 45px": ""}">
+      <input id="login_lap" class="input_style" type="text" placeholder="${localization_dict.login}">
+      <input id="password" class="input_style" type="password" placeholder="${localization_dict.password}" style="${!(edit_flag)? "padding-right: 45px": ""}">
       ${!(edit_flag)? `<img id="see_indicator" class="see" src="./static/img/see.svg" onclick="show_password('password', 'see_indicator')">`: ""}
     </div>
     <div id="auth_scheme_input_lak" style="display: none">
-      <input id="login_lak" class="input_style" type="text" placeholder="login">
-      <input id="privateKey" class="input_style" type="text" placeholder="private key path">
+      <input id="login_lak" class="input_style" type="text" placeholder="${localization_dict.login}">
+      <input id="privateKey" class="input_style" type="text" placeholder="${localization_dict.private_key_path}">
       <input type="file" id="PrivateKeyInput" accept=".ppk" style="display: none;">
       <div class="option" onclick="document.getElementById('PrivateKeyInput').click()">
         <div></div>
@@ -66,17 +66,17 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
       </div>
 
     </div>
-    <p class="connection_page_name">Command</p>
-    <textarea id="first_command" class="input_style" type="text" placeholder="Command (For example: clear & python3)"></textarea>
-    <p class="first_command_info">Command to be executed on the server after connection (optional).</p>
+    <p class="connection_page_name">${localization_dict.command}</p>
+    <textarea id="first_command" class="input_style" type="text" placeholder="${localization_dict.command} (${localization_dict.command_example})"></textarea>
+    <p class="first_command_info">${localization_dict.command_info}</p>
     <div class="button submit" onclick="${(edit_flag)? `save_data_connection(${group_id}, ${item_id}, true)`: `save_data_connection(${group_id})`}">
-      <p>${(edit_flag)? "Save": "Create"}</p>
+      <p>${(edit_flag)? localization_dict.save: localization_dict.create}</p>
     </div>
     ${(edit_flag)? `<div class="button share" onclick="share(${group_id}, ${item_id})">
-      <p>Share</p>
+      <p>${localization_dict.share}</p>
     </div>`: ""}
     ${(edit_flag)? `<div class="button predelete" onclick="alert_delete_connection(${group_id}, ${item_id})">
-      <p>Delete</p>
+      <p>${localization_dict.delete}</p>
     </div>`: ""}
   `, "alert")
 
@@ -212,10 +212,10 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
 function alert_delete_connection(group_id, item_id, event) {
   var index = get_indexes_by_id(group_id, item_id);
   open_alert(`
-    <p class="name_delete">Delete connection?</p>
-    <p class="delete_info">The '${TABS[index[0]].items[index[1]].name}' connection is selected for deletion. The current session with this connection will be terminated.</p>
+    <p class="name_delete">${localization_dict.delete_connection}?</p>
+    <p class="delete_info">${localization_dict.delete_info_pre} '${TABS[index[0]].items[index[1]].name}' ${localization_dict.delete_info_last}</p>
     <div class="button delete" onclick="delete_connection(${group_id}, ${item_id})">
-      <p>Delete forever</p>
+      <p>${localization_dict.delete_forever}</p>
     </div>
   `, "delete_alert", function() {
     alert_create_edit_connection(group_id, item_id, undefined, true);
@@ -246,18 +246,18 @@ function delete_connection(group_id, item_id) {
 
 function alert_edit_create_group(group_id, event, edit_flag=false) {
   open_alert(`
-    <p class="name">${(edit_flag)? "Edit group": "Create a new group"}</p>
+    <p class="name">${(edit_flag)? localization_dict.edit_group_title: localization_dict.create_group_title}</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="Group name">
-    <p class="name_info">A random name is generated if you do not provide one.</p>
+    <input id="name" class="input_style" type="text" placeholder="${localization_dict.group_name}">
+    <p class="name_info">${localization_dict.random_name}</p>
     <div class="button submit" onclick="${(edit_flag)? `save_data_group(${group_id}, true)`: `save_data_group()`}">
-      <p>${(edit_flag)? "Save": "Create"}</p>
+      <p>${(edit_flag)? localization_dict.save: localization_dict.create}</p>
     </div>
     ${(edit_flag)? `<div class="button share" onclick="share(${group_id})">
-      <p>Share</p>
+      <p>${localization_dict.share}</p>
     </div>`: ""}
     ${(edit_flag)? `<div class="button predelete" onclick="alert_delete_group(${group_id})">
-      <p>Delete</p>
+      <p>${localization_dict.delete}</p>
     </div>`: ""}
   `, "alert_group");
 
@@ -320,10 +320,10 @@ function save_data_group(group_id, edit_flag=false) {
 function alert_delete_group(group_id, event) {
   var index = get_index_group_by_id(group_id);
   open_alert(`
-    <p class="name_delete">Delete group?</p>
-    <p class="delete_info">The '${TABS[index].name}' group is selected for deletion. All current sessions within this group will be terminated.</p>
+    <p class="name_delete">${localization_dict.delete_group}?</p>
+    <p class="delete_info">${localization_dict.delete_info_group_pre} '${TABS[index].name}' ${localization_dict.delete_info_group_last}</p>
     <div class="button delete" onclick="delete_group(${group_id})">
-      <p>Delete forever</p>
+      <p>${localization_dict.delete_forever}</p>
     </div>
   `, "delete_alert", function() {
     alert_edit_create_group(group_id, undefined, true);

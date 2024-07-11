@@ -39,7 +39,7 @@ function search() {
   }
   if (count_found < 1) {
     openModal("toolBar_info");
-    document.getElementById("toolBar_info").innerHTML = "No connections found";
+    document.getElementById("toolBar_info").innerHTML = localization_dict.no_connections_found;
   } else {
     closeModal("toolBar_info");
   }
