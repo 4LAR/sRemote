@@ -48,61 +48,61 @@ function save_settings() {
 
 function alert_settings() {
   open_alert(`
-    <p class="name_settings">Settings</p>
+    <p class="name_settings">${localization_dict.settings_title}</p>
     <hr class="hr_settings">
     <div class="settings_body scroll_style block_select" onchange="settings_change(event)">
       <ul class="settings_list">
         <li id="settings_menu_general" onclick="change_settings_page('general')">
           <div></div>
           <img src="./static/img/settings/general.svg" alt="">
-          <p>General</p>
+          <p>${localization_dict.settings_menu_general}</p>
         </li>
         <li id="settings_menu_account" onclick="change_settings_page('account')">
           <div></div>
           <img src="./static/img/settings/account.svg" alt="">
-          <p>Account</p>
+          <p>${localization_dict.settings_menu_account}</p>
         </li>
         <li id="settings_menu_connection" onclick="change_settings_page('connection')">
           <div></div>
           <img src="./static/img/settings/connection.svg" alt="">
-          <p>Connection</p>
+          <p>${localization_dict.settings_menu_connection}</p>
         </li>
       </ul>
       <div id="settings_page_general">
-        <p class="settings_h">General</p>
+        <p class="settings_h">${localization_dict.settings_menu_general}</p>
 
         <div class="checkbox" for="settings_General_autoStart">
           <input type="checkbox" id="settings_General_autoStart">
-          <label for="settings_General_autoStart">Start sRemote when you sign in to your computer</label>
+          <label for="settings_General_autoStart">${localization_dict.settings_General_autoStart}</label>
         </div>
 
         <div class="checkbox" for="settings_General_keepBackground">
           <input type="checkbox" id="settings_General_keepBackground">
-          <label for="settings_General_keepBackground">Keep sRemote running in the background</label>
+          <label for="settings_General_keepBackground">${localization_dict.settings_General_keepBackground}</label>
         </div>
 
         <div class="checkbox" for="settings_General_saveWindowState">
           <input type="checkbox" id="settings_General_saveWindowState">
-          <label for="settings_General_saveWindowState">Save window position on exit</label>
+          <label for="settings_General_saveWindowState">${localization_dict.settings_General_saveWindowState}</label>
         </div>
 
-        <p class="info_settings">Choose theme for sRemote</p>
+        <p class="info_settings">${localization_dict.settings_General_thame}</p>
         <div class="settings_one_line">
           <div class="checkbox-round" for="settings_General_thame_light">
             <input type="radio" id="settings_General_thame_light" name="thame">
-            <label for="settings_General_thame_light">Light</label>
+            <label for="settings_General_thame_light">${localization_dict.settings_General_thame_light}</label>
           </div>
           <div class="checkbox-round" for="settings_General_thame_dark">
             <input type="radio" id="settings_General_thame_dark" name="thame">
-            <label for="settings_General_thame_dark">Dark</label>
+            <label for="settings_General_thame_dark">${localization_dict.settings_General_thame_dark}</label>
           </div>
         </div>
       </div>
       <div id="settings_page_account">
-        <p class="settings_h">Account</p>
+        <p class="settings_h">${localization_dict.settings_menu_account}</p>
       </div>
       <div id="settings_page_connection">
-        <p class="settings_h">Connection</p>
+        <p class="settings_h">${localization_dict.settings_menu_connection}</p>
 
         <div class="checkbox" for="settings_Connections_autoConnect">
           <input type="checkbox" id="settings_Connections_autoConnect">
