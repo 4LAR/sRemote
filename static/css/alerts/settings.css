@@ -58,7 +58,7 @@
 .settings_alert .settings_h {
   color: var(--alert-font-color);
   font-size: 1.2em;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
 }
 
 .settings_alert label, .settings_alert input {
@@ -113,6 +113,10 @@
 
 .settings_body .number > label {
   margin-left: 5px;
+}
+
+.settings_body > div > div {
+  margin-bottom: 5px;
 }
 
 /* -------------------------------------------------------------------------- */

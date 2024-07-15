@@ -9,6 +9,8 @@ function settings_change(e) {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
   } else if (e.target.id.split("_")[2] == "maxCacheData") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
+  } else if (e.target.tagName == "SELECT") {
+    SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = document.getElementById(e.target.id).value;
   } else {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = document.getElementById(e.target.id).checked;
   }
@@ -22,6 +24,7 @@ ipcRenderer.on('get-config-response', (event, response) => {
 
   if (first_get_config_flag) {
     set_thame(SETTINGS_DICT["General"]["thame"]);
+    read_localization(SETTINGS_DICT["General"]["lang"]);
     read();
     first_get_config_flag = false;
   }
@@ -70,6 +73,11 @@ function alert_settings() {
       </ul>
       <div id="settings_page_general">
         <p class="settings_h">${localization_dict.settings_menu_general}</p>
+
+        <div class="selector">
+          <label>${localization_dict.settings_General_lang}:</label>
+          ${select_generator({"English": "en", "Русский": "ru"}, "settings_General_lang", "input_style", SETTINGS_DICT["General"]["lang"])}
+        </div>
 
         <div class="checkbox" for="settings_General_autoStart">
           <input type="checkbox" id="settings_General_autoStart">

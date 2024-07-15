@@ -38,6 +38,7 @@
   "search": "search",
 
   "settings_title": "Settings",
+  "settings_General_lang": "Application language",
   "settings_menu_general": "General",
   "settings_menu_account": "Account",
   "settings_menu_connection": "Connection",

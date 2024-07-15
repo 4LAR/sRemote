@@ -38,6 +38,7 @@
   "search": "Поиск",
 
   "settings_title": "Настройки",
+  "settings_General_lang": "Язык приложения",
   "settings_menu_general": "Общие",
   "settings_menu_account": "Учетная запись",
   "settings_menu_connection": "Подключение",

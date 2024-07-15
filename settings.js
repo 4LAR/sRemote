@@ -17,6 +17,8 @@ class Settings {
     } else {
       this.options = {
         "General": {
+          "lang": "en",
+          "password": "",
           "autoStart": false,
           "keepBackground": false,
           "thame": "dark", // light, dark, system
