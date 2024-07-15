@@ -164,6 +164,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
       document.getElementById(`item_${group_id}_${item_id}`).innerHTML = generate_item_by_data(insert_data, group_id, item_id);
       document.getElementById(`li_${group_id}_${item_id}`).innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&group_id=${group_id}&item_id=${item_id}&data_path=${path.dirname(store.path)}' style="display: none" id="iframe_${group_id}_${item_id}"></div>`;
       document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.update_status = update_status;
+      document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.localization_dict = localization_dict;
 
     } catch (e) {
       console.warn(e);

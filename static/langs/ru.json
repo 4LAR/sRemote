@@ -21,6 +21,7 @@
   "delete_forever": "Удалить",
   "save": "Сохранить",
   "create": "Создать",
+  "apply": "Применить",
 
   "delete_connection": "Удаление соединения",
   "delete_info_pre": "соединение",
@@ -34,5 +35,26 @@
   "delete_info_group_last": "выбрана для удаления. Все текущие сеансы в этой группе будут прекращены.",
   "no_connections_found": "Соединения не найдены",
   "empty_list": "Здесь что-то пустовато",
-  "search": "Поиск"
+  "search": "Поиск",
+
+  "settings_title": "Настройки",
+  "settings_menu_general": "Общие",
+  "settings_menu_account": "Учетная запись",
+  "settings_menu_connection": "Подключение",
+  "settings_General_autoStart": "Запускать sRemote при входе в систему",
+  "settings_General_keepBackground": "Держать sRemote в фоновом режиме",
+  "settings_General_saveWindowState": "Сохранять положение окна при выходе",
+  "settings_General_thame": "Выберите тему для sRemote",
+  "settings_General_thame_light": "Светлая",
+  "settings_General_thame_dark": "Темная",
+  "settings_Connections_autoConnect": "Автоматически подключаться ко всем сетям при запуске приложения",
+  "settings_Connections_readyTimeout": "Время ожидания завершения SSH рукопожатия (в миллисекундах)",
+  "settings_Connections_cacheData": "Кэшировать данные из терминала",
+  "settings_Connections_maxCacheData": "Размер кэша терминала (в байтах)",
+
+  "ssh_failed_to_connect": "Не удалось подключиться к удаленному серверу",
+  "ssh_invalid_credentials": "Недействительные данные для аутентификации",
+  "ssh_host_terminated": "Удаленный хост завершил текущее соединение",
+  "ssh_close_connection": "Закрываем соединение...",
+  "ssh_connect": "Подключаемся..."
 }

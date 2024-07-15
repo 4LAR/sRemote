@@ -221,7 +221,7 @@ function create_connection() {
         stream_obj = stream;
         stream.on('close', () => {
           console.log('Stream :: close');
-          printOnNewLine(`[\x1b[34mINFO\x1b[0m] Remote host terminated an existing connection.`);
+          printOnNewLine(`[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_host_terminated}`);
           local_update_status(0);
           connected_flag = false;
           conn.end();
@@ -275,13 +275,13 @@ function create_connection() {
 function disconnect() {
   if (conn) {
     conn.end();
-    printOnNewLine("[\x1b[34mINFO\x1b[0m] CLOSE CONNECTION...");
+    printOnNewLine(`[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_close_connection}`);
   }
 }
 
 function connect() {
   create_connection();
-  printOnNewLine("[\x1b[34mINFO\x1b[0m] CONNECT...");
+  printOnNewLine(`[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_connect}`);
 }
 
 // переподключение

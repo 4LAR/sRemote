@@ -1,5 +1,5 @@
 
-const current_lang = "en";
+const current_lang = "ru";
 var localization_dict = {};
 
 function read_localization(lang) {

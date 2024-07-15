@@ -106,29 +106,29 @@ function alert_settings() {
 
         <div class="checkbox" for="settings_Connections_autoConnect">
           <input type="checkbox" id="settings_Connections_autoConnect">
-          <label for="settings_Connections_autoConnect">Automatically connect to all networks upon application startup</label>
+          <label for="settings_Connections_autoConnect">${localization_dict.settings_Connections_autoConnect}</label>
         </div>
 
         <div class="number">
           <input type="number" class="input_style" id="settings_Connections_readyTimeout">
-          <label for="settings_Connections_readyTimeout">How long (in milliseconds) to wait for the SSH handshake to complete.</label>
+          <label for="settings_Connections_readyTimeout">${localization_dict.settings_Connections_readyTimeout}</label>
         </div>
 
         <div class="checkbox" for="settings_Connections_cacheData">
           <input type="checkbox" id="settings_Connections_cacheData">
-          <label for="settings_Connections_cacheData">Cache data from the terminal</label>
+          <label for="settings_Connections_cacheData">${localization_dict.settings_Connections_cacheData}</label>
         </div>
 
         <div class="number">
           <input type="number" class="input_style" id="settings_Connections_maxCacheData">
-          <label for="settings_Connections_maxCacheData">Terminal cache size (in bytes).</label>
+          <label for="settings_Connections_maxCacheData">${localization_dict.settings_Connections_maxCacheData}</label>
         </div>
       </div>
 
     </div>
     <div class="settings_buttons_bar">
       <div id="settings_save_button" class="not_active_button save" onclick="save_settings()">
-        <p>Apply</p>
+        <p>${localization_dict.apply}</p>
       </div>
     </div>
   `, "settings_alert", function() {get_config()});

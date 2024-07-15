@@ -200,6 +200,7 @@ function append_item(data, group_id, item_id) {
   );
   //
   document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.update_status = update_status;
+  document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.localization_dict = localization_dict;
 }
 
 //
