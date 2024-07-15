@@ -131,8 +131,8 @@ ul.settings_list > li {
   position: relative;
   width: 200px;
   height: 40px;
-  /* margin-bottom: 10px; */
   cursor: pointer;
+  border-left: 3px solid transparent;
 }
 
 ul.settings_list > li > div {
@@ -141,7 +141,6 @@ ul.settings_list > li > div {
   height: 100%;
   opacity: 0;
   background-color: var(--alert-font-color);
-  /* border-radius: 8px; */
   transition: .1s all;
 }
 
@@ -152,6 +151,16 @@ ul.settings_list > li:hover > div {
 ul.settings_list > li.selected > div {
   background-color: var(--select-color);
   opacity: .2;
+}
+
+ul.settings_list > li > div.selector {
+  width: 3px;
+  background-color: transparent;
+}
+
+ul.settings_list > li.selected > div.selector {
+  opacity: 1;
+  background-color: var(--select-color);
 }
 
 ul.settings_list > li > p {

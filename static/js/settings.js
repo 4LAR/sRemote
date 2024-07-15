@@ -57,16 +57,19 @@ function alert_settings() {
       <ul class="settings_list">
         <li id="settings_menu_general" onclick="change_settings_page('general')">
           <div></div>
+          <div class="selector"></div>
           <img src="./static/img/settings/general.svg" alt="">
           <p>${localization_dict.settings_menu_general}</p>
         </li>
         <li id="settings_menu_account" onclick="change_settings_page('account')">
           <div></div>
+          <div class="selector"></div>
           <img src="./static/img/settings/account.svg" alt="">
           <p>${localization_dict.settings_menu_account}</p>
         </li>
         <li id="settings_menu_connection" onclick="change_settings_page('connection')">
           <div></div>
+          <div class="selector"></div>
           <img src="./static/img/settings/connection.svg" alt="">
           <p>${localization_dict.settings_menu_connection}</p>
         </li>
