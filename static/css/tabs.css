@@ -72,14 +72,41 @@
 
 /* -------------------------------------------------------------------------- */
 
-.tabs_items > li > span.drag_line {
+.tabs_items > li > span.drag_line_top {
   position: absolute;
-  top: -1px;
+  top: -2px;
   left: -3px;
-  height: 3px;
+  height: 21px;
   width: calc(100% + 3px);
-  background-color: var(--select-color);
+  /* background-color: var(--select-color); */
+  background-color: transparent;
+  border-top: 3px solid transparent;
   display: none;
+  z-index: 2;
+}
+
+.tabs_items > li > span.drag_line_bottom {
+  position: absolute;
+  bottom: -2px;
+  left: -3px;
+  height: 21px;
+  width: calc(100% + 3px);
+  /* background-color: var(--select-color); */
+  background-color: transparent;
+  border-bottom: 3px solid transparent;
+  display: none;
+  z-index: 2;
+}
+
+ul.tabs.drag .tabs_items > li > span.drag_line_top,
+ul.tabs.drag .tabs_items > li > span.drag_line_bottom {
+  display: block;
+
+}
+
+.tabs_items > li > span.drag_line_bottom.hover,
+.tabs_items > li > span.drag_line_top.hover {
+  border-color: var(--select-color);
 }
 
 .tabs_items > li > div.reconnect {
@@ -113,7 +140,7 @@
 }
 
 ul.tabs.drag .tabs_items > li > * {
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 /* -------------------------------------------------------------------------- */

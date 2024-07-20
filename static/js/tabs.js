@@ -113,7 +113,8 @@ function open_group(group_id) {
 //
 function generate_item_by_data(data, group_id, item_id="") {
   return `
-    <span class="drag_line"></span>
+    <span class="drag_line_top"></span>
+    <span class="drag_line_bottom"></span>
     <img id="status_${group_id}_${item_id}" class="status_none" src="./static/img/terminal.svg">
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
@@ -183,6 +184,8 @@ function append_item(data, group_id, item_id) {
     }
   );
   document.getElementById(`item_${group_id}_${item_id}`).draggable = true;
+  // document.getElementById(`item_${group_id}_${item_id}`).setAttribute("data-group-id", group_id);
+  // document.getElementById(`item_${group_id}_${item_id}`).setAttribute("data-item-id", item_id);
   // добавляем линию для разделения сединений
   append_to_ul(
     `items_${group_id}`,
@@ -324,56 +327,38 @@ var drag_item_id = "";
 var hovered_item = undefined;
 const items_drag_list = document.getElementById("tabs");
 
-items_drag_list.addEventListener(
-  "dragstart",
-  function(e) {
-    e.target.style = "opacity: .4";
-    drag_item_id = e.target.id;
-    items_drag_list.className = `tabs block_select drag`;
+items_drag_list.addEventListener("dragstart", function(e) {
+  e.target.style = "opacity: .4";
+  drag_item_id = e.target.id;
+  items_drag_list.className = `tabs block_select drag`;
+});
+
+
+items_drag_list.addEventListener("dragend", function(e) {
+  e.target.style = "opacity: 1";
+  items_drag_list.className = `tabs block_select`;
+});
+
+items_drag_list.addEventListener("dragover", function(e) {
+  e.preventDefault();
+});
+
+items_drag_list.addEventListener("dragenter", function(e) {
+  console.log(e.target.className);
+  if ((e.target.className.split("_")[0] == "drag") && (e.target.parentNode.id != drag_item_id)) {
+    e.target.classList.add("hover");
+    hovered_item = e.target;
   }
-)
+});
 
-items_drag_list.addEventListener(
-  "dragend",
-  function(e) {
-    e.target.style = "opacity: 1";
-  }
-)
+items_drag_list.addEventListener("dragleave", function(e) {
+  e.target.classList.remove("hover");
+});
 
-items_drag_list.addEventListener(
-  "dragenter",
-  function(e) {
-    if ((e.target.id.split("_")[0] == "item" && (e.target.id !== drag_item_id))) {
-      e.target.getElementsByClassName("drag_line")[0].style = "display: block";
-      hovered_item = e.target.getElementsByClassName("drag_line")[0];
-    }
-  }
-)
+function insertAfter(newNode, existingNode) {
+  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+}
 
-items_drag_list.addEventListener(
-  "dragleave",
-  function(e) {
-    if ((e.target.id.split("_")[0] == "item" && (e.target.id !== drag_item_id))) {
-      e.target.getElementsByClassName("drag_line")[0].style = "display: none";
-    }
-  }
-)
-
-items_drag_list.addEventListener(
-  "drop",
-  function(e) {
-    const group_id = e.target.id.split("_")[1];
-    const item_id = e.target.id.split("_")[2];
-
-    const drag_group_id_ = drag_item_id.split("_")[1];
-    const drag_item_id_ = drag_item_id.split("_")[2];
-
-    document.getElementById('id')
-    document.getElementById(`items_${group_id}`).insertBefore(document.getElementById(drag_item_id), e.target);
-    document.getElementById(`items_${group_id}`).insertBefore(document.getElementById(`line_${drag_group_id_}_${drag_item_id_}`), e.target);
-    auto_height_items(group_id);
-    items_drag_list.className = `tabs block_select`;
-    hovered_item.style = "display: none";
-    console.log(e.target.id);
-  }
-)
+items_drag_list.addEventListener("drop", function(e) {
+  hovered_item.classList.remove("hover");
+});
