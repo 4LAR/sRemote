@@ -85,7 +85,8 @@ function auto_height_items(group_id, delta_items=0) {
   var items_list = document.getElementById(`items_${group_id}`);
   var delta_pixels = 0;
   if (delta_items !== 0) {
-    var ul_length = document.getElementById(`group_${group_id}`).getElementsByClassName("line").length;
+    // var ul_length = document.getElementById(`group_${group_id}`).getElementsByClassName("line").length;
+    var ul_length = 0;
     delta_pixels = items_list.scrollHeight / ul_length;
   }
 
@@ -113,8 +114,6 @@ function open_group(group_id) {
 //
 function generate_item_by_data(data, group_id, item_id="") {
   return `
-    <span class="drag_line_top"></span>
-    <span class="drag_line_bottom"></span>
     <img id="status_${group_id}_${item_id}" class="status_none" src="./static/img/terminal.svg">
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
@@ -163,6 +162,7 @@ function append_group(data, group_id, selected=false) {
     `group_${group_id}`,
     className=(selected)? "group selected": "group"
   );
+  initializeSortableForGroup(group_id);
 }
 
 //
@@ -187,13 +187,13 @@ function append_item(data, group_id, item_id) {
   // document.getElementById(`item_${group_id}_${item_id}`).setAttribute("data-group-id", group_id);
   // document.getElementById(`item_${group_id}_${item_id}`).setAttribute("data-item-id", item_id);
   // добавляем линию для разделения сединений
-  append_to_ul(
-    `items_${group_id}`,
-    ``,
-    undefined,
-    `line_${group_id}_${item_id}`,
-    "line"
-  );
+  // append_to_ul(
+  //   `items_${group_id}`,
+  //   ``,
+  //   undefined,
+  //   `line_${group_id}_${item_id}`,
+  //   "line"
+  // );
   //
   append_to_ul(
     "terminal_list", `
@@ -323,42 +323,31 @@ window.addEventListener('keydown', customKeyEventHandler);
 
 /*----------------------------------------------------------------------------*/
 
-var drag_item_id = "";
-var hovered_item = undefined;
-const items_drag_list = document.getElementById("tabs");
+function initializeSortableForGroup(groupId) {
+  const itemsList = document.getElementById(`items_${groupId}`);
 
-items_drag_list.addEventListener("dragstart", function(e) {
-  e.target.style = "opacity: .4";
-  drag_item_id = e.target.id;
-  items_drag_list.className = `tabs block_select drag`;
-});
+  const sortable = new Sortable(itemsList, {
+    animation: 150,
+    ghostClass: 'sortable-ghost', // Класс для плейсхолдера
+    onStart: function (evt) {
+      evt.item.style.opacity = '0.4';
+    },
+    onEnd: function (evt) {
+      evt.item.style.opacity = '1';
+      let config_file = store.get('connections');
+      console.log(config_file);
+      const newIndex = evt.newIndex;
+      const oldIndex = evt.oldIndex;
 
+      const group = config_file[groupId];
+      const movedItem = group.items[oldIndex];
 
-items_drag_list.addEventListener("dragend", function(e) {
-  e.target.style = "opacity: 1";
-  items_drag_list.className = `tabs block_select`;
-});
+      group.items.splice(oldIndex, 1);
 
-items_drag_list.addEventListener("dragover", function(e) {
-  e.preventDefault();
-});
+      group.items.splice(newIndex, 0, movedItem);
 
-items_drag_list.addEventListener("dragenter", function(e) {
-  console.log(e.target.className);
-  if ((e.target.className.split("_")[0] == "drag") && (e.target.parentNode.id != drag_item_id)) {
-    e.target.classList.add("hover");
-    hovered_item = e.target;
-  }
-});
-
-items_drag_list.addEventListener("dragleave", function(e) {
-  e.target.classList.remove("hover");
-});
-
-function insertAfter(newNode, existingNode) {
-  existingNode.parentNode.insertBefore(newNode, existingNode.nextSibling);
+      console.log(config_file);
+      store.set('connections', config_file);
+    }
+  });
 }
-
-items_drag_list.addEventListener("drop", function(e) {
-  hovered_item.classList.remove("hover");
-});

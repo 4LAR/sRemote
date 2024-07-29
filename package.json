@@ -9,6 +9,7 @@
     "electron": "^26.6.2",
     "electron-builder": "^24.9.1",
     "electron-reloader": "^1.2.3",
+    "sortablejs": "^1.15.2",
     "ssh2": "^1.15.0"
   },
   "dependencies": {
@@ -37,7 +38,9 @@
     ],
     "fileAssociations": [
       {
-        "ext": ["srem"],
+        "ext": [
+          "srem"
+        ],
         "name": "sRemote connection/group File",
         "role": "SSH Terminal"
       }

@@ -236,7 +236,7 @@ function delete_connection(group_id, item_id) {
   TABS[index[0]].items.splice(index[1], 1);
   document.getElementById(`item_${group_id}_${item_id}`).remove();
   document.getElementById(`iframe_${group_id}_${item_id}`).remove();
-  document.getElementById(`line_${group_id}_${item_id}`).remove();
+  // document.getElementById(`line_${group_id}_${item_id}`).remove();
   document.getElementById(`li_${group_id}_${item_id}`).remove();
 
   auto_height_items(group_id, -1);
@@ -345,7 +345,7 @@ function delete_group(group_id) {
 
       document.getElementById(`item_${group_id}_${item.id}`).remove();
       document.getElementById(`iframe_${group_id}_${item.id}`).remove();
-      document.getElementById(`line_${group_id}_${item.id}`).remove();
+      // document.getElementById(`line_${group_id}_${item.id}`).remove();
       document.getElementById(`li_${group_id}_${item.id}`).remove();
     } catch (e) {
       console.warn(e)

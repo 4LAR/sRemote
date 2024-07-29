@@ -24,6 +24,7 @@
   cursor: pointer;
   height: 40px;
   background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .tabs_items > li.line {
@@ -71,43 +72,6 @@
 }
 
 /* -------------------------------------------------------------------------- */
-
-.tabs_items > li > span.drag_line_top {
-  position: absolute;
-  top: -2px;
-  left: -3px;
-  height: 21px;
-  width: calc(100% + 3px);
-  /* background-color: var(--select-color); */
-  background-color: transparent;
-  border-top: 3px solid transparent;
-  display: none;
-  z-index: 2;
-}
-
-.tabs_items > li > span.drag_line_bottom {
-  position: absolute;
-  bottom: -2px;
-  left: -3px;
-  height: 21px;
-  width: calc(100% + 3px);
-  /* background-color: var(--select-color); */
-  background-color: transparent;
-  border-bottom: 3px solid transparent;
-  display: none;
-  z-index: 2;
-}
-
-ul.tabs.drag .tabs_items > li > span.drag_line_top,
-ul.tabs.drag .tabs_items > li > span.drag_line_bottom {
-  display: block;
-
-}
-
-.tabs_items > li > span.drag_line_bottom.hover,
-.tabs_items > li > span.drag_line_top.hover {
-  border-color: var(--select-color);
-}
 
 .tabs_items > li > div.reconnect {
   position: absolute;
@@ -419,6 +383,16 @@ ul.tabs.drag .tabs_items > li > * {
 .tabs > li.group.selected > div.indicator {
   opacity: 0;
 }
+
+/* -------------------------------------------------------------------------- */
+
+/* .sortable-chosen, sortable-chosen.sortable-ghost {
+  opacity: 0;
+}
+.sortable-ghost {
+  background-color: #dadada;
+  opacity: 1;
+} */
 
 /* -------------------------------------------------------------------------- */
 
