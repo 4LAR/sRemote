@@ -36,6 +36,12 @@ function show_password(id, indicator_id) {
   }
 }
 
+function alert_create_edit_connection_event(event) {
+  console.log(event.target);
+  console.log(get_ids_from_event(event));
+  alert_create_edit_connection(...get_ids_from_event(event), event, true);
+}
+
 function alert_create_edit_connection(group_id, item_id, event, edit_flag=false) {
   open_alert(`
     <p class="name">${(edit_flag)? localization_dict.edit_connection_title: localization_dict.create_connection_title}</p>
@@ -82,6 +88,8 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
 
   if (edit_flag) {
     var index = get_indexes_by_id(group_id, item_id);
+    console.log(TABS[index[0]]);
+    console.log(TABS[index[0]].items[index[1]]);
     document.getElementById("name").value = TABS[index[0]].items[index[1]].name;
     document.getElementById("host").value = TABS[index[0]].items[index[1]].host;
     document.getElementById("port").value = TABS[index[0]].items[index[1]].port;

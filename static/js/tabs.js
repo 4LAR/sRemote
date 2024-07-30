@@ -14,6 +14,16 @@ const STATUS_LIST = [
 ]
 
 //
+function get_ids_from_event(event) {
+  var id = "";
+  id = event.target.id;
+  if (!event.target.id) {
+    id = event.target.parentElement.id;
+  }
+  return [id.split("_")[1], id.split("_")[2]];
+}
+
+//
 function get_index_group_by_id(group_id) {
   var real_group_id = 0;
   for (const group of TABS) {
@@ -117,13 +127,13 @@ function generate_item_by_data(data, group_id, item_id="") {
     <img id="status_${group_id}_${item_id}" class="status_none" src="./static/img/terminal.svg">
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
-    <div class="reconnect" onclick="reconnect(${group_id}, ${item_id}, event)">
+    <div class="reconnect" onclick="reconnect_event(event)">
       <img id="reconnect_${group_id}_${item_id}" src="./static/img/play.svg">
     </div>
-    <div class="edit" onclick="alert_create_edit_connection(${group_id}, ${item_id}, event, true)">
+    <div class="edit" onclick="alert_create_edit_connection_event(event)">
       <img src="./static/img/edit.svg">
     </div>
-    <!--<div class="delete" onclick="alert_delete_connection(${group_id}, ${item_id}, event)">
+    <!--<div class="delete" onclick="alert_delete_connection_event(event)">
       <img src="./static/img/cross.svg">
     </div>-->
   `;
@@ -171,30 +181,22 @@ function append_item(data, group_id, item_id) {
   append_to_ul(
     `items_${group_id}`,
     generate_item_by_data(data, group_id, item_id),
-    function() {
-      select_item(group_id, item_id);
+    function(event) {
+      select_item(...get_ids_from_event(event));
     },
     `item_${group_id}_${item_id}`,
     className="",
-    function() {
-      var iframe = document.getElementById(`iframe_${group_id}_${item_id}`);
+    function(event) {
+      const ids = get_ids_from_event(event);
+      console.log(ids);
+      var iframe = document.getElementById(`iframe_${ids[0]}_${ids[1]}`);
       if (!iframe.contentWindow.connected_flag) {
         iframe.contentWindow.connect();
       }
     }
   );
   document.getElementById(`item_${group_id}_${item_id}`).draggable = true;
-  // document.getElementById(`item_${group_id}_${item_id}`).setAttribute("data-group-id", group_id);
-  // document.getElementById(`item_${group_id}_${item_id}`).setAttribute("data-item-id", item_id);
-  // добавляем линию для разделения сединений
-  // append_to_ul(
-  //   `items_${group_id}`,
-  //   ``,
-  //   undefined,
-  //   `line_${group_id}_${item_id}`,
-  //   "line"
-  // );
-  //
+
   append_to_ul(
     "terminal_list", `
       <iframe src='ssh.html?data=${JSON.stringify(data)}&config=${JSON.stringify(SETTINGS_DICT)}&group_id=${group_id}&item_id=${item_id}&data_path=${path.dirname(store.path)}' style="display: none" id="iframe_${group_id}_${item_id}"></div>
@@ -267,6 +269,10 @@ function read() {
     // store.set('connections', []);
     // ipcRenderer.send('relaunch');
   }
+}
+
+function reconnect_event(event) {
+  reconnect(...get_ids_from_event(event), event);
 }
 
 function reconnect(group_id, item_id, event) {
@@ -342,11 +348,82 @@ function initializeSortableForGroup(groupId) {
       const group = config_file[groupId];
       const movedItem = group.items[oldIndex];
 
+      // Обновляем config_file
       group.items.splice(oldIndex, 1);
-
       group.items.splice(newIndex, 0, movedItem);
 
-      console.log(config_file);
+      // Обновляем TABS
+      const movedTabItem = TABS[groupId].items[oldIndex];
+      TABS[groupId].items.splice(oldIndex, 1);
+      TABS[groupId].items.splice(newIndex, 0, movedTabItem);
+
+      // Обновляем id внутри TABS
+      TABS[groupId].items.forEach((item, index) => {
+        item.id = index; // Обновляем id на основе нового индекса
+      });
+
+      const group_items = itemsList.getElementsByTagName('li');
+
+      var iframes_list = [];
+      var li_list = [];
+      var status_list = [];
+      var reconnect_list = [];
+      for (const item of [...group_items].reverse()) {
+        var group_id_ = item.id.split("_")[1]
+        var item_id_ = item.id.split("_")[2]
+        iframes_list.push(
+          [document.getElementById(`iframe_${group_id_}_${item_id_}`), false]
+        );
+        li_list.push(
+          [document.getElementById(`li_${group_id_}_${item_id_}`), false]
+        );
+        status_list.push(
+          [document.getElementById(`status_${group_id_}_${item_id_}`), false]
+        );
+        reconnect_list.push(
+          [document.getElementById(`reconnect_${group_id_}_${item_id_}`), false]
+        );
+      }
+
+      console.log("iframe", iframes_list);
+      console.log("li", li_list);
+      console.log("status", status_list);
+      console.log("reconnect", reconnect_list);
+
+      let new_index = group_items.length - 1;
+      for (const item of [...group_items].reverse()) {
+        oldIndex_ = item.id.split("_")[2];
+        item.id = `item_${groupId}_${new_index}`;
+
+        for (const el of iframes_list) {
+          if ((el[0].id.split("_")[2] == oldIndex_) && (!el[1])) {
+            el[0].id = `iframe_${groupId}_${new_index}`;
+            el[1] = true;
+            el[0].contentWindow.item_id = new_index;
+          }
+        }
+        for (const el of li_list) {
+          if ((el[0].id.split("_")[2] == oldIndex_) && (!el[1])) {
+            el[0].id = `li_${groupId}_${new_index}`;
+            el[1] = true;
+          }
+        }
+        for (const el of status_list) {
+          if ((el[0].id.split("_")[2] == oldIndex_) && (!el[1])) {
+            el[0].id = `status_${groupId}_${new_index}`;
+            el[1] = true;
+          }
+        }
+        for (const el of reconnect_list) {
+          if ((el[0].id.split("_")[2] == oldIndex_) && (!el[1])) {
+            el[0].id = `reconnect_${groupId}_${new_index}`;
+            el[1] = true;
+          }
+        }
+        new_index--;
+      }
+
+      // Сохраняем изменения в store
       store.set('connections', config_file);
     }
   });
