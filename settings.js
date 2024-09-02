@@ -22,13 +22,19 @@ class Settings {
           "autoStart": false,
           "keepBackground": false,
           "thame": "dark", // light, dark, system
-          "saveWindowState": true
+          "saveWindowState": true,
+          "experimental": false
         },
         "Connections": {
           "autoConnect": true,
           "readyTimeout": 20000,
           "cacheData": false,
           "maxCacheData": 5000
+        },
+        "Account": {
+          "url": "https://sRemote.100lar-web.ru/",
+          "token": "",
+          "autofetch": true
         }
       };
     }
@@ -63,6 +69,10 @@ class Settings {
       let errorBool = false;
 
       for (const section in this.options) {
+        if (config[section] === undefined) {
+          errorBool = true;
+          continue;
+        }
         for (const parameter in this.options[section]) {
           const parameterBuf = config[section][parameter];
           if (parameterBuf !== undefined) {

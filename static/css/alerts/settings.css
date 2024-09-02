@@ -179,3 +179,73 @@ ul.settings_list > li > img {
   width: 20px;
   filter: invert(var(--invert-buttons));
 }
+
+/* -------------------------------------------------------------------------- */
+
+#settings_account_login_container {
+  position: relative;
+  width: 600px;
+  padding-top: 30px;
+  margin-left: 40%;
+  margin-top: 20px;
+  transform: translateX(-50%);
+}
+
+#settings_account_login_container > div.user_icon {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  height: 200px;
+  width: 200px;
+  background-color: var(--not-active-button-bg-color);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+#settings_account_login_container > div.user_icon > img {
+  width: 100%;
+  height: 100%;
+}
+
+#settings_account_login_container > div.user_icon > img.default {
+  margin-left: 5%;
+  margin-top: 15%;
+  width: 90%;
+  height: 90%;
+  filter: invert(.05);
+}
+
+#settings_account_login_container > input {
+  width: 300px;
+  margin-left: 240px;
+  margin-bottom: 10px;
+}
+
+#settings_account_login_container > a {
+  position: absolute;
+  top: 155px;
+  left: 240px;
+}
+
+#settings_account_login_container > div#settings_save_button {
+  position: absolute;
+  margin-top: 10px;
+  right: 30px;
+  width: 120px;
+}
+
+#settings_account_login_container > div.register {
+  position: relative;
+  margin-top: 110px;
+}
+
+#settings_account_login_container > div.register > p {
+  color: var(--alert-font-color);
+}
+
+#settings_account_login_container > div.register > div {
+  position: absolute;
+  right: 30px;
+  top: -10px;
+  width: 120px;
+}

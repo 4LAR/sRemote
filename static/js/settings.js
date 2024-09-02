@@ -3,7 +3,11 @@ var SETTINGS_DICT = {};
 var settings_changed = false;
 
 function settings_change(e) {
-  if (e.target.id.split("_")[2] == "thame") {
+  if (e.target.id.split("_")[1] == "account") {
+    return;
+  } else if (e.target.id.split("_")[1] == "macros") {
+    return;
+  } else if (e.target.id.split("_")[2] == "thame") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = e.target.id.split("_")[3];
   } else if (e.target.id.split("_")[2] == "readyTimeout") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
@@ -73,6 +77,12 @@ function alert_settings() {
           <img src="./static/img/settings/connection.svg" alt="">
           <p>${localization_dict.settings_menu_connection}</p>
         </li>
+        <li id="settings_menu_macros" onclick="change_settings_page('macros')">
+          <div></div>
+          <div class="selector"></div>
+          <img src="./static/img/settings/macros.svg" alt="">
+          <p>Macros</p>
+        </li>
       </ul>
       <div id="settings_page_general">
         <p class="settings_h">${localization_dict.settings_menu_general}</p>
@@ -110,7 +120,39 @@ function alert_settings() {
         </div>
       </div>
       <div id="settings_page_account">
-        <p class="settings_h">${localization_dict.settings_menu_account}</p>
+        <div id="settings_account_login_container">
+          <div class="user_icon">
+            <img class="default" src="./static/img/settings/account.svg" alt="">
+          </div>
+          <p class="error" id="auth_error"></p>
+          <input type="text" class="input_style" id="settings_account_login" placeholder="Login">
+          <input type="password" class="input_style" id="settings_account_password" placeholder="Password">
+          <a href="#">Forgot your password?</a>
+          <div id="settings_save_button" class="button" onclick="()">
+            <p>Login</p>
+          </div>
+          <div class="register">
+            <p>If you don't have an account, you can create one.</p>
+            <div id="settings_save_button" class="button" onclick="()">
+              <p>Register</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="settings_account_user_container">
+
+        </div>
+
+        <p>Groups on server</p>
+        <ul id="settings_account_server">
+
+        </ul>
+
+        <p>Groups on your local machine</p>
+        <ul id="settings_account_local">
+
+        </ul>
+
       </div>
       <div id="settings_page_connection">
         <p class="settings_h">${localization_dict.settings_menu_connection}</p>
@@ -134,6 +176,12 @@ function alert_settings() {
           <input type="number" class="input_style" id="settings_Connections_maxCacheData">
           <label for="settings_Connections_maxCacheData">${localization_dict.settings_Connections_maxCacheData}</label>
         </div>
+      </div>
+
+      <div id="settings_page_macros">
+        <p class="settings_h">Macros</p>
+
+
       </div>
 
     </div>
@@ -165,7 +213,8 @@ get_config();
 const settings_pages = [
   "general",
   "account",
-  "connection"
+  "connection",
+  "macros"
 ];
 
 function change_settings_page(page_name) {
