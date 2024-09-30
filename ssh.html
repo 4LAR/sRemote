@@ -5,12 +5,28 @@
     <title></title>
     <link rel="stylesheet" href = "./static/css/libs/xterm.css"/>
     <link rel="stylesheet" href = "./static/css/ssh.css"/>
+    <link rel="stylesheet" href = "./static/css/sshMenu.css"/>
     <link rel="stylesheet" href = "./static/css/main.css"/>
     <link rel="stylesheet" href = "./static/css/colors.css"/>
   </head>
   <body>
-    <div id="terminal"></div>
-    <p class="font_size" id="font_size">font-size: 12px</p>
+    <div class="menu">
+      <div id="menu_terminal_button" onclick="open_menu('terminal')">
+        <img src="./static/img/settings/connection.svg">
+        <p>Terminal</p>
+      </div>
+      <div id="menu_files_button" onclick="open_menu('files')">
+        <img src="./static/img/files/folder.svg">
+        <p>Files</p>
+      </div>
+    </div>
+    <div id="menu_terminal">
+      <div id="terminal"></div>
+      <p class="font_size" id="font_size">font-size: 12px</p>
+    </div>
+    <div id="menu_files">
+      <p>HELLO WORLD</p>
+    </div>
   </body>
   <script type="text/javascript" src="./static/js/libs/xterm.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-fit.js"></script>
@@ -21,4 +37,5 @@
   </script>
   <script type="text/javascript" src="./static/js/main.js"></script>
   <script type="text/javascript" src="./static/js/ssh.js"></script>
+  <script type="text/javascript" src="./static/js/sftp.js"></script>
 </html>

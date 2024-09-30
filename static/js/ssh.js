@@ -216,6 +216,12 @@ function create_connection() {
     conn.on('ready', () => {
       console.log('Client :: ready');
       newLine();
+
+      conn.sftp((err, sftp) => {
+        if (err) throw err;
+        sftp_obj = sftp;
+      });
+
       conn.shell((err, stream) => {
         if (err) throw err;
         stream_obj = stream;
@@ -318,3 +324,24 @@ function customKeyEventHandler(e) {
 if (config["Connections"]["autoConnect"]) {
   create_connection();
 }
+
+/*----------------------------------------------------------------------------*/
+
+const menu_items = [
+  "terminal",
+  "files"
+]
+
+function open_menu(item) {
+  for (const menu_el of menu_items) {
+    if (menu_el == item) {
+      document.getElementById(`menu_${menu_el}_button`).className = "selected";
+      document.getElementById(`menu_${menu_el}`).style.display = "block";
+    } else {
+      document.getElementById(`menu_${menu_el}_button`).className = "";
+      document.getElementById(`menu_${menu_el}`).style.display = "none";
+    }
+  }
+}
+
+open_menu("terminal")

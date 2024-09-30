@@ -3,9 +3,15 @@ html {
   overflow-y: hidden;
 }
 
+body {
+  font-family: -apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif,"Apple Color Emoji";
+  font-size: 14px;
+  line-height: 1.5;
+}
+
 #terminal {
   position: absolute;
-  top: 0px;
+  top: 31px;
   bottom: 0px;
   left: 0px;
   width: 100%;
