@@ -220,6 +220,7 @@ function create_connection() {
       conn.sftp((err, sftp) => {
         if (err) throw err;
         sftp_obj = sftp;
+        listFiles();
       });
 
       conn.shell((err, stream) => {

@@ -17,11 +17,10 @@ div.menu > div {
   cursor: pointer;
   padding-left: 5px;
   padding-right: 5px;
-  border-radius: 12px;
 }
 
 div.menu > div.selected {
-  background-color: var(--border-color);
+  border-bottom: 2px solid var(--tabs-font-color);
 }
 
 div.menu > div > img {

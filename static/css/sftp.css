@@ -1,0 +1,38 @@
+
+ul.files {
+  position: absolute;
+  top: 31px;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  overflow-y: auto;
+  margin: 0px;
+  padding: 0px;
+}
+
+ul.files > li {
+  position: relative;
+  height: 30px;
+  width: 100%;
+  border-bottom: 1px solid var(--border-color);
+}
+
+ul.files > li > img {
+  position: absolute;
+  left: 20px;
+  top: 0px;
+  height: 20px;
+}
+
+ul.files > li > img.folder {
+  filter: brightness(0) saturate(100%) invert(75%) sepia(39%) saturate(343%) hue-rotate(5deg) brightness(90%) contrast(91%);
+}
+
+ul.files > li > img.file {
+  filter: brightness(0) saturate(100%) invert(72%) sepia(59%) saturate(244%) hue-rotate(156deg) brightness(84%) contrast(92%);
+}
+
+ul.files > li > p {
+  margin-left: 60px;
+  color: var(--tabs-font-color);
+}

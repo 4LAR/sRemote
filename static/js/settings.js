@@ -128,12 +128,12 @@ function alert_settings() {
           <input type="text" class="input_style" id="settings_account_login" placeholder="Login">
           <input type="password" class="input_style" id="settings_account_password" placeholder="Password">
           <a href="#">Forgot your password?</a>
-          <div id="settings_save_button" class="button" onclick="()">
+          <div id="" class="button" onclick="()">
             <p>Login</p>
           </div>
           <div class="register">
             <p>If you don't have an account, you can create one.</p>
-            <div id="settings_save_button" class="button" onclick="()">
+            <div id="" class="button" onclick="()">
               <p>Register</p>
             </div>
           </div>
