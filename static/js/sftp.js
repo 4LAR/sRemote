@@ -12,7 +12,7 @@ function split() {
     document.getElementById("files_0").style.width = "50%";
     document.getElementById("files_1").style.width = "50%";
     if (pathArr[1].length < 1) {
-      pathArr[1] = pathArr[0];
+      pathArr[1] = pathArr[0].map((element) => element);
       listFiles(1);
     }
   } else {
