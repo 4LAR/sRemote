@@ -23,6 +23,17 @@ function split() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+function getHomePath() {
+  return new Promise((resolve, reject) => {
+    sftp_obj.realpath('.', (err, path) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(path);
+    });
+  });
+}
+
 function convert_path(arr) {
   return "/" + arr.join("/");
 }
@@ -40,6 +51,7 @@ function listFiles(id=0) {
     // document.getElementById("path").innerHTML = convert_path(pathArr);
     if (pathArr.length > 0)
       addBackButton(id);
+    appendUploadFrame(id);
     for (const file of list) {
       const name_splitted = file.longname.split(/\s+/);
 
@@ -124,47 +136,54 @@ function back(id) {
   listFiles(id);
 }
 
-function upload_file(file) {
-  console.log(file.path.replaceAll('\\', '/'), convert_path(pathArr) + "/" + file.name);
-  sftp_obj.fastPut(file.path.replaceAll('\\', '/'), convert_path(pathArr) + "/" + file.name, {}, (err) => {
+function upload_file(file, id=0) {
+  console.log(id);
+  console.log(pathArr[id]);
+  sftp_obj.fastPut(file.path.replaceAll('\\', '/'), convert_path(pathArr[id]) + "/" + file.name, {}, (err) => {
     if (err) {
       console.error(err);
       return;
     };
-    listFiles();
+    listFiles(id);
     console.log('File uploaded successfully');
   });
 }
 
+function appendUploadFrame(id) {
+  var ul = document.getElementById(`files_${id}`);
+  var li = document.createElement("li");
+  li.innerHTML = `
+    <div></div>
+    <div>
+      <img src="./static/img/upload.svg">
+      <p>Drop your files here</p>
+    </div>
+  `;
+  li.className = "upload";
+  ul.appendChild(li);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
-const dropZone = document.getElementById("menu_files");
+for (let id = 0; id < 2; id++) {
+  const dropZone = document.getElementById(`files_${id}`);
+  document.addEventListener('DOMContentLoaded', () => {
 
-document.addEventListener('DOMContentLoaded', () => {
+    dropZone.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      dropZone.classList.add('drag-over');
+    });
 
-  dropZone.addEventListener('dragover', (event) => {
-    event.preventDefault();
-    dropZone.classList.add('drag-over');
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (event) => {
+      event.preventDefault();
+      const files = event.dataTransfer.files;
+      for (const file of files) {
+        upload_file(file, id)
+      }
+    });
   });
-
-  dropZone.addEventListener('dragleave', () => {
-    dropZone.classList.remove('drag-over');
-  });
-
-  dropZone.addEventListener('drop', (event) => {
-    event.preventDefault();
-    const files = event.dataTransfer.files;
-    for (const file of files) {
-      upload_file(file)
-    }
-
-    // dropZone.classList.remove('drag-over');
-    //
-    // const files = event.dataTransfer.files;
-    //
-    // if (files.length > 0) {
-    //   const filePath = files[0].path;
-    //   read_import_file(filePath);
-    // }
-  });
-});
+}

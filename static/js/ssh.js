@@ -223,8 +223,10 @@ function create_connection() {
           return;
         };
         sftp_obj = sftp;
-        listFiles(0);
-        listFiles(1);
+        getHomePath().then(path=>{
+          pathArr[0] = path.split("/").filter(part => part !== "");
+          listFiles(0);
+        })
       });
 
       conn.shell((err, stream) => {
