@@ -11,7 +11,7 @@
     <link rel="stylesheet" href = "./static/css/colors.css"/>
   </head>
   <body>
-    <div class="menu">
+    <div class="menu block_select">
       <div id="menu_terminal_button" onclick="open_menu('terminal')">
         <img src="./static/img/settings/connection.svg">
         <p>Terminal</p>
@@ -26,7 +26,12 @@
       <p class="font_size" id="font_size">font-size: 12px</p>
     </div>
     <div id="menu_files">
-      <ul class="files scroll_style" id="files_left"></ul>
+      <div class="files_toolBar">
+        <p id="path"></p>
+        <img class="split" src="./static/img/split.svg" onclick="split()">
+      </div>
+      <ul class="files scroll_style" id="files_0"></ul>
+      <ul class="files scroll_style right" id="files_1"></ul>
     </div>
   </body>
   <script type="text/javascript" src="./static/js/libs/xterm.js"></script>

@@ -1,26 +1,79 @@
 
-ul.files {
+div.files_toolBar {
   position: absolute;
   top: 31px;
+  left: 0px;
+  width: 100%;
+  height: 25px;
+  background-color: var(--terminal-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+div.files_toolBar > p {
+  position: absolute;
+  margin: 0px;
+  top: 2px;
+  left: 10px;
+  color: var(--tabs-selected-font-color);
+}
+
+div.files_toolBar > img.split {
+  position: absolute;
+  top: 4px;
+  right: 10px;
+  width: 16px;
+  filter: invert(var(--invert-buttons));
+  cursor: pointer;
+}
+
+div.files_toolBar > img.split:hover {
+  filter: invert(var(--invert-buttons-hover));
+}
+
+/* -------------------------------------------------------------------------- */
+
+ul.files {
+  position: absolute;
+  top: calc(31px + 25px);
   bottom: 0px;
   left: 0px;
   width: 100%;
   overflow-y: auto;
   margin: 0px;
   padding: 0px;
+  overflow-x: hidden;
+  transition: .3s all;
+  /* background-color: var(--terminal-bg); */
+}
+
+ul.files.right {
+  left: auto;
+  right: 0px;
+  width: 0%;
+  border-left: 1px solid var(--border-color);
 }
 
 ul.files > li {
   position: relative;
-  height: 30px;
+  height: 35px;
   width: 100%;
-  border-bottom: 1px solid var(--border-color);
+  /* border-bottom: 1px solid var(--border-color); */
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: .1s all;
+}
+
+ul.files > li:hover {
+  background-color: var(--input-bg);
+  border-left: 3px solid var(--input-bg);
+  transition: .1s all;
+
 }
 
 ul.files > li > img {
   position: absolute;
   left: 20px;
-  top: 0px;
+  top: 7px;
   height: 20px;
 }
 
@@ -32,7 +85,35 @@ ul.files > li > img.file {
   filter: brightness(0) saturate(100%) invert(72%) sepia(59%) saturate(244%) hue-rotate(156deg) brightness(84%) contrast(92%);
 }
 
+ul.files > li > img.link {
+  filter: brightness(0) saturate(100%) invert(72%) sepia(59%) saturate(244%) hue-rotate(156deg) brightness(84%) contrast(92%);
+}
+
+ul.files > li > img.back {
+  filter: invert(50%) sepia(35%) saturate(6992%) hue-rotate(144deg) brightness(94%) contrast(101%);
+}
+
 ul.files > li > p {
+  position: absolute;
   margin-left: 60px;
+  color: var(--tabs-selected-font-color);
+  margin: 0px;
+  top: 7px;
+  left: 60px;
+}
+
+ul.files > li > p.size {
+  left: auto;
+  right: 10px;
   color: var(--tabs-font-color);
+  width: 80px;
+  text-align: left;
+}
+
+ul.files > li > p.access_rights {
+  left: auto;
+  right: 150px;
+  color: var(--tabs-font-color);
+  width: 100px;
+  text-align: left;
 }

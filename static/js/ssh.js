@@ -218,9 +218,13 @@ function create_connection() {
       newLine();
 
       conn.sftp((err, sftp) => {
-        if (err) throw err;
+        if (err) {
+          console.error(err);
+          return;
+        };
         sftp_obj = sftp;
-        listFiles();
+        listFiles(0);
+        listFiles(1);
       });
 
       conn.shell((err, stream) => {
