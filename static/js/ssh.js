@@ -224,7 +224,7 @@ function create_connection() {
         };
         sftp_obj = sftp;
         getHomePath().then(path=>{
-          pathArr[0] = path.split("/").filter(part => part !== "");
+          pathArr[0] = path.split("/").filter(part => part !== "").map((element) => element);
           listFiles(0);
         })
       });
