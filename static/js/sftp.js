@@ -11,6 +11,8 @@ function split() {
   if (split_flag) {
     document.getElementById("files_0").style.width = "50%";
     document.getElementById("files_1").style.width = "50%";
+    document.getElementById("files_toolBar_0").style.width = "50%";
+    document.getElementById("files_toolBar_1").style.width = "50%";
     if (pathArr[1].length < 1) {
       pathArr[1] = pathArr[0].map((element) => element);
       listFiles(1);
@@ -18,6 +20,8 @@ function split() {
   } else {
     document.getElementById("files_0").style.width = "100%";
     document.getElementById("files_1").style.width = "0%";
+    document.getElementById("files_toolBar_0").style.width = "100%";
+    document.getElementById("files_toolBar_1").style.width = "0%";
   }
 }
 
@@ -48,7 +52,7 @@ function listFiles(id=0) {
       listFiles(id);
       return;
     }
-    // document.getElementById("path").innerHTML = convert_path(pathArr);
+    document.getElementById(`path_${id}`).innerHTML = convert_path(pathArr[id]);
     if (pathArr.length > 0)
       addBackButton(id);
     appendUploadFrame(id);

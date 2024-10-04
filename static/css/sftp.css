@@ -7,6 +7,13 @@ div.files_toolBar {
   height: 25px;
   background-color: var(--terminal-bg);
   border-bottom: 1px solid var(--border-color);
+  transition: .3s all;
+}
+
+div.files_toolBar.right {
+  left: auto;
+  right: 0px;
+  width: 0%;
 }
 
 div.files_toolBar > p {
