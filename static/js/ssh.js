@@ -167,19 +167,38 @@ fit.fit();
 term.resize(100, 50);
 fit.fit();
 
-term.element.addEventListener('contextmenu', (e) => {
+document.getElementById("terminal").addEventListener('contextmenu', (e) => {
   e.preventDefault()
   ipcRenderer.send('show-context-menu', {
-    return: `ssh_${group_id}_${item_id}`,
+    target: "connection",
+    id: `${group_id}_${item_id}`,
+    function: "ssh_context",
     template: [
       {
-        label: 'Copy'
+        label: 'Copy',
+        enabled: term.hasSelection(),
+        accelerator: "CommandOrControl+Shift+C"
       }, {
-        label: 'Paste'
+        label: 'Paste',
+        enabled: !!navigator.clipboard.readText(),
+        accelerator: "CommandOrControl+Shift+V"
       }
     ]
   })
 });
+
+function ssh_context(data) {
+  console.log(group_id, item_id, data);
+  if (data == "Copy") {
+    const toCopy = term.getSelection();
+    navigator.clipboard.writeText(toCopy);
+    term.focus();
+  } else if (data == "Paste") {
+    navigator.clipboard.readText().then((toPaste) => {
+      stream_obj.write(toPaste);
+    });
+  }
+}
 
 /*----------------------------------------------------------------------------*/
 

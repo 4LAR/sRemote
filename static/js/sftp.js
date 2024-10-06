@@ -164,8 +164,6 @@ function appendFileList(file, id=0) {
       files_list[indexLastSelected].classList.add('selected');
       selected_files[id].push(files_list[indexLastSelected].getElementsByTagName("p")[0].innerHTML)
 
-
-      // for (const )
     } else {
       if (file.type == "folder") {
         openFolder(file.name, id);
@@ -304,9 +302,31 @@ function create_directory(path, name, id) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-window.addEventListener('contextmenu', (e) => {
-  e.preventDefault()
-  console.log(e.target)
+document.getElementById('menu_files').addEventListener('contextmenu', (event) => {
+  event.preventDefault()
+
+  var element = event.target;
+  var li_element = undefined;
+  var selected = false;
+  var selected_one = false;
+  if (element.tagName != "LI" && element.tagName != "UL") {
+    li_element = element.parentElement;
+    element = li_element.parentElement;
+  } else if (element.tagName == "LI") {
+    li_element = element;
+    element = li_element.parentElement;
+  }
+
+  // if (li_element !== undefined && li_element.classList.contains('selected')) {
+  if (selected_files[Number(element.id.split("_")[1])].length > 0) {
+    selected = true;
+  }
+  if (selected_files[Number(element.id.split("_")[1])].length == 1) {
+    selected_one = true;
+  }
+
+  console.log(element, li_element, selected);
+
   ipcRenderer.send('show-context-menu', {
     target: "connection",
     id: `${group_id}_${item_id}`,
@@ -325,11 +345,11 @@ window.addEventListener('contextmenu', (e) => {
         type: 'separator'
       }, {
         label: 'Cut',
-        enabled: false,
+        enabled: (selected || !!li_element),
         accelerator: "CommandOrControl+X"
       }, {
         label: 'Copy',
-        enabled: false,
+        enabled: (selected || !!li_element),
         accelerator: "CommandOrControl+C"
       }, {
         label: 'Paste',
@@ -339,17 +359,17 @@ window.addEventListener('contextmenu', (e) => {
         type: 'separator'
       }, {
         label: 'Delete',
-        enabled: false,
+        enabled: (selected || !!li_element),
         accelerator: "Delete"
       }, {
         label: 'Rename',
-        enabled: false,
+        enabled: (selected_one || !!li_element),
         accelerator: "F2"
       }, {
         type: 'separator'
       }, {
         label: 'Properties',
-        enabled: false
+        enabled: (selected_one || !!li_element)
       }
     ]
   })
@@ -357,7 +377,6 @@ window.addEventListener('contextmenu', (e) => {
 
 function sftp_context(data) {
   console.log(group_id, item_id, data);
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////
