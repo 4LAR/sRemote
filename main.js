@@ -194,7 +194,9 @@ const createWindow = () => {
         insert_data = el;
       } else {
         insert_data = {
-          label: el.label
+          label: el.label,
+          enabled: el.enabled,
+          accelerator: el.accelerator
         }
         if (!("submenu" in el)) {
           insert_data.click = () => {

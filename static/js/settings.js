@@ -65,7 +65,7 @@ function alert_settings() {
           <img src="./static/img/settings/general.svg" alt="">
           <p>${localization_dict.settings_menu_general}</p>
         </li>
-        <li id="settings_menu_account" onclick="change_settings_page('account')">
+        <li id="settings_menu_account" onclick="change_settings_page('account')" style="display: none">
           <div></div>
           <div class="selector"></div>
           <img src="./static/img/settings/account.svg" alt="">

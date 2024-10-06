@@ -94,8 +94,14 @@ function clearFileList(id=0) {
   document.getElementById(`files_${id}`).innerHTML = "";
 }
 
+function clearSelectionEvent(event, id) {
+  if (event.target.tagName == "UL")
+    clearSelection(id);
+}
+
 function clearSelection(id) {
   const ul = document.getElementById(`files_${id}`);
+  selected_files[id] = [];
   for (let li of ul.children) {
     li.classList.remove('selected');
   }
@@ -134,10 +140,48 @@ function appendFileList(file, id=0) {
     } else if (event.shiftKey) {
       const lastSelected = selected_files[id].pop()
       selected_files[id] = [];
-      ...
+      const files_list = document.getElementById(`files_${id}`).getElementsByTagName("li");
+      var indexLastSelected = -1;
+      var indexSelected = -1;
+      var index = 0;
+      for (const el of files_list) {
+        el.classList.remove('selected');
+        if (el.getElementsByTagName("p")[0].innerHTML == lastSelected) {
+          indexLastSelected = index;
+        }
+        if (el.getElementsByTagName("p")[0].innerHTML == file.name) {
+          indexSelected = index;
+        }
+        index++;
+      }
+
+      for (let i = Math.min(indexSelected, indexLastSelected); i <= Math.max(indexSelected, indexLastSelected); i++) {
+        if (i == indexLastSelected)
+          continue;
+        files_list[i].classList.add('selected');
+        selected_files[id].push(files_list[i].getElementsByTagName("p")[0].innerHTML)
+      }
+      files_list[indexLastSelected].classList.add('selected');
+      selected_files[id].push(files_list[indexLastSelected].getElementsByTagName("p")[0].innerHTML)
+
+
+      // for (const )
     } else {
-      if (file.type == "folder")
+      if (file.type == "folder") {
         openFolder(file.name, id);
+
+      } else {
+        const files_list = document.getElementById(`files_${id}`).getElementsByTagName("li");
+        selected_files[id] = [];
+        for (const el of files_list) {
+          if (el.getElementsByTagName("p")[0].innerHTML == file.name && !el.classList.contains('selected')) {
+            el.classList.add('selected');
+            selected_files[id].push(file.name);
+          } else {
+            el.classList.remove('selected');
+          }
+        }
+      }
     }
   }
   ul.appendChild(li);
@@ -262,6 +306,7 @@ function create_directory(path, name, id) {
 
 window.addEventListener('contextmenu', (e) => {
   e.preventDefault()
+  console.log(e.target)
   ipcRenderer.send('show-context-menu', {
     target: "connection",
     id: `${group_id}_${item_id}`,
@@ -279,21 +324,32 @@ window.addEventListener('contextmenu', (e) => {
       }, {
         type: 'separator'
       }, {
-        label: 'Cut'
+        label: 'Cut',
+        enabled: false,
+        accelerator: "CommandOrControl+X"
       }, {
-        label: 'Copy'
+        label: 'Copy',
+        enabled: false,
+        accelerator: "CommandOrControl+C"
       }, {
-        label: 'Paste'
+        label: 'Paste',
+        enabled: false,
+        accelerator: "CommandOrControl+V"
       }, {
         type: 'separator'
       }, {
-        label: 'Delete'
+        label: 'Delete',
+        enabled: false,
+        accelerator: "Delete"
       }, {
-        label: 'Rename'
+        label: 'Rename',
+        enabled: false,
+        accelerator: "F2"
       }, {
         type: 'separator'
       }, {
-        label: 'Properties'
+        label: 'Properties',
+        enabled: false
       }
     ]
   })
