@@ -167,6 +167,20 @@ fit.fit();
 term.resize(100, 50);
 fit.fit();
 
+term.element.addEventListener('contextmenu', (e) => {
+  e.preventDefault()
+  ipcRenderer.send('show-context-menu', {
+    return: `ssh_${group_id}_${item_id}`,
+    template: [
+      {
+        label: 'Copy'
+      }, {
+        label: 'Paste'
+      }
+    ]
+  })
+});
+
 /*----------------------------------------------------------------------------*/
 
 var stream_obj = undefined;
@@ -348,6 +362,13 @@ function open_menu(item) {
       document.getElementById(`menu_${menu_el}_button`).className = "";
       document.getElementById(`menu_${menu_el}`).style.display = "none";
     }
+  }
+  switch (item) {
+    case "terminal":
+      fitToscreen();
+      break;
+    default:
+      break;
   }
 }
 

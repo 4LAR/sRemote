@@ -3,6 +3,7 @@ var pathArr = [[], []];
 var sftp_obj = undefined;
 var selected_files_id = [];
 var split_flag = false;
+var selected_files = [[], []];
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +45,7 @@ function convert_path(arr) {
 
 function listFiles(id=0) {
   clearFileList(id);
-
+  selected_files[id] = [];
   var files = [];
   sftp_obj.readdir(convert_path(pathArr[id]), (err, list) => {
     if (err) {
@@ -93,6 +94,13 @@ function clearFileList(id=0) {
   document.getElementById(`files_${id}`).innerHTML = "";
 }
 
+function clearSelection(id) {
+  const ul = document.getElementById(`files_${id}`);
+  for (let li of ul.children) {
+    li.classList.remove('selected');
+  }
+}
+
 // access_rights:"lrwxrwxrwx"
 // group:"root"
 // name:"sbin"
@@ -109,9 +117,27 @@ function appendFileList(file, id=0) {
     <p class="size">${file_size}</p>
     <p class="access_rights">${file.access_rights}</p>
   `;
-  if (file.type == "folder") {
-    li.onclick = function() {
-      openFolder(file.name, id);
+  li.onclick = function(event) {
+    var element = event.target;
+    if (element.tagName != "LI") {
+      element = element.parentElement;
+    }
+    if (event.ctrlKey) {
+      const index = selected_files[id].indexOf(file.name);
+      if (index < 0) {
+        selected_files[id].push(file.name);
+        element.classList.add('selected');
+      } else {
+        selected_files[id].splice(index, 1);
+        element.classList.remove('selected');
+      }
+    } else if (event.shiftKey) {
+      const lastSelected = selected_files[id].pop()
+      selected_files[id] = [];
+      ...
+    } else {
+      if (file.type == "folder")
+        openFolder(file.name, id);
     }
   }
   ul.appendChild(li);
@@ -140,19 +166,6 @@ function back(id) {
   listFiles(id);
 }
 
-function upload_file(file, id=0) {
-  console.log(id);
-  console.log(pathArr[id]);
-  sftp_obj.fastPut(file.path.replaceAll('\\', '/'), convert_path(pathArr[id]) + "/" + file.name, {}, (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    };
-    listFiles(id);
-    console.log('File uploaded successfully');
-  });
-}
-
 function appendUploadFrame(id) {
   var ul = document.getElementById(`files_${id}`);
   var li = document.createElement("li");
@@ -165,6 +178,130 @@ function appendUploadFrame(id) {
   `;
   li.className = "upload";
   ul.appendChild(li);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function upload_file(file, id=0) {
+  const remotePath = convert_path(pathArr[id]) + "/" + file.name;
+
+  if (fs.lstatSync(file.path).isDirectory()) {
+    sftp_obj.mkdir(remotePath, (err) => {
+      console.log(`Directory created: ${remotePath}`);
+      uploadDirectory(file.path, remotePath, id);
+    });
+  } else {
+    sftp_obj.fastPut(file.path.replaceAll('\\', '/'), remotePath, {}, (err) => {
+      listFiles(id);
+      console.log('File uploaded successfully');
+    });
+  }
+}
+
+function uploadDirectory(localPath, remotePath, id) {
+  const fs = require('fs');
+  const path = require('path');
+
+  fs.readdir(localPath, (err, items) => {
+    let itemsCount = items.length;
+    if (itemsCount === 0) {
+      console.log(`Directory is empty: ${localPath}`);
+      return;
+    }
+
+    items.forEach(item => {
+      const itemPath = path.join(localPath, item);
+      const remoteItemPath = path.join(remotePath, item);
+
+      fs.stat(itemPath, (err, stats) => {
+        if (stats.isDirectory()) {
+          sftp_obj.mkdir(remoteItemPath, (err) => {
+            console.log(`Directory created: ${remoteItemPath}`);
+            uploadDirectory(itemPath, remoteItemPath, id);
+          });
+        } else {
+          sftp_obj.fastPut(itemPath.replaceAll('\\', '/'), remoteItemPath, {}, (err) => {
+            console.log(`File uploaded successfully: ${remoteItemPath}`);
+          });
+        }
+
+        itemsCount--;
+        if (itemsCount === 0) {
+          listFiles(id);
+        }
+      });
+    });
+  });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function remove(path, type, id) {
+  if (type == "folder") {
+    sftp_obj.unlink(path, (err) => {
+      listFiles(id);
+    });
+  } else {
+    sftp_obj.rmdir(path, (err) => {
+      listFiles(id);
+    });
+  }
+}
+
+function create_file(path, name, id) {
+
+}
+
+function create_directory(path, name, id) {
+  mkdir.unlink(path + "/" + name, (err) => {
+    listFiles(id);
+  });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+window.addEventListener('contextmenu', (e) => {
+  e.preventDefault()
+  ipcRenderer.send('show-context-menu', {
+    target: "connection",
+    id: `${group_id}_${item_id}`,
+    function: "sftp_context",
+    template: [
+      {
+        label: 'Create',
+        submenu: [
+          {
+            label: "File"
+          }, {
+            label: "Folder"
+          }
+        ]
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Cut'
+      }, {
+        label: 'Copy'
+      }, {
+        label: 'Paste'
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Delete'
+      }, {
+        label: 'Rename'
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Properties'
+      }
+    ]
+  })
+});
+
+function sftp_context(data) {
+  console.log(group_id, item_id, data);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -184,6 +321,7 @@ for (let id = 0; id < 2; id++) {
 
     dropZone.addEventListener('drop', (event) => {
       event.preventDefault();
+      dropZone.classList.remove('drag-over');
       const files = event.dataTransfer.files;
       for (const file of files) {
         upload_file(file, id)

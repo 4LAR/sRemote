@@ -428,3 +428,9 @@ function initializeSortableForGroup(groupId) {
     }
   });
 }
+
+ipcRenderer.on('context-menu-command', (e, command) => {
+  if (command.target == "connection") {
+    eval(`document.getElementById("iframe_${command.id}").contentWindow.${command.function}("${command.action}")`);
+  }
+})

@@ -185,6 +185,40 @@ const createWindow = () => {
     settings.options = response;
     settings.saveSettings();
   });
+
+  function parse_menu_template(event, response, data, subret="") {
+    var result = [];
+    for (const el of data) {
+      var insert_data = {};
+      if ("type" in el) {
+        insert_data = el;
+      } else {
+        insert_data = {
+          label: el.label
+        }
+        if (!("submenu" in el)) {
+          insert_data.click = () => {
+            event.sender.send('context-menu-command', {
+              target: response.target,
+              id: response.id,
+              function: response.function,
+              action: `${subret}${el.label}`
+            })
+          }
+        } else {
+          insert_data.submenu = parse_menu_template(event, response, el.submenu, `${subret}${el.label}_`);
+        }
+      }
+      result.push(insert_data);
+    }
+    return result;
+  }
+
+  ipcMain.on('show-context-menu', (event, response) => {
+    const template = parse_menu_template(event, response, response.template);
+    const menu = Menu.buildFromTemplate(template)
+    menu.popup({ window: BrowserWindow.fromWebContents(event.sender) })
+  })
 }
 
 if (!gotTheLock) {

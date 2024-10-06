@@ -14,6 +14,7 @@ div.files_toolBar.right {
   left: auto;
   right: 0px;
   width: 0%;
+  border-left: 1px solid var(--border-color);
 }
 
 div.files_toolBar > p {
@@ -25,12 +26,13 @@ div.files_toolBar > p {
 }
 
 div.files_toolBar > img.split {
-  position: absolute;
-  top: 4px;
+  position: fixed;
+  top: 36px;
   right: 10px;
   width: 16px;
   filter: invert(var(--invert-buttons));
   cursor: pointer;
+  z-index: 2;
 }
 
 div.files_toolBar > img.split:hover {
@@ -74,6 +76,11 @@ ul.files > li:hover {
   background-color: var(--input-bg);
   border-left: 3px solid var(--input-bg);
   transition: .1s all;
+}
+
+ul.files > li.selected {
+  background-color: var(--input-bg);
+  border-left: 3px solid var(--select-color) !important;
 }
 
 ul.files > li > img {
