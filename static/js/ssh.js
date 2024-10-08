@@ -168,23 +168,26 @@ term.resize(100, 50);
 fit.fit();
 
 document.getElementById("terminal").addEventListener('contextmenu', (e) => {
-  e.preventDefault()
-  ipcRenderer.send('show-context-menu', {
-    target: "connection",
-    id: `${group_id}_${item_id}`,
-    function: "ssh_context",
-    template: [
-      {
-        label: 'Copy',
-        enabled: term.hasSelection(),
-        accelerator: "CommandOrControl+Shift+C"
-      }, {
-        label: 'Paste',
-        enabled: !!navigator.clipboard.readText(),
-        accelerator: "CommandOrControl+Shift+V"
-      }
-    ]
-  })
+  e.preventDefault();
+  navigator.clipboard.readText().then((toPaste) => {
+    ipcRenderer.send('show-context-menu', {
+      target: "connection",
+      id: `${group_id}_${item_id}`,
+      function: "ssh_context",
+      template: [
+        {
+          label: 'Copy',
+          enabled: term.hasSelection(),
+          accelerator: "CommandOrControl+Shift+C"
+        }, {
+          label: 'Paste',
+          enabled: (toPaste.length > 0),
+          accelerator: "CommandOrControl+Shift+V"
+        }
+      ]
+    })
+  });
+
 });
 
 function ssh_context(data) {
@@ -313,7 +316,7 @@ function create_connection() {
     printOnNewLine(`[\x1b[31mERROR\x1b[0m] ${e}`);
     local_update_status(1);
     connected_flag = false;
-    console.error();(e);
+    console.error(e);
   }
 
 }
