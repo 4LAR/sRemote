@@ -362,88 +362,57 @@ function initializeSortableForGroup(groupId) {
       const newIndex = evt.newIndex;
       const oldIndex = evt.oldIndex;
 
-      const group = config_file[groupId];
-      const movedItem = group.items[oldIndex];
+      const fromGroupId = evt.from.id.split("_")[1];
+      const toGroupId = evt.to.id.split("_")[1];
 
-      // Обновляем config_file
-      group.items.splice(oldIndex, 1);
-      group.items.splice(newIndex, 0, movedItem);
+      // Если элемент перемещается между группами
+      if (fromGroupId !== toGroupId) {
+        const fromGroup = config_file[fromGroupId];
+        const toGroup = config_file[toGroupId];
+        const movedItem = fromGroup.items[oldIndex];
 
-      // Обновляем TABS
-      const movedTabItem = TABS[groupId].items[oldIndex];
-      TABS[groupId].items.splice(oldIndex, 1);
-      TABS[groupId].items.splice(newIndex, 0, movedTabItem);
+        // Удаляем элемент из исходной группы
+        fromGroup.items.splice(oldIndex, 1);
+        // Добавляем элемент в целевую группу
+        toGroup.items.splice(newIndex, 0, movedItem);
 
-      // Обновляем id внутри TABS
-      TABS[groupId].items.forEach((item, index) => {
-        item.id = index; // Обновляем id на основе нового индекса
-      });
+        // Обновляем TABS
+        const movedTabItem = TABS[fromGroupId].items[oldIndex];
+        TABS[fromGroupId].items.splice(oldIndex, 1);
+        TABS[toGroupId].items.splice(newIndex, 0, movedTabItem);
 
-      const group_items = itemsList.getElementsByTagName('li');
+        //...
+      } else {
+        // Если элемент перемещается внутри одной группы
+        const group = config_file[fromGroupId];
+        const movedItem = group.items[oldIndex];
 
-      var iframes_list = [];
-      var li_list = [];
-      var status_list = [];
-      var reconnect_list = [];
-      for (const item of [...group_items].reverse()) {
-        var group_id_ = item.id.split("_")[1]
-        var item_id_ = item.id.split("_")[2]
-        iframes_list.push(
-          [document.getElementById(`iframe_${group_id_}_${item_id_}`), false]
-        );
-        li_list.push(
-          [document.getElementById(`li_${group_id_}_${item_id_}`), false]
-        );
-        status_list.push(
-          [document.getElementById(`status_${group_id_}_${item_id_}`), false]
-        );
-        reconnect_list.push(
-          [document.getElementById(`reconnect_${group_id_}_${item_id_}`), false]
-        );
-      }
+        // Обновляем config_file
+        group.items.splice(oldIndex, 1);
+        group.items.splice(newIndex, 0, movedItem);
 
-      console.log("iframe", iframes_list);
-      console.log("li", li_list);
-      console.log("status", status_list);
-      console.log("reconnect", reconnect_list);
+        // Обновляем TABS
+        const movedTabItem = TABS[fromGroupId].items[oldIndex];
+        TABS[fromGroupId].items.splice(oldIndex, 1);
+        TABS[fromGroupId].items.splice(newIndex, 0, movedTabItem);
 
-      let new_index = group_items.length - 1;
-      for (const item of [...group_items].reverse()) {
-        oldIndex_ = item.id.split("_")[2];
-        item.id = `item_${groupId}_${new_index}`;
-
-        for (const el of iframes_list) {
-          if ((el[0].id.split("_")[2] == oldIndex_) && (!el[1])) {
-            el[0].id = `iframe_${groupId}_${new_index}`;
-            el[1] = true;
-            el[0].contentWindow.item_id = new_index;
-          }
-        }
-        for (const el of li_list) {
-          if ((el[0].id.split("_")[2] == oldIndex_) && (!el[1])) {
-            el[0].id = `li_${groupId}_${new_index}`;
-            el[1] = true;
-          }
-        }
-        for (const el of status_list) {
-          if ((el[0].id.split("_")[2] == oldIndex_) && (!el[1])) {
-            el[0].id = `status_${groupId}_${new_index}`;
-            el[1] = true;
-          }
-        }
-        for (const el of reconnect_list) {
-          if ((el[0].id.split("_")[2] == oldIndex_) && (!el[1])) {
-            el[0].id = `reconnect_${groupId}_${new_index}`;
-            el[1] = true;
-          }
-        }
-        new_index--;
+        //...
       }
 
       // Сохраняем изменения в store
       store.set('connections', config_file);
+      console.log(TABS);
     }
   });
+}
+
+function updateGroupsIds(groupIdOne, groupIdTwo) {
+  const groupOneList = document.getElementById(`items_${groupIdOne}`).getElementsByTagName('LI');
+  const groupTwoList = document.getElementById(`items_${groupIdTwo}`).getElementsByTagName('LI');
+  const maxLength = (groupOneList.length > groupTwoList.length)? groupOneList.length: groupTwoList.length;
+  for (let index = 0; index < maxLength; index++) {
+    //...
+  }
 }
 
 ipcRenderer.on('context-menu-command', (e, command) => {
