@@ -247,7 +247,7 @@ function delete_connection(group_id, item_id) {
   // document.getElementById(`line_${group_id}_${item_id}`).remove();
   document.getElementById(`li_${group_id}_${item_id}`).remove();
 
-  auto_height_items(group_id, -1);
+  auto_height_items(group_id);
   close_alert(false);
 }
 

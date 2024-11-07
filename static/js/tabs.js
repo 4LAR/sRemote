@@ -92,16 +92,16 @@ function update_status(group_id, item_id, status) {
 
 //
 function auto_height_items(group_id, delta_items=0) {
-  var items_list = document.getElementById(`items_${group_id}`);
-  var delta_pixels = 0;
-  if (delta_items !== 0) {
-    // var ul_length = document.getElementById(`group_${group_id}`).getElementsByClassName("line").length;
-    var ul_length = 0;
-    delta_pixels = items_list.scrollHeight / ul_length;
+  var items_elem = document.getElementById(`items_${group_id}`);
+  var items_list = items_elem.getElementsByTagName('LI');
+  var delta_pixels = (items_list.length > 0)? items_list[0].offsetHeight: 0;
+  var height = 0;
+  for (let i = 0; i < items_list.length + delta_items; i++) {
+    height += delta_pixels;
   }
 
   const isContentVisible = document.getElementById(`group_${group_id}`).className == "group selected";
-  items_list.style.height = (isContentVisible)? `${items_list.scrollHeight + ((delta_items !== 0)? (delta_pixels * delta_items): 0)}px`: `0px`;
+  items_elem.style.height = (isContentVisible)? `${height}px`: `0px`;
 }
 
 //
@@ -328,17 +328,34 @@ function customKeyEventHandler(e) {
 window.addEventListener('keydown', customKeyEventHandler);
 
 /*----------------------------------------------------------------------------*/
-
+var last_drag_connection_id = undefined;
 function initializeSortableForGroup(groupId) {
   const itemsList = document.getElementById(`items_${groupId}`);
 
   const sortable = new Sortable(itemsList, {
+    group: 'connections',
     animation: 150,
     ghostClass: 'sortable-ghost', // Класс для плейсхолдера
     onStart: function (evt) {
       evt.item.style.opacity = '0.4';
     },
+    onMove: function(evt) {
+      if (!last_drag_connection_id)
+        last_drag_connection_id = evt.from.id.split("_")[1];
+      var from = last_drag_connection_id;
+      var to = evt.to.id.split("_")[1];
+      console.log(from, to);
+      if (from == to) {
+        auto_height_items(from);
+        auto_height_items(to);
+      } else {
+        auto_height_items(from, -1);
+        auto_height_items(to, 1);
+      }
+      last_drag_connection_id = to;
+    },
     onEnd: function (evt) {
+      last_drag_connection_id = undefined;
       evt.item.style.opacity = '1';
       let config_file = store.get('connections');
       console.log(config_file);
