@@ -381,7 +381,14 @@ function initializeSortableForGroup(groupId) {
         TABS[fromGroupId].items.splice(oldIndex, 1);
         TABS[toGroupId].items.splice(newIndex, 0, movedTabItem);
 
-        //...
+        TABS[fromGroupId].items.forEach((item, index) => {
+          item.id = index; // Обновляем id на основе нового индекса
+        });
+        TABS[toGroupId].items.forEach((item, index) => {
+          item.id = index;
+        });
+
+        updateGroupsIds(fromGroupId, toGroupId);
       } else {
         // Если элемент перемещается внутри одной группы
         const group = config_file[fromGroupId];
@@ -396,7 +403,11 @@ function initializeSortableForGroup(groupId) {
         TABS[fromGroupId].items.splice(oldIndex, 1);
         TABS[fromGroupId].items.splice(newIndex, 0, movedTabItem);
 
-        //...
+        TABS[fromGroupId].items.forEach((item, index) => {
+          item.id = index; // Обновляем id на основе нового индекса
+        });
+
+        updateGroupsIds(fromGroupId);
       }
 
       // Сохраняем изменения в store
@@ -406,12 +417,61 @@ function initializeSortableForGroup(groupId) {
   });
 }
 
-function updateGroupsIds(groupIdOne, groupIdTwo) {
+function updateGroupsIds(groupIdOne, groupIdTwo=undefined) {
   const groupOneList = document.getElementById(`items_${groupIdOne}`).getElementsByTagName('LI');
-  const groupTwoList = document.getElementById(`items_${groupIdTwo}`).getElementsByTagName('LI');
+  const groupTwoList = (!!groupIdTwo)? document.getElementById(`items_${groupIdTwo}`).getElementsByTagName('LI'): {length: 0};
   const maxLength = (groupOneList.length > groupTwoList.length)? groupOneList.length: groupTwoList.length;
-  for (let index = 0; index < maxLength; index++) {
-    //...
+  for (let index = maxLength - 1; index >= 0; index--) {
+    var OneItem = undefined;
+    var OneIframe = undefined;
+    var OneLi = undefined;
+    var OneStatus = undefined;
+    var OneReconnect = undefined;
+    // Получем элементы по старым иденторам (Сначала для первой группы)
+    if (groupOneList[index]) {
+      const OneOldGroup = groupOneList[index].id.split("_")[1];
+      const OneOldId = groupOneList[index].id.split("_")[2];
+      OneItem       = document.getElementById(`item_${OneOldGroup}_${OneOldId}`);
+      OneIframe     = document.getElementById(`iframe_${OneOldGroup}_${OneOldId}`);
+      OneLi         = document.getElementById(`li_${OneOldGroup}_${OneOldId}`);
+      OneStatus     = document.getElementById(`status_${OneOldGroup}_${OneOldId}`);
+      OneReconnect  = document.getElementById(`reconnect_${OneOldGroup}_${OneOldId}`);
+    }
+
+    var TwoItem = undefined;
+    var TwoIframe = undefined;
+    var TwoLi = undefined;
+    var TwoStatus = undefined;
+    var TwoReconnect = undefined;
+    // а теперь для второй
+    if (groupTwoList[index]) {
+      const TwoOldGroup = groupTwoList[index].id.split("_")[1];
+      const TwoOldId = groupTwoList[index].id.split("_")[2];
+      TwoItem       = document.getElementById(`item_${TwoOldGroup}_${TwoOldId}`);
+      TwoIframe     = document.getElementById(`iframe_${TwoOldGroup}_${TwoOldId}`);
+      TwoLi         = document.getElementById(`li_${TwoOldGroup}_${TwoOldId}`);
+      TwoStatus     = document.getElementById(`status_${TwoOldGroup}_${TwoOldId}`);
+      TwoReconnect  = document.getElementById(`reconnect_${TwoOldGroup}_${TwoOldId}`);
+    }
+    // console.log(OneItem, TwoItem);
+
+    // Заменяем старые идентификаторы на новые
+    if (!!OneItem) {
+      OneItem.id      = `item_${groupIdOne}_${index}`;
+      OneIframe.id    = `iframe_${groupIdOne}_${index}`;
+      OneLi.id        = `li_${groupIdOne}_${index}`;
+      OneStatus.id    = `status_${groupIdOne}_${index}`;
+      OneReconnect.id = `reconnect_${groupIdOne}_${index}`;
+    }
+
+    if (!!groupIdTwo && !!TwoItem) {
+      TwoItem.id      = `item_${groupIdTwo}_${index}`;
+      TwoIframe.id    = `iframe_${groupIdTwo}_${index}`;
+      TwoLi.id        = `li_${groupIdTwo}_${index}`;
+      TwoStatus.id    = `status_${groupIdTwo}_${index}`;
+      TwoReconnect.id = `reconnect_${groupIdTwo}_${index}`;
+    }
+
   }
 }
 
