@@ -43,6 +43,8 @@ function alert_create_edit_connection_event(event) {
 }
 
 function alert_create_edit_connection(group_id, item_id, event, edit_flag=false) {
+  if (group_id === undefined)
+    group_id = get_id_group_from_event(event);
   open_alert(`
     <p class="name">${(edit_flag)? localization_dict.edit_connection_title: localization_dict.create_connection_title}</p>
     <hr>
@@ -253,7 +255,9 @@ function delete_connection(group_id, item_id) {
 
 /*----------------------------------------------------------------------------*/
 
-function alert_edit_create_group(group_id, event, edit_flag=false) {
+function alert_edit_create_group(event, edit_flag=false) {
+  const group_id = get_id_group_from_event(event);
+  console.log(group_id);
   open_alert(`
     <p class="name">${(edit_flag)? localization_dict.edit_group_title: localization_dict.create_group_title}</p>
     <hr>

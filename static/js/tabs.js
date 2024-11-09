@@ -23,6 +23,16 @@ function get_ids_from_event(event) {
   return [id.split("_")[1], id.split("_")[2]];
 }
 
+function get_id_group_from_event(event) {
+  var id = "";
+  id = event.target.parentElement.id;
+  if (!event.target.parentElement.id) {
+    id = event.target.parentElement.parentElement.id;
+    console.log("1", event.target.parentElement.parentElement);
+  }
+  return id.split("_")[1];
+}
+
 //
 function get_index_group_by_id(group_id) {
   var real_group_id = 0;
@@ -105,7 +115,8 @@ function auto_height_items(group_id, delta_items=0) {
 }
 
 //
-function open_group(group_id) {
+function open_group(event) {
+  const group_id = get_id_group_from_event(event);
   var index = get_index_group_by_id(group_id);
   if (TABS[index].open_flag) {
     document.getElementById(`group_${group_id}`).className = "group";
@@ -145,14 +156,12 @@ function generate_group_data(data, id="") {
     <div class="indicator" id="group_indicator_${id}"></div>
     <img class="dropdown" src="./static/img/dropdown.svg">
     <p class="group_name">${data.name}</p>
-    <div class="hitbox" onclick="open_group(${id})">
+    <div class="hitbox" onclick="open_group(event)"></div>
 
-    </div>
-
-    <div class="more group_activity" onclick="alert_edit_create_group(${id}, event, true)">
+    <div class="more group_activity" onclick="alert_edit_create_group(event, true)">
       <img src="./static/img/edit.svg">
     </div>
-    <div class="add group_activity" onclick="alert_create_edit_connection(${id}, undefined, event, false)">
+    <div class="add group_activity" onclick="alert_create_edit_connection(undefined, undefined, event, false)">
       <img src="./static/img/add.svg">
     </div>
 
@@ -421,59 +430,68 @@ function updateGroupsIds(groupIdOne, groupIdTwo=undefined) {
   const groupOneList = document.getElementById(`items_${groupIdOne}`).getElementsByTagName('LI');
   const groupTwoList = (!!groupIdTwo)? document.getElementById(`items_${groupIdTwo}`).getElementsByTagName('LI'): {length: 0};
   const maxLength = (groupOneList.length > groupTwoList.length)? groupOneList.length: groupTwoList.length;
-  for (let index = maxLength - 1; index >= 0; index--) {
-    var OneItem = undefined;
-    var OneIframe = undefined;
-    var OneLi = undefined;
-    var OneStatus = undefined;
-    var OneReconnect = undefined;
+
+  var groupOneComponents = [];
+  var groupTwoComponents = [];
+  for (let index = 0; index < maxLength; index++) {
     // Получем элементы по старым иденторам (Сначала для первой группы)
     if (groupOneList[index]) {
       const OneOldGroup = groupOneList[index].id.split("_")[1];
       const OneOldId = groupOneList[index].id.split("_")[2];
-      OneItem       = document.getElementById(`item_${OneOldGroup}_${OneOldId}`);
-      OneIframe     = document.getElementById(`iframe_${OneOldGroup}_${OneOldId}`);
-      OneLi         = document.getElementById(`li_${OneOldGroup}_${OneOldId}`);
-      OneStatus     = document.getElementById(`status_${OneOldGroup}_${OneOldId}`);
-      OneReconnect  = document.getElementById(`reconnect_${OneOldGroup}_${OneOldId}`);
+      groupOneComponents.push({
+        Item: document.getElementById(`item_${OneOldGroup}_${OneOldId}`),
+        Iframe: document.getElementById(`iframe_${OneOldGroup}_${OneOldId}`),
+        Li: document.getElementById(`li_${OneOldGroup}_${OneOldId}`),
+        Status: document.getElementById(`status_${OneOldGroup}_${OneOldId}`),
+        Reconnect: document.getElementById(`reconnect_${OneOldGroup}_${OneOldId}`)
+      });
     }
 
-    var TwoItem = undefined;
-    var TwoIframe = undefined;
-    var TwoLi = undefined;
-    var TwoStatus = undefined;
-    var TwoReconnect = undefined;
     // а теперь для второй
     if (groupTwoList[index]) {
       const TwoOldGroup = groupTwoList[index].id.split("_")[1];
       const TwoOldId = groupTwoList[index].id.split("_")[2];
-      TwoItem       = document.getElementById(`item_${TwoOldGroup}_${TwoOldId}`);
-      TwoIframe     = document.getElementById(`iframe_${TwoOldGroup}_${TwoOldId}`);
-      TwoLi         = document.getElementById(`li_${TwoOldGroup}_${TwoOldId}`);
-      TwoStatus     = document.getElementById(`status_${TwoOldGroup}_${TwoOldId}`);
-      TwoReconnect  = document.getElementById(`reconnect_${TwoOldGroup}_${TwoOldId}`);
-    }
-    // console.log(OneItem, TwoItem);
 
-    // Заменяем старые идентификаторы на новые
-    if (!!OneItem) {
-      OneItem.id      = `item_${groupIdOne}_${index}`;
-      OneIframe.id    = `iframe_${groupIdOne}_${index}`;
-      OneLi.id        = `li_${groupIdOne}_${index}`;
-      OneStatus.id    = `status_${groupIdOne}_${index}`;
-      OneReconnect.id = `reconnect_${groupIdOne}_${index}`;
+      groupTwoComponents.push({
+        Item: document.getElementById(`item_${TwoOldGroup}_${TwoOldId}`),
+        Iframe: document.getElementById(`iframe_${TwoOldGroup}_${TwoOldId}`),
+        Li: document.getElementById(`li_${TwoOldGroup}_${TwoOldId}`),
+        Status: document.getElementById(`status_${TwoOldGroup}_${TwoOldId}`),
+        Reconnect: document.getElementById(`reconnect_${TwoOldGroup}_${TwoOldId}`)
+      });
+    }
+  }
+
+  // Заменяем старые идентификаторы на новые
+  console.log(groupOneComponents, groupTwoComponents);
+  for (let index = 0; index < maxLength; index++) {
+    if (!!groupOneComponents[index]) {
+      groupOneComponents[index].Item.id      = `item_${groupIdOne}_${index}`;
+      groupOneComponents[index].Li.id        = `li_${groupIdOne}_${index}`;
+      groupOneComponents[index].Status.id    = `status_${groupIdOne}_${index}`;
+      groupOneComponents[index].Reconnect.id = `reconnect_${groupIdOne}_${index}`;
+      groupOneComponents[index].Iframe.id    = `iframe_${groupIdOne}_${index}`;
+      groupOneComponents[index].Iframe.contentWindow.group_id = groupIdOne;
+      groupOneComponents[index].Iframe.contentWindow.item_id = index;
     }
 
-    if (!!groupIdTwo && !!TwoItem) {
-      TwoItem.id      = `item_${groupIdTwo}_${index}`;
-      TwoIframe.id    = `iframe_${groupIdTwo}_${index}`;
-      TwoLi.id        = `li_${groupIdTwo}_${index}`;
-      TwoStatus.id    = `status_${groupIdTwo}_${index}`;
-      TwoReconnect.id = `reconnect_${groupIdTwo}_${index}`;
+    if (!!groupIdTwo && !!groupTwoComponents[index]) {
+      groupTwoComponents[index].Item.id      = `item_${groupIdTwo}_${index}`;
+      groupTwoComponents[index].Li.id        = `li_${groupIdTwo}_${index}`;
+      groupTwoComponents[index].Status.id    = `status_${groupIdTwo}_${index}`;
+      groupTwoComponents[index].Reconnect.id = `reconnect_${groupIdTwo}_${index}`;
+      groupTwoComponents[index].Iframe.id    = `iframe_${groupIdTwo}_${index}`;
+      groupTwoComponents[index].Iframe.contentWindow.group_id = groupIdTwo;
+      groupTwoComponents[index].Iframe.contentWindow.item_id = index;
     }
-
   }
 }
+
+/*----------------------------------------------------------------------------*/
+
+
+
+/*----------------------------------------------------------------------------*/
 
 ipcRenderer.on('context-menu-command', (e, command) => {
   if (command.target == "connection") {
