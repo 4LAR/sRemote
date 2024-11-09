@@ -63,7 +63,7 @@ function select_item(group_id, item_id) {
       if (group.id == group_id && item.id == item_id) {
         document.getElementById(`item_${group.id}_${item.id}`).className = "selected";
         openModal(`iframe_${group.id}_${item.id}`);
-        document.getElementById(`iframe_${group.id}_${item.id}`).contentWindow.addEventListener('keydown', customKeyEventHandler);
+        // document.getElementById(`iframe_${group.id}_${item.id}`).contentWindow.addEventListener('keydown', customKeyEventHandler);
 
         in_group_flag = true;
         //
@@ -218,6 +218,7 @@ function append_item(data, group_id, item_id) {
   //
   document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.update_status = update_status;
   document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.localization_dict = localization_dict;
+  document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.addEventListener('keydown', customKeyEventHandler);
 }
 
 //
