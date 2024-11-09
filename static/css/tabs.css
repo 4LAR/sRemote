@@ -253,6 +253,7 @@ ul.tabs.drag .tabs_items > li > * {
   display: block;
   padding-top: 25px;
   background-color: var(--groups-bg-color);
+  transition: .2s all;
 }
 
 .tabs > li.group > ul {
@@ -266,14 +267,16 @@ ul.tabs.drag .tabs_items > li > * {
 }
 
 .tabs > li.group > p.empty_group {
-  position: inherit;
+  position: absolute;
   margin: 0px;
-  padding: 5px 0px;
+  padding-top: 0px;
+  padding-bottom: 10px;
   text-align: center;
   display: none;
   width: 100%;
   color: var(--tabs-selected-font-color);
   border-bottom: 1px solid var(--border-color);
+  top: 35px;
 }
 
 .tabs > li.group.selected > ul:empty ~ .empty_group {

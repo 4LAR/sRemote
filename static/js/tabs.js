@@ -28,7 +28,6 @@ function get_id_group_from_event(event) {
   id = event.target.parentElement.id;
   if (!event.target.parentElement.id) {
     id = event.target.parentElement.parentElement.id;
-    console.log("1", event.target.parentElement.parentElement);
   }
   return id.split("_")[1];
 }
@@ -69,7 +68,6 @@ function select_item(group_id, item_id) {
         in_group_flag = true;
         //
         if (SETTINGS_DICT["Connections"]["autoConnect"]) {
-          console.log("zalupa");
           var iframe = document.getElementById(`iframe_${group.id}_${item.id}`);
           iframe.contentWindow.onload = function() {
             iframe.contentWindow.create_connection();
@@ -108,6 +106,10 @@ function auto_height_items(group_id, delta_items=0) {
   var height = 0;
   for (let i = 0; i < items_list.length + delta_items; i++) {
     height += delta_pixels;
+  }
+
+  if (height < 1) {
+    height = 41;
   }
 
   const isContentVisible = document.getElementById(`group_${group_id}`).className == "group selected";
@@ -197,7 +199,6 @@ function append_item(data, group_id, item_id) {
     className="",
     function(event) {
       const ids = get_ids_from_event(event);
-      console.log(ids);
       var iframe = document.getElementById(`iframe_${ids[0]}_${ids[1]}`);
       if (!iframe.contentWindow.connected_flag) {
         iframe.contentWindow.connect();
@@ -353,7 +354,6 @@ function initializeSortableForGroup(groupId) {
         last_drag_connection_id = evt.from.id.split("_")[1];
       var from = last_drag_connection_id;
       var to = evt.to.id.split("_")[1];
-      console.log(from, to);
       if (from == to) {
         auto_height_items(from);
         auto_height_items(to);
@@ -367,7 +367,6 @@ function initializeSortableForGroup(groupId) {
       last_drag_connection_id = undefined;
       evt.item.style.opacity = '1';
       let config_file = store.get('connections');
-      console.log(config_file);
       const newIndex = evt.newIndex;
       const oldIndex = evt.oldIndex;
 
@@ -397,7 +396,7 @@ function initializeSortableForGroup(groupId) {
           item.id = index;
         });
 
-        updateGroupsIds(fromGroupId, toGroupId);
+        updateGroupsIds([fromGroupId, toGroupId]);
       } else {
         // Если элемент перемещается внутри одной группы
         const group = config_file[fromGroupId];
@@ -416,80 +415,104 @@ function initializeSortableForGroup(groupId) {
           item.id = index; // Обновляем id на основе нового индекса
         });
 
-        updateGroupsIds(fromGroupId);
+        updateGroupsIds([fromGroupId]);
       }
 
       // Сохраняем изменения в store
       store.set('connections', config_file);
-      console.log(TABS);
     }
   });
 }
 
-function updateGroupsIds(groupIdOne, groupIdTwo=undefined) {
-  const groupOneList = document.getElementById(`items_${groupIdOne}`).getElementsByTagName('LI');
-  const groupTwoList = (!!groupIdTwo)? document.getElementById(`items_${groupIdTwo}`).getElementsByTagName('LI'): {length: 0};
-  const maxLength = (groupOneList.length > groupTwoList.length)? groupOneList.length: groupTwoList.length;
+// Обновление всех идентификаторов внутри групп id которых указаны в updateIds (updateIds = [int, ...])
+function updateGroupsIds(updateIds) {
+  const groupsList = updateIds.map(o => document.getElementById(`items_${o}`).getElementsByTagName('LI'));
+  const maxLength = Math.max(...groupsList.map(o => o.length));
+  var groupsComponents = [];
+  for (const _ of groupsList) {
+    groupsComponents.push([]);
+  }
 
-  var groupOneComponents = [];
-  var groupTwoComponents = [];
+  // Получем элементы по старым иденторам
   for (let index = 0; index < maxLength; index++) {
-    // Получем элементы по старым иденторам (Сначала для первой группы)
-    if (groupOneList[index]) {
-      const OneOldGroup = groupOneList[index].id.split("_")[1];
-      const OneOldId = groupOneList[index].id.split("_")[2];
-      groupOneComponents.push({
-        Item: document.getElementById(`item_${OneOldGroup}_${OneOldId}`),
-        Iframe: document.getElementById(`iframe_${OneOldGroup}_${OneOldId}`),
-        Li: document.getElementById(`li_${OneOldGroup}_${OneOldId}`),
-        Status: document.getElementById(`status_${OneOldGroup}_${OneOldId}`),
-        Reconnect: document.getElementById(`reconnect_${OneOldGroup}_${OneOldId}`)
-      });
-    }
+    for (let groupIndex = 0; groupIndex < groupsList.length; groupIndex++) {
+      if (!groupsList[groupIndex][[index]])
+        continue;
 
-    // а теперь для второй
-    if (groupTwoList[index]) {
-      const TwoOldGroup = groupTwoList[index].id.split("_")[1];
-      const TwoOldId = groupTwoList[index].id.split("_")[2];
-
-      groupTwoComponents.push({
-        Item: document.getElementById(`item_${TwoOldGroup}_${TwoOldId}`),
-        Iframe: document.getElementById(`iframe_${TwoOldGroup}_${TwoOldId}`),
-        Li: document.getElementById(`li_${TwoOldGroup}_${TwoOldId}`),
-        Status: document.getElementById(`status_${TwoOldGroup}_${TwoOldId}`),
-        Reconnect: document.getElementById(`reconnect_${TwoOldGroup}_${TwoOldId}`)
+      const OldGroup = groupsList[groupIndex][index].id.split("_")[1];
+      const OldId = groupsList[groupIndex][index].id.split("_")[2];
+      groupsComponents[groupIndex].push({
+        Item: document.getElementById(`item_${OldGroup}_${OldId}`),
+        Iframe: document.getElementById(`iframe_${OldGroup}_${OldId}`),
+        Li: document.getElementById(`li_${OldGroup}_${OldId}`),
+        Status: document.getElementById(`status_${OldGroup}_${OldId}`),
+        Reconnect: document.getElementById(`reconnect_${OldGroup}_${OldId}`)
       });
     }
   }
 
   // Заменяем старые идентификаторы на новые
-  console.log(groupOneComponents, groupTwoComponents);
   for (let index = 0; index < maxLength; index++) {
-    if (!!groupOneComponents[index]) {
-      groupOneComponents[index].Item.id      = `item_${groupIdOne}_${index}`;
-      groupOneComponents[index].Li.id        = `li_${groupIdOne}_${index}`;
-      groupOneComponents[index].Status.id    = `status_${groupIdOne}_${index}`;
-      groupOneComponents[index].Reconnect.id = `reconnect_${groupIdOne}_${index}`;
-      groupOneComponents[index].Iframe.id    = `iframe_${groupIdOne}_${index}`;
-      groupOneComponents[index].Iframe.contentWindow.group_id = groupIdOne;
-      groupOneComponents[index].Iframe.contentWindow.item_id = index;
-    }
+    for (let groupIndex = 0; groupIndex < groupsList.length; groupIndex++) {
+      if (!groupsComponents[groupIndex][index])
+        continue;
 
-    if (!!groupIdTwo && !!groupTwoComponents[index]) {
-      groupTwoComponents[index].Item.id      = `item_${groupIdTwo}_${index}`;
-      groupTwoComponents[index].Li.id        = `li_${groupIdTwo}_${index}`;
-      groupTwoComponents[index].Status.id    = `status_${groupIdTwo}_${index}`;
-      groupTwoComponents[index].Reconnect.id = `reconnect_${groupIdTwo}_${index}`;
-      groupTwoComponents[index].Iframe.id    = `iframe_${groupIdTwo}_${index}`;
-      groupTwoComponents[index].Iframe.contentWindow.group_id = groupIdTwo;
-      groupTwoComponents[index].Iframe.contentWindow.item_id = index;
+      const groupId = updateIds[groupIndex];
+      groupsComponents[groupIndex][index].Item.id      = `item_${groupId}_${index}`;
+      groupsComponents[groupIndex][index].Li.id        = `li_${groupId}_${index}`;
+      groupsComponents[groupIndex][index].Status.id    = `status_${groupId}_${index}`;
+      groupsComponents[groupIndex][index].Reconnect.id = `reconnect_${groupId}_${index}`;
+      groupsComponents[groupIndex][index].Iframe.id    = `iframe_${groupId}_${index}`;
+      groupsComponents[groupIndex][index].Iframe.contentWindow.group_id = groupId;
+      groupsComponents[groupIndex][index].Iframe.contentWindow.item_id = index;
     }
   }
 }
 
 /*----------------------------------------------------------------------------*/
 
+const sortable_groups = new Sortable(document.getElementById('tabs'), {
+  group: 'groups',
+  animation: 150,
+  ghostClass: 'sortable-ghost', // Класс для плейсхолдера
+  onStart: function (evt) {
+    evt.item.style.opacity = '0.4';
+  },
+  onMove: function(evt) {
 
+  },
+  onEnd: function (evt) {
+    evt.item.style.opacity = '1';
+
+    let config_file = store.get('connections');
+    let newTabs = [];
+    let newConfig = Array(config_file.length).fill({});
+
+    const newIndex = evt.newIndex;
+    const oldIndex = evt.oldIndex;
+
+    // let queueGroupsSort = Array(config_file.length).fill({});
+    const groups = document.getElementById('tabs').getElementsByClassName('group');
+    for (let i = 0; i < groups.length; i++) {
+      const oldGroupId = groups[i].id.split("_")[1];
+      const groupIndex = get_index_group_by_id(oldGroupId);
+      newTabs.push(TABS[groupIndex]);
+      newConfig[i] = config_file[groupIndex];
+    }
+
+    TABS = newTabs;
+    for (let i = 0; i < groups.length; i++) {
+      groups[i].id = `group_${i}`;
+      groups[i].getElementsByClassName('tabs_items')[0].id = `items_${i}`;
+      groups[i].getElementsByClassName('indicator')[0].id = `group_indicator_${i}`;
+      TABS[i].id = i;
+    }
+
+    updateGroupsIds([...Array(groups.length).keys()]);
+    store.set('connections', newConfig);
+
+  }
+});
 
 /*----------------------------------------------------------------------------*/
 

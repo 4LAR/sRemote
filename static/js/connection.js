@@ -255,8 +255,8 @@ function delete_connection(group_id, item_id) {
 
 /*----------------------------------------------------------------------------*/
 
-function alert_edit_create_group(event, edit_flag=false) {
-  const group_id = get_id_group_from_event(event);
+function alert_edit_create_group(event=undefined, edit_flag=false) {
+  const group_id = (event)? get_id_group_from_event(event): 0;
   console.log(group_id);
   open_alert(`
     <p class="name">${(edit_flag)? localization_dict.edit_group_title: localization_dict.create_group_title}</p>
@@ -313,13 +313,7 @@ function save_data_group(group_id, edit_flag=false) {
       });
 
       TABS.push(insert_data)
-      append_to_ul(
-        "tabs",
-        generate_group_data(insert_data, insert_data.id),
-        undefined,
-        `group_${insert_data.id}`,
-        className="group"
-      );
+      append_group(insert_data, insert_data.id);
     } catch (e) {
       console.warn(e);
     }
