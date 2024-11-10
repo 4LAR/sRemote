@@ -105,7 +105,8 @@ function auto_height_items(group_id, delta_items=0) {
   var delta_pixels = (items_list.length > 0)? items_list[0].offsetHeight: 0;
   var height = 0;
   for (let i = 0; i < items_list.length + delta_items; i++) {
-    height += delta_pixels;
+    if (items_list[i].style.display !== "none")
+      height += delta_pixels;
   }
 
   if (height < 1) {

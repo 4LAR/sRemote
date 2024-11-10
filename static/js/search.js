@@ -10,6 +10,7 @@ function search() {
         openModal(`item_${group.id}_${item.id}`);
         openModal(`line_${group.id}_${item.id}`);
       }
+      auto_height_items(group.id);
     }
     closeModal("toolBar_info");
     return;
@@ -33,6 +34,7 @@ function search() {
     }
     if (found_flag) {
       openModal(`group_${group.id}`);
+      auto_height_items(group.id);
     } else {
       closeModal(`group_${group.id}`);
     }
