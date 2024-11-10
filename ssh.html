@@ -27,11 +27,13 @@
     </div>
     <div id="menu_files">
       <div id="files_toolBar_0" class="files_toolBar">
-        <p id="path_0"></p>
+        <img class="reload" src="./static/img/reload.svg" onclick="listFiles(0)">
+        <input id="path_0"></input>
         <img class="split" src="./static/img/split.svg" onclick="split()">
       </div>
       <div id="files_toolBar_1" class="files_toolBar right">
-        <p id="path_1"></p>
+        <img class="reload" src="./static/img/reload.svg" onclick="listFiles(1)">
+        <input id="path_1"></input>
       </div>
       <ul class="files scroll_style block_select" id="files_0" onclick="clearSelectionEvent(event, 0)"></ul>
       <ul class="files scroll_style right block_select" id="files_1" onclick="clearSelectionEvent(event, 1)"></ul>

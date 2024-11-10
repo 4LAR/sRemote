@@ -192,14 +192,21 @@ document.getElementById("terminal").addEventListener('contextmenu', (e) => {
 
 function ssh_context(data) {
   console.log(group_id, item_id, data);
-  if (data == "Copy") {
-    const toCopy = term.getSelection();
-    navigator.clipboard.writeText(toCopy);
-    term.focus();
-  } else if (data == "Paste") {
-    navigator.clipboard.readText().then((toPaste) => {
-      stream_obj.write(toPaste);
-    });
+  switch (data) {
+    case "Copy": {
+      const toCopy = term.getSelection();
+      navigator.clipboard.writeText(toCopy);
+      term.focus();
+      break;
+    }
+    case "Paste": {
+      navigator.clipboard.readText().then((toPaste) => {
+        stream_obj.write(toPaste);
+      });
+      break;
+    }
+    default:
+      break;
   }
 }
 

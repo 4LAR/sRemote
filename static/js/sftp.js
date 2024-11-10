@@ -1,9 +1,14 @@
 
 var pathArr = [[], []];
 var sftp_obj = undefined;
-var selected_files_id = [];
+var selected_file = undefined;
 var split_flag = false;
 var selected_files = [[], []];
+var clipboard = {
+  path: "",
+  files: [],
+  action: null
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +58,7 @@ function listFiles(id=0) {
       listFiles(id);
       return;
     }
-    document.getElementById(`path_${id}`).innerHTML = convert_path(pathArr[id]);
+    document.getElementById(`path_${id}`).value = convert_path(pathArr[id]);
     if (pathArr.length > 0)
       addBackButton(id);
     appendUploadFrame(id);
@@ -138,13 +143,18 @@ function appendFileList(file, id=0) {
         element.classList.remove('selected');
       }
     } else if (event.shiftKey) {
+      clearSelection(Math.abs(id - 1))
       const lastSelected = selected_files[id].pop()
       selected_files[id] = [];
       const files_list = document.getElementById(`files_${id}`).getElementsByTagName("li");
       var indexLastSelected = -1;
       var indexSelected = -1;
-      var index = 0;
+      var index = -1;
       for (const el of files_list) {
+        index++;
+        if (el.className === "upload" || el.className === "back")
+          continue;
+
         el.classList.remove('selected');
         if (el.getElementsByTagName("p")[0].innerHTML == lastSelected) {
           indexLastSelected = index;
@@ -152,11 +162,10 @@ function appendFileList(file, id=0) {
         if (el.getElementsByTagName("p")[0].innerHTML == file.name) {
           indexSelected = index;
         }
-        index++;
       }
 
       for (let i = Math.min(indexSelected, indexLastSelected); i <= Math.max(indexSelected, indexLastSelected); i++) {
-        if (i == indexLastSelected)
+        if (i == indexLastSelected || files_list[i].className === "upload" || files_list[i].className === "back")
           continue;
         files_list[i].classList.add('selected');
         selected_files[id].push(files_list[i].getElementsByTagName("p")[0].innerHTML)
@@ -192,6 +201,7 @@ function addBackButton(id) {
     <img src="./static/img/arrow.svg" class="back">
     <p>..</p>
   `;
+  li.className = "back";
   li.onclick = function() {
     back(id);
   }
@@ -300,6 +310,55 @@ function create_directory(path, name, id) {
   });
 }
 
+function cut() {
+  const id = Number(selected_file.id.split("_")[1]);
+  clipboard.files = selected_files[id];
+  clipboard.path = convert_path(pathArr[id]);
+  clipboard.action = 'cut';
+  console.log("CUT", clipboard);
+}
+
+function copy() {
+  const id = Number(selected_file.id.split("_")[1]);
+  clipboard.files = selected_files[id];
+  clipboard.path = convert_path(pathArr[id]);
+  clipboard.action = 'copy';
+  console.log("COPY", clipboard);
+}
+
+function conn_cp(remoteFilePath, destinationPath, onloadFunc=undefined) {
+  conn.exec(`cp ${remoteFilePath} ${destinationPath}`, (err, stream) => {
+    if (onloadFunc) {
+      onloadFunc(err);
+    } else {
+      if (err) throw err;
+    }
+  });
+}
+
+function paste() {
+  const targetId = Number(selected_file.id.split("_")[1]);
+  for (const file of clipboard.files) {
+    const sourcePath = clipboard.path + "/" + file;
+    const destPath = convert_path(pathArr[targetId]);
+    console.log(sourcePath, destPath, file);
+    if (clipboard.action === 'cut') {
+      // Перемещение файла
+      sftp_obj.rename(sourcePath, destPath + "/" + file, (err) => {
+        if (err) console.error(err);
+        listFiles(targetId);
+      });
+    } else if (clipboard.action === 'copy') {
+      // Копирование файла
+      conn_cp(sourcePath, destPath, (err) => {
+        if (err) console.error(err);
+        listFiles(targetId);
+      });
+    }
+  }
+  clipboard.files = [];
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 document.getElementById('menu_files').addEventListener('contextmenu', (event) => {
@@ -316,6 +375,8 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
     li_element = element;
     element = li_element.parentElement;
   }
+
+  selected_file = element;
 
   // if (li_element !== undefined && li_element.classList.contains('selected')) {
   if (selected_files[Number(element.id.split("_")[1])].length > 0) {
@@ -353,7 +414,7 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
         accelerator: "CommandOrControl+C"
       }, {
         label: 'Paste',
-        enabled: false,
+        enabled: (clipboard.files.length > 0),
         accelerator: "CommandOrControl+V"
       }, {
         type: 'separator'
@@ -377,6 +438,22 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
 
 function sftp_context(data) {
   console.log(group_id, item_id, data);
+  switch (data) {
+    case "Copy": {
+      copy();
+      break;
+    }
+    case "Cut": {
+      console.log("asluidhjkf");
+      cut();
+      break;
+    }
+    case "Paste": {
+      paste();
+    }
+    default:
+      break;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -387,11 +464,16 @@ for (let id = 0; id < 2; id++) {
 
     dropZone.addEventListener('dragover', (event) => {
       event.preventDefault();
-      dropZone.classList.add('drag-over');
+      if (!dropZone.classList.contains('drag-over')) {
+        dropZone.classList.add('drag-over');
+      }
     });
 
-    dropZone.addEventListener('dragleave', () => {
-      dropZone.classList.remove('drag-over');
+    dropZone.addEventListener('dragleave', (event) => {
+      const relatedTarget = event.relatedTarget;
+      if (!dropZone.contains(relatedTarget)) {
+        dropZone.classList.remove('drag-over');
+      }
     });
 
     dropZone.addEventListener('drop', (event) => {
@@ -399,7 +481,7 @@ for (let id = 0; id < 2; id++) {
       dropZone.classList.remove('drag-over');
       const files = event.dataTransfer.files;
       for (const file of files) {
-        upload_file(file, id)
+        upload_file(file, id);
       }
     });
   });

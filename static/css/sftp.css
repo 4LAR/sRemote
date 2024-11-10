@@ -17,12 +17,30 @@ div.files_toolBar.right {
   border-left: 1px solid var(--border-color);
 }
 
-div.files_toolBar > p {
+div.files_toolBar > input {
   position: absolute;
   margin: 0px;
-  top: 2px;
-  left: 10px;
+  top: 4px;
+  left: 40px;
   color: var(--tabs-selected-font-color);
+  width: calc(100% - 80px);
+  border: none;
+  background-color: transparent;
+}
+
+div.files_toolBar > input:focus{
+  outline: none;
+}
+
+div.files_toolBar > img.reload {
+  position: absolute;
+  top: 5px;
+  left: 10px;
+  width: 16px;
+  filter: invert(var(--invert-buttons));
+  cursor: pointer;
+  z-index: 2;
+  transition: .1s all;
 }
 
 div.files_toolBar > img.split {
@@ -33,8 +51,10 @@ div.files_toolBar > img.split {
   filter: invert(var(--invert-buttons));
   cursor: pointer;
   z-index: 2;
+  transition: .1s all;
 }
 
+div.files_toolBar > img.reload:hover,
 div.files_toolBar > img.split:hover {
   filter: invert(var(--invert-buttons-hover));
 }
