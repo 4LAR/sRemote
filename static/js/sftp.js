@@ -2,6 +2,7 @@
 var pathArr = [[], []];
 var sftp_obj = undefined;
 var selected_file = undefined;
+var selected_li_file = undefined;
 var split_flag = false;
 var selected_files = [[], []];
 var clipboard = {
@@ -312,16 +313,22 @@ function create_directory(path, name, id) {
 
 function cut() {
   const id = Number(selected_file.id.split("_")[1]);
-  clipboard.files = selected_files[id];
+  clipboard.files = JSON.parse(JSON.stringify(selected_files[id]));
   clipboard.path = convert_path(pathArr[id]);
+  if (selected_li_file) {
+    clipboard.files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML)
+  }
   clipboard.action = 'cut';
   console.log("CUT", clipboard);
 }
 
 function copy() {
   const id = Number(selected_file.id.split("_")[1]);
-  clipboard.files = selected_files[id];
+  clipboard.files = JSON.parse(JSON.stringify(selected_files[id]));
   clipboard.path = convert_path(pathArr[id]);
+  if (selected_li_file) {
+    clipboard.files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML)
+  }
   clipboard.action = 'copy';
   console.log("COPY", clipboard);
 }
@@ -377,6 +384,7 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
   }
 
   selected_file = element;
+  selected_li_file = li_element;
 
   // if (li_element !== undefined && li_element.classList.contains('selected')) {
   if (selected_files[Number(element.id.split("_")[1])].length > 0) {
