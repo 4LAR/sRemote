@@ -26,7 +26,7 @@ class Settings {
           "experimental": false
         },
         "Connections": {
-          "autoConnect": true,
+          "autoConnect": false,
           "readyTimeout": 20000,
           "cacheData": false,
           "maxCacheData": 5000
