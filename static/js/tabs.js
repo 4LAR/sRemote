@@ -315,7 +315,7 @@ function left_menu() {
   } else {
     // document.getElementById("left_menu").style.left = `-${document.getElementById("left_menu").style.width}`;
     document.getElementById("left_menu").style.left = `-201px`;
-    document.getElementById("left_menu").style.borderRight = `1px solid transparent`;
+    document.getElementById("left_menu").style.borderRight = `4px solid transparent`;
     document.getElementById("terminal_list").style.left = "1px";
     document.getElementById("terminal_list").style.width = "calc(100% - 1px)";
     document.getElementById("dropdown_left_menu").style.transform = "rotate(-90deg)";
