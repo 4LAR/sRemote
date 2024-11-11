@@ -9,6 +9,10 @@
     <link rel="stylesheet" href = "./static/css/sshMenu.css"/>
     <link rel="stylesheet" href = "./static/css/main.css"/>
     <link rel="stylesheet" href = "./static/css/colors.css"/>
+    <link rel="stylesheet" href = "./static/css/button.css"/>
+    <link rel="stylesheet" href = "./static/css/alerts/alert.css"/>
+    <link rel="stylesheet" href = "./static/css/alerts/sftp.css"/>
+    <link rel="stylesheet" href = "./static/css/alerts/connection.css"/>
   </head>
   <body>
     <div class="menu block_select">
@@ -21,11 +25,11 @@
         <p>Files</p>
       </div>
     </div>
-    <div id="menu_terminal">
+    <div id="menu_terminal" class="menu_item">
       <div id="terminal"></div>
       <p class="font_size" id="font_size">font-size: 12px</p>
     </div>
-    <div id="menu_files">
+    <div id="menu_files" class="menu_item">
       <div id="files_toolBar_0" class="files_toolBar">
         <img class="reload" src="./static/img/reload.svg" onclick="listFiles(0)">
         <input id="path_0"></input>
@@ -37,6 +41,14 @@
       </div>
       <ul class="files scroll_style block_select" id="files_0" onclick="clearSelectionEvent(event, 0)"></ul>
       <ul class="files scroll_style right block_select" id="files_1" onclick="clearSelectionEvent(event, 1)"></ul>
+
+      <div class="bg_alert" id="files_bg_alert" onclick="close_alert()"></div>
+      <div id="files_alert">
+        <div class="alert_head">
+          <img src="./static/img/plus.svg" onclick="close_alert()">
+        </div>
+        <div class="alert_body" id="files_alert_body"></div>
+      </div>
     </div>
   </body>
   <script type="text/javascript" src="./static/js/libs/xterm.js"></script>

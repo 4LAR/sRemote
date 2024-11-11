@@ -47,3 +47,11 @@ div.menu > div > p {
 div.menu > div.selected > p {
   color: var(--tabs-selected-font-color);
 }
+
+div.menu_item {
+  position: absolute;
+  top: 31px;
+  left: 0px;
+  width: 100%;
+  bottom: 0px;
+}

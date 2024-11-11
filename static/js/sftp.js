@@ -1,4 +1,81 @@
 
+var onclose_alert_function = undefined;
+function open_alert(html, type="alert_sftp", onclose=undefined) {
+  document.getElementById("files_alert_body").innerHTML = html;
+  document.getElementById("files_alert").className = type;
+
+  onclose_alert_function = onclose;
+
+  openModal('files_bg_alert');
+  openModal('files_alert');
+}
+
+function close_alert(onclose=true) {
+  closeModal('files_bg_alert');
+  closeModal('files_alert');
+
+  if (onclose_alert_function && onclose) {
+    onclose_alert_function();
+  }
+}
+
+close_alert();
+
+document.addEventListener('keydown', function(event){
+  if (event.keyCode == 27) {
+    close_alert();
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
+function isValidLinuxFileName(fileName) {
+    // Проверяем, что имя не пустое и не содержит недопустимых символов
+    const invalidChars = /[\/\0]/; // недопустимые символы: / и null
+    const isValid = !invalidChars.test(fileName) && fileName.length > 0;
+
+    // Проверяем, что имя не начинается и не заканчивается пробелами
+    const trimmedFileName = fileName.trim();
+    const hasLeadingOrTrailingSpaces = (fileName !== trimmedFileName);
+
+    // Проверяем, что имя не состоит только из пробелов
+    const isOnlySpaces = trimmedFileName.length === 0;
+
+    return isValid && !hasLeadingOrTrailingSpaces && !isOnlySpaces;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+function alert_error(text) {
+  open_alert(`
+    <p class="name">Error</p>
+    <hr>
+    <p>${text}</p>
+    <div class="button submit" onclick="close_alert()">
+      <p>Ok</p>
+    </div>
+  `, 'alert_sftp_file')
+}
+
+function alert_rename() {
+
+}
+
+function alert_new_folder_file(folder_flag=false) {
+  open_alert(`
+    <p class="name">${(folder_flag)? "Create folder": "Create file"}</p>
+    <hr>
+    <input id="name" class="input_style" type="text" placeholder="${(folder_flag)? "Folder name": "File name"}">
+    <div class="button submit" onclick="create_directory_from_alert()">
+      <p>Create</p>
+    </div>
+  `, 'alert_sftp_file')
+}
+
+// alert_new_folder_file();
+
+////////////////////////////////////////////////////////////////////////////////
+
 var pathArr = [[], []];
 var sftp_obj = undefined;
 var selected_file = undefined;
@@ -251,9 +328,22 @@ function create_file(path, name, id) {
 
 }
 
-function create_directory(path, name, id) {
-  mkdir.unlink(path + "/" + name, (err) => {
+function create_directory_from_alert() {
+  create_directory(
+    document.getElementById('name').value,
+    Number(selected_file.id.split("_")[1]),
+    function() {
+      close_alert();
+    }
+  );
+}
+
+function create_directory(name, id, onEnd=undefined) {
+  const dirPath = `${convert_path(pathArr[id])}/${name}`;
+  sftp_obj.mkdir(dirPath, (err) => {
     listFiles(id);
+    if (onEnd) onEnd();
+    if (err) alert_error(err.toString());
   });
 }
 
@@ -281,11 +371,8 @@ function copy() {
 
 function conn_cp(remoteFilePath, destinationPath, onloadFunc=undefined) {
   conn.exec(`cp ${remoteFilePath} ${destinationPath}`, (err, stream) => {
-    if (onloadFunc) {
-      onloadFunc(err);
-    } else {
-      if (err) throw err;
-    }
+    if (onloadFunc) onloadFunc(err);
+    if (err) alert_error(err.toString());
   });
 }
 
@@ -298,13 +385,13 @@ function paste() {
     if (clipboard.action === 'cut') {
       // Перемещение файла
       sftp_obj.rename(sourcePath, destPath + "/" + file, (err) => {
-        if (err) console.error(err);
+        if (err) alert_error(err.toString());
         listFiles(targetId);
       });
     } else if (clipboard.action === 'copy') {
       // Копирование файла
       conn_cp(sourcePath, destPath, (err) => {
-        if (err) console.error(err);
+        if (err) alert_error(err.toString());
         listFiles(targetId);
       });
     }
@@ -380,12 +467,13 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
         label: 'Rename',
         enabled: (selected_one || !!li_element),
         accelerator: "F2"
-      }, {
-        type: 'separator'
-      }, {
-        label: 'Properties',
-        enabled: (selected_one || !!li_element)
       }
+      // }, {
+      //   type: 'separator'
+      // }, {
+      //   label: 'Properties',
+      //   enabled: (selected_one || !!li_element)
+      // }
     ]
   })
 });
@@ -393,6 +481,14 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
 function sftp_context(data) {
   console.log(group_id, item_id, data);
   switch (data) {
+    case "Create_File": {
+      alert_new_folder_file();
+      break;
+    }
+    case "Create_Folder": {
+      alert_new_folder_file(true);
+      break;
+    }
     case "Copy": {
       copy();
       break;
@@ -404,6 +500,10 @@ function sftp_context(data) {
     }
     case "Paste": {
       paste();
+      break;
+    }
+    case "Rename": {
+      break;
     }
     default:
       break;
@@ -500,7 +600,7 @@ for (let id = 0; id < 2; id++) {
           console.log("All files uploaded successfully for drop zone:", id);
           listFiles(id);
         }).catch(err => {
-          console.error("Error during upload in drop zone:", id, err);
+          if (err) alert_error(err.toString());
         });
     });
   });
