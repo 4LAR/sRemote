@@ -77,7 +77,7 @@ function alert_settings() {
           <img src="./static/img/settings/connection.svg" alt="">
           <p>${localization_dict.settings_menu_connection}</p>
         </li>
-        <li id="settings_menu_macros" onclick="change_settings_page('macros')">
+        <li id="settings_menu_macros" onclick="change_settings_page('macros')" style="display: none">
           <div></div>
           <div class="selector"></div>
           <img src="./static/img/settings/macros.svg" alt="">

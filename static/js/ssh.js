@@ -281,6 +281,7 @@ function create_connection() {
           local_update_status(0);
           connected_flag = false;
           conn.end();
+          document.getElementById('connection_warning').style.display = "block";
         }).on('data', (data) => {
           term.write(data);
           if (config["Connections"]["cacheData"])
@@ -338,6 +339,7 @@ function disconnect() {
 function connect() {
   create_connection();
   printOnNewLine(`[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_connect}`);
+  document.getElementById('connection_warning').style.display = "none";
 }
 
 // переподключение

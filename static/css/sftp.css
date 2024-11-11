@@ -133,6 +133,10 @@ ul.files > li > p {
   margin: 0px;
   top: 7px;
   left: 60px;
+  width: 70%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 ul.files > li > p.size {
@@ -213,4 +217,22 @@ ul.files > li.upload > div:last-child > p {
   width: 100%;
   font-size: 1.6em;
   text-align: center;
+}
+
+div.connection_warning {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: #00000066;
+}
+
+div.connection_warning > p {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--tabs-selected-font-color);
+  font-size: 1.6em;
 }

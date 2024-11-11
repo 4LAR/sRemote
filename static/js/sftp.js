@@ -61,15 +61,16 @@ function alert_rename() {
 
 }
 
-function alert_new_folder_file(folder_flag=false) {
+function alert_new_folder() {
   open_alert(`
-    <p class="name">${(folder_flag)? "Create folder": "Create file"}</p>
+    <p class="name">Create folder</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="${(folder_flag)? "Folder name": "File name"}">
+    <input id="name" class="input_style" type="text" placeholder="Folder name">
     <div class="button submit" onclick="create_directory_from_alert()">
       <p>Create</p>
     </div>
   `, 'alert_sftp_file')
+  document.getElementById("name").focus()
 }
 
 // alert_new_folder_file();
@@ -324,7 +325,7 @@ function remove(path, type, id) {
   }
 }
 
-function create_file(path, name, id) {
+function create_file(name, id, onEnd=undefined) {
 
 }
 
@@ -434,15 +435,19 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
     id: `${group_id}_${item_id}`,
     function: "sftp_context",
     template: [
+      // {
+      //   label: 'Create',
+      //   submenu: [
+      //     {
+      //       label: "File"
+      //     }, {
+      //       label: "Folder"
+      //     }
+      //   ]
+      // }, {
       {
-        label: 'Create',
-        submenu: [
-          {
-            label: "File"
-          }, {
-            label: "Folder"
-          }
-        ]
+        label: 'New folder',
+        enabled: true
       }, {
         type: 'separator'
       }, {
@@ -481,12 +486,8 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
 function sftp_context(data) {
   console.log(group_id, item_id, data);
   switch (data) {
-    case "Create_File": {
-      alert_new_folder_file();
-      break;
-    }
-    case "Create_Folder": {
-      alert_new_folder_file(true);
+    case "New folder": {
+      alert_new_folder();
       break;
     }
     case "Copy": {
@@ -503,6 +504,9 @@ function sftp_context(data) {
       break;
     }
     case "Rename": {
+      break;
+    }
+    case "Delete": {
       break;
     }
     default:

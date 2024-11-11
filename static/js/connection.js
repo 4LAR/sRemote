@@ -87,7 +87,7 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
       <p>${localization_dict.delete}</p>
     </div>`: ""}
   `, "alert")
-
+  document.getElementById("name").focus()
   if (edit_flag) {
     var index = get_indexes_by_id(group_id, item_id);
     console.log(TABS[index[0]]);
@@ -273,6 +273,8 @@ function alert_edit_create_group(event=undefined, edit_flag=false) {
       <p>${localization_dict.delete}</p>
     </div>`: ""}
   `, "alert_group");
+
+  document.getElementById("name").focus()
 
   if (edit_flag) {
     var index = get_index_group_by_id(group_id);
