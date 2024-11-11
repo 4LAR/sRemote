@@ -235,60 +235,6 @@ function appendUploadFrame(id) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function upload_file(file, id=0) {
-  const remotePath = convert_path(pathArr[id]) + "/" + file.name;
-
-  if (fs.lstatSync(file.path).isDirectory()) {
-    sftp_obj.mkdir(remotePath, (err) => {
-      console.log(`Directory created: ${remotePath}`);
-      uploadDirectory(file.path, remotePath, id);
-    });
-  } else {
-    sftp_obj.fastPut(file.path.replaceAll('\\', '/'), remotePath, {}, (err) => {
-      listFiles(id);
-      console.log('File uploaded successfully');
-    });
-  }
-}
-
-function uploadDirectory(localPath, remotePath, id) {
-  const fs = require('fs');
-  const path = require('path');
-
-  fs.readdir(localPath, (err, items) => {
-    let itemsCount = items.length;
-    if (itemsCount === 0) {
-      console.log(`Directory is empty: ${localPath}`);
-      return;
-    }
-
-    items.forEach(item => {
-      const itemPath = path.join(localPath, item);
-      const remoteItemPath = path.join(remotePath, item);
-
-      fs.stat(itemPath, (err, stats) => {
-        if (stats.isDirectory()) {
-          sftp_obj.mkdir(remoteItemPath, (err) => {
-            console.log(`Directory created: ${remoteItemPath}`);
-            uploadDirectory(itemPath, remoteItemPath, id);
-          });
-        } else {
-          sftp_obj.fastPut(itemPath.replaceAll('\\', '/'), remoteItemPath, {}, (err) => {
-            console.log(`File uploaded successfully: ${remoteItemPath}`);
-          });
-        }
-
-        itemsCount--;
-        if (itemsCount === 0) {
-          listFiles(id);
-        }
-      });
-    });
-  });
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 function remove(path, type, id) {
   if (type == "folder") {
     sftp_obj.unlink(path, (err) => {
@@ -466,6 +412,59 @@ function sftp_context(data) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+function upload_file(file, remotePathArr) {
+  const remotePath = convert_path(remotePathArr) + "/" + file.name;
+
+  return new Promise((resolve, reject) => {
+    if (fs.lstatSync(file.path).isDirectory()) {
+      sftp_obj.mkdir(remotePath, (err) => {
+        if (err) {
+          return reject(err);
+        }
+        console.log(`Directory created: ${remotePath}`);
+        uploadDirectory(file.path, [...remotePathArr, file.name]).then(resolve).catch(reject);
+      });
+    } else {
+      sftp_obj.fastPut(file.path, remotePath, {}, (err) => {
+        if (err) {
+          return reject(err);
+        }
+        console.log(`File uploaded successfully: ${remotePath}`);
+        resolve();
+      });
+    }
+  });
+}
+
+function uploadDirectory(localPath, remotePathArr) {
+  return new Promise((resolve, reject) => {
+    fs.readdir(localPath, (err, items) => {
+      if (err) {
+        return reject(err);
+      }
+
+      let itemsCount = items.length;
+      if (itemsCount === 0) {
+        console.log(`Directory is empty: ${localPath}`);
+        return resolve();
+      }
+
+      let uploadPromises = items.map(item => {
+        return upload_file({
+          name: item,
+          path: path.join(localPath, item)
+        }, remotePathArr);
+      });
+
+      Promise.all(uploadPromises)
+        .then(() => resolve())
+        .catch(reject);
+    });
+  });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 for (let id = 0; id < 2; id++) {
   const dropZone = document.getElementById(`files_${id}`);
   document.addEventListener('DOMContentLoaded', () => {
@@ -488,9 +487,21 @@ for (let id = 0; id < 2; id++) {
       event.preventDefault();
       dropZone.classList.remove('drag-over');
       const files = event.dataTransfer.files;
+
+      // Создаем массив промисов для загрузки файлов
+      let uploadPromises = [];
       for (const file of files) {
-        upload_file(file, id);
+        uploadPromises.push(upload_file(file, pathArr[id]));
       }
+
+      // Ждем завершения всех загрузок
+      Promise.all(uploadPromises)
+        .then(() => {
+          console.log("All files uploaded successfully for drop zone:", id);
+          listFiles(id);
+        }).catch(err => {
+          console.error("Error during upload in drop zone:", id, err);
+        });
     });
   });
 }
