@@ -374,7 +374,7 @@ function customKeyEventHandler(e) {
 
 // если нам надо сразу подключаться
 if (config["Connections"]["autoConnect"]) {
-  create_connection();
+  connect();
 }
 
 /*----------------------------------------------------------------------------*/

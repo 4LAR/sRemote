@@ -66,13 +66,6 @@ function select_item(group_id, item_id) {
         // document.getElementById(`iframe_${group.id}_${item.id}`).contentWindow.addEventListener('keydown', customKeyEventHandler);
 
         in_group_flag = true;
-        //
-        if (SETTINGS_DICT["Connections"]["autoConnect"]) {
-          var iframe = document.getElementById(`iframe_${group.id}_${item.id}`);
-          iframe.contentWindow.onload = function() {
-            iframe.contentWindow.create_connection();
-          };
-        }
       } else {
         document.getElementById(`item_${group.id}_${item.id}`).className = "";
         closeModal(`iframe_${group.id}_${item.id}`);
