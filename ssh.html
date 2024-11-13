@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" href = "./static/css/libs/xterm.css"/>
-    <link rel="stylesheet" href = "./static/css/ssh.css"/>
-    <link rel="stylesheet" href = "./static/css/sftp.css"/>
-    <link rel="stylesheet" href = "./static/css/sshMenu.css"/>
+    <link rel="stylesheet" href = "./static/css/connection/ssh.css"/>
+    <link rel="stylesheet" href = "./static/css/connection/sftp.css"/>
+    <link rel="stylesheet" href = "./static/css/connection/menu.css"/>
     <link rel="stylesheet" href = "./static/css/main.css"/>
     <link rel="stylesheet" href = "./static/css/colors.css"/>
     <link rel="stylesheet" href = "./static/css/button.css"/>
@@ -30,17 +30,22 @@
       <p class="font_size" id="font_size">font-size: 12px</p>
     </div>
     <div id="menu_files" class="menu_item">
-      <div id="files_toolBar_0" class="files_toolBar">
-        <img class="reload" src="./static/img/reload.svg" onclick="listFiles(0)">
-        <input id="path_0"></input>
-        <img class="split" src="./static/img/split.svg" onclick="split()">
+
+      <div class="files" id="files_div_0">
+        <div class="files_toolBar right">
+          <img class="reload" src="./static/img/reload.svg" onclick="listFiles(1)">
+          <input id="path_1"></input>
+        </div>
+        <ul class="scroll_style block_select" id="files_0" onclick="clearSelectionEvent(event, 0)"></ul>
       </div>
-      <div id="files_toolBar_1" class="files_toolBar right">
-        <img class="reload" src="./static/img/reload.svg" onclick="listFiles(1)">
-        <input id="path_1"></input>
+      <div class="files" id="files_div_1">
+        <div class="files_toolBar">
+          <img class="reload" src="./static/img/reload.svg" onclick="listFiles(0)">
+          <input id="path_0"></input>
+          <img class="split" src="./static/img/split.svg" onclick="split()">
+        </div>
+        <ul class="scroll_style right block_select" id="files_1" onclick="clearSelectionEvent(event, 1)"></ul>
       </div>
-      <ul class="files scroll_style block_select" id="files_0" onclick="clearSelectionEvent(event, 0)"></ul>
-      <ul class="files scroll_style right block_select" id="files_1" onclick="clearSelectionEvent(event, 1)"></ul>
 
       <div class="bg_alert" id="files_bg_alert" onclick="close_alert()"></div>
       <div id="files_alert">
@@ -62,6 +67,6 @@
     window.require = parent.window.require
   </script>
   <script type="text/javascript" src="./static/js/main.js"></script>
-  <script type="text/javascript" src="./static/js/ssh.js"></script>
-  <script type="text/javascript" src="./static/js/sftp.js"></script>
+  <script type="text/javascript" src="./static/js/connection/ssh.js"></script>
+  <script type="text/javascript" src="./static/js/connection/sftp.js"></script>
 </html>

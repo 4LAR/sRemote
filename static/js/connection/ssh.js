@@ -266,6 +266,7 @@ function create_connection() {
           return;
         };
         sftp_obj = sftp;
+        document.getElementById('connection_warning').style.display = "none";
         getHomePath().then(path=>{
           pathArr[0] = path.split("/").filter(part => part !== "");
           listFiles(0);
@@ -339,7 +340,6 @@ function disconnect() {
 function connect() {
   create_connection();
   printOnNewLine(`[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_connect}`);
-  document.getElementById('connection_warning').style.display = "none";
 }
 
 // переподключение
