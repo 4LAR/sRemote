@@ -32,19 +32,27 @@
     <div id="menu_files" class="menu_item">
 
       <div class="files" id="files_div_0">
-        <div class="files_toolBar right">
-          <img class="reload" src="./static/img/reload.svg" onclick="listFiles(1)">
-          <input id="path_1"></input>
-        </div>
-        <ul class="scroll_style block_select" id="files_0" onclick="clearSelectionEvent(event, 0)"></ul>
-      </div>
-      <div class="files" id="files_div_1">
-        <div class="files_toolBar">
+        <div class="toolBar">
           <img class="reload" src="./static/img/reload.svg" onclick="listFiles(0)">
           <input id="path_0"></input>
+        </div>
+        <ul class="scroll_style block_select" id="files_0" onclick="clearSelectionEvent(event, 0)"></ul>
+        <div class="upload-frame">
+          <img src="./static/img/upload.svg">
+          <p>Drop your files here</p>
+        </div>
+      </div>
+      <div class="files right" id="files_div_1">
+        <div class="toolBar">
+          <img class="reload" src="./static/img/reload.svg" onclick="listFiles(1)">
+          <input id="path_1"></input>
           <img class="split" src="./static/img/split.svg" onclick="split()">
         </div>
         <ul class="scroll_style right block_select" id="files_1" onclick="clearSelectionEvent(event, 1)"></ul>
+        <div class="upload-frame">
+          <img src="./static/img/upload.svg">
+          <p>Drop your files here</p>
+        </div>
       </div>
 
       <div class="bg_alert" id="files_bg_alert" onclick="close_alert()"></div>

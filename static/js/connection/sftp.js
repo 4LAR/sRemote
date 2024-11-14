@@ -94,19 +94,15 @@ var clipboard = {
 function split() {
   split_flag = !split_flag;
   if (split_flag) {
-    document.getElementById("files_0").style.width = "50%";
-    document.getElementById("files_1").style.width = "50%";
-    document.getElementById("files_toolBar_0").style.width = "50%";
-    document.getElementById("files_toolBar_1").style.width = "50%";
+    document.getElementById("files_div_0").style.width = "50%";
+    document.getElementById("files_div_1").style.width = "50%";
     if (pathArr[1].length < 1) {
       pathArr[1] = pathArr[0].map((element) => element);
       listFiles(1);
     }
   } else {
-    document.getElementById("files_0").style.width = "100%";
-    document.getElementById("files_1").style.width = "0%";
-    document.getElementById("files_toolBar_0").style.width = "100%";
-    document.getElementById("files_toolBar_1").style.width = "0%";
+    document.getElementById("files_div_0").style.width = "100%";
+    document.getElementById("files_div_1").style.width = "0%";
   }
 }
 
@@ -140,7 +136,6 @@ function listFiles(id=0) {
     document.getElementById(`path_${id}`).value = convert_path(pathArr[id]);
     if (pathArr.length > 0)
       addBackButton(id);
-    appendUploadFrame(id);
     for (const file of list) {
       const name_splitted = file.longname.split(/\s+/);
 
@@ -295,20 +290,6 @@ function openFolder(name, id) {
 function back(id) {
   pathArr[id].pop();
   listFiles(id);
-}
-
-function appendUploadFrame(id) {
-  var ul = document.getElementById(`files_${id}`);
-  var li = document.createElement("li");
-  li.innerHTML = `
-    <div></div>
-    <div>
-      <img src="./static/img/upload.svg">
-      <p>Drop your files here</p>
-    </div>
-  `;
-  li.className = "upload";
-  ul.appendChild(li);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -570,7 +551,7 @@ function uploadDirectory(localPath, remotePathArr) {
 ////////////////////////////////////////////////////////////////////////////////
 
 for (let id = 0; id < 2; id++) {
-  const dropZone = document.getElementById(`files_${id}`);
+  const dropZone = document.getElementById(`files_div_${id}`);
   document.addEventListener('DOMContentLoaded', () => {
 
     dropZone.addEventListener('dragover', (event) => {

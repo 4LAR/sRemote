@@ -1,5 +1,5 @@
 
-div.files_toolBar {
+div.files > div.toolBar {
   position: absolute;
   top: 0px;
   left: 0px;
@@ -10,14 +10,11 @@ div.files_toolBar {
   transition: .3s all;
 }
 
-div.files_toolBar.right {
-  left: auto;
-  right: 0px;
-  width: 0%;
+div.files.right > div.toolBar {
   border-left: 1px solid var(--border-color);
 }
 
-div.files_toolBar > input {
+div.files > div.toolBar > input {
   position: absolute;
   margin: 0px;
   top: 4px;
@@ -28,11 +25,11 @@ div.files_toolBar > input {
   background-color: transparent;
 }
 
-div.files_toolBar > input:focus{
+div.files > div.toolBar > input:focus{
   outline: none;
 }
 
-div.files_toolBar > img.reload {
+div.files > div.toolBar > img.reload {
   position: absolute;
   top: 5px;
   left: 10px;
@@ -43,7 +40,7 @@ div.files_toolBar > img.reload {
   transition: .1s all;
 }
 
-div.files_toolBar > img.split {
+div.files > div.toolBar > img.split {
   position: fixed;
   top: 36px;
   right: 10px;
@@ -54,35 +51,40 @@ div.files_toolBar > img.split {
   transition: .1s all;
 }
 
-div.files_toolBar > img.reload:hover,
-div.files_toolBar > img.split:hover {
+div.files > div.toolBar > img.reload:hover,
+div.files > div.toolBar > img.split:hover {
   filter: invert(var(--invert-buttons-hover));
 }
 
 /* -------------------------------------------------------------------------- */
 
-ul.files {
+div.files {
   position: absolute;
-  top: 31px;
+  top: 0px;
   bottom: 0px;
   left: 0px;
   width: 100%;
-  overflow-y: auto;
-  margin: 0px;
-  padding: 0px;
-  overflow-x: hidden;
   transition: .3s all;
-  /* background-color: var(--terminal-bg); */
 }
 
-ul.files.right {
+div.files.right {
   left: auto;
   right: 0px;
   width: 0%;
   border-left: 1px solid var(--border-color);
 }
 
-ul.files > li {
+div.files > ul {
+  width: 100%;
+  height: calc(100% - 26px);
+  overflow-y: auto;
+  margin: 0px;
+  padding: 0px;
+  margin-top: 26px;
+  overflow-x: hidden;
+}
+
+div.files > ul > li {
   position: relative;
   height: 35px;
   width: 100%;
@@ -92,41 +94,41 @@ ul.files > li {
   transition: .1s all;
 }
 
-ul.files > li:hover {
+div.files > ul > li:hover {
   background-color: var(--input-bg);
   border-left: 3px solid var(--input-bg);
   transition: .1s all;
 }
 
-ul.files > li.selected {
+div.files > ul > li.selected {
   background-color: var(--input-bg);
   border-left: 3px solid var(--select-color) !important;
 }
 
-ul.files > li > img {
+div.files > ul > li > img {
   position: absolute;
   left: 20px;
   top: 7px;
   height: 20px;
 }
 
-ul.files > li > img.folder {
+div.files > ul > li > img.folder {
   filter: brightness(0) saturate(100%) invert(75%) sepia(39%) saturate(343%) hue-rotate(5deg) brightness(90%) contrast(91%);
 }
 
-ul.files > li > img.file {
+div.files > ul > li > img.file {
   filter: brightness(0) saturate(100%) invert(72%) sepia(59%) saturate(244%) hue-rotate(156deg) brightness(84%) contrast(92%);
 }
 
-ul.files > li > img.link {
+div.files > ul > li > img.link {
   filter: brightness(0) saturate(100%) invert(72%) sepia(59%) saturate(244%) hue-rotate(156deg) brightness(84%) contrast(92%);
 }
 
-ul.files > li > img.back {
+div.files > ul > li > img.back {
   filter: invert(50%) sepia(35%) saturate(6992%) hue-rotate(144deg) brightness(94%) contrast(101%);
 }
 
-ul.files > li > p {
+div.files > ul > li > p {
   position: absolute;
   margin-left: 60px;
   color: var(--tabs-selected-font-color);
@@ -139,7 +141,7 @@ ul.files > li > p {
   text-overflow: ellipsis;
 }
 
-ul.files > li > p.size {
+div.files > ul > li > p.size {
   left: auto;
   right: 10px;
   color: var(--tabs-font-color);
@@ -147,7 +149,7 @@ ul.files > li > p.size {
   text-align: left;
 }
 
-ul.files > li > p.access_rights {
+div.files > ul > li > p.access_rights {
   left: auto;
   right: 150px;
   color: var(--tabs-font-color);
@@ -155,7 +157,7 @@ ul.files > li > p.access_rights {
   text-align: left;
 }
 
-ul.files > li.upload {
+div.files > div.upload-frame {
   display: none;
   position: absolute;
   left: 0px;
@@ -163,43 +165,16 @@ ul.files > li.upload {
   width: 100%;
   height: 100%;
   z-index: 2;
-  background-color: #00000000;
+  background-color: #00000066;
   cursor: default;
   pointer-events: none;
 }
 
-ul.files > li.upload:hover {
-  background-color: #00000000;
-  background-color: none;
-  border-left: none;
-}
-
-ul.files.drag-over > li.upload {
+div.files.drag-over > div.upload-frame {
   display: block;
 }
 
-ul.files > li.upload > div:first-child {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  background-color: #000;
-  opacity: .4;
-}
-
-ul.files > li.upload > div:last-child {
-  position: absolute;
-  top: 30px;
-  left: 30px;
-  width: calc(100% - 60px);
-  height: calc(100% - 60px);
-  border: 5px dashed var(--tabs-selected-font-color);
-  border-radius: 20px;
-  box-sizing: border-box;
-}
-
-ul.files > li.upload > div:last-child > img {
+div.files > div.upload-frame > img {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -208,7 +183,7 @@ ul.files > li.upload > div:last-child > img {
   width: 100px;
 }
 
-ul.files > li.upload > div:last-child > p {
+div.files > div.upload-frame > p {
   position: absolute;
   top: 50%;
   left: 50%;
