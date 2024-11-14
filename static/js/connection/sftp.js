@@ -61,12 +61,12 @@ function alert_rename() {
 
 }
 
-function alert_new_folder() {
+function alert_new_folderFile(fileFlag=false) {
   open_alert(`
-    <p class="name">Create folder</p>
+    <p class="name">Create ${(fileFlag)? "file": "folder"}</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="Folder name">
-    <div class="button submit" onclick="create_directory_from_alert()">
+    <input id="name" class="input_style" type="text" placeholder="${(fileFlag)? "File": "Folder"} name">
+    <div class="button submit" onclick="${(fileFlag)? "create_file_from_alert()": "create_directory_from_alert()"}">
       <p>Create</p>
     </div>
   `, 'alert_sftp_file')
@@ -310,6 +310,25 @@ function create_file(name, id, onEnd=undefined) {
 
 }
 
+function create_file_from_alert() {
+  const name_input = document.getElementById('name');
+  if (!isValidLinuxFileName(name_input.value)) {
+    name_input.className = "input_style input_warning";
+    return;
+  } else {
+    name_input.className = "input_style";
+  }
+  //
+  conn_new_file(
+    convert_path(pathArr[Number(selected_file.id.split("_")[1])]),
+    name_input.value,
+    function() {
+      listFiles(Number(selected_file.id.split("_")[1]));
+      close_alert();
+    }
+  );
+}
+
 function create_directory_from_alert() {
   const name_input = document.getElementById('name');
   if (!isValidLinuxFileName(name_input.value)) {
@@ -431,20 +450,20 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
     id: `${group_id}_${item_id}`,
     function: "sftp_context",
     template: [
-      // {
-      //   label: 'Create',
-      //   submenu: [
-      //     {
-      //       label: "File"
-      //     }, {
-      //       label: "Folder"
-      //     }
-      //   ]
-      // }, {
       {
-        label: 'New folder',
-        enabled: true
+        label: 'Create',
+        submenu: [
+          {
+            label: "File"
+          }, {
+            label: "Folder"
+          }
+        ]
       }, {
+      // {
+      //   label: 'New folder',
+      //   enabled: true
+      // }, {
         type: 'separator'
       }, {
         label: 'Cut',
@@ -482,8 +501,12 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
 function sftp_context(data) {
   console.log(group_id, item_id, data);
   switch (data) {
-    case "New folder": {
-      alert_new_folder();
+    case "Create_Folder": {
+      alert_new_folderFile();
+      break;
+    }
+    case "Create_File": {
+      alert_new_folderFile(true);
       break;
     }
     case "Copy": {
