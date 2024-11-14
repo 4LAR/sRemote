@@ -10,10 +10,6 @@ div.files > div.toolBar {
   transition: .3s all;
 }
 
-div.files.right > div.toolBar {
-  border-left: 1px solid var(--border-color);
-}
-
 div.files > div.toolBar > input {
   position: absolute;
   margin: 0px;
