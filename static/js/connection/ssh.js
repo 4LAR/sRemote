@@ -270,6 +270,10 @@ function create_connection() {
         getHomePath().then(path=>{
           pathArr[0] = path.split("/").filter(part => part !== "");
           listFiles(0);
+          if (split_flag) {
+            pathArr[1] = path.split("/").filter(part => part !== "");
+            listFiles(1);
+          }
         })
       });
 
