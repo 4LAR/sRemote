@@ -30,18 +30,18 @@ document.addEventListener('keydown', function(event){
 ////////////////////////////////////////////////////////////////////////////////
 
 function isValidLinuxFileName(fileName) {
-    // Проверяем, что имя не пустое и не содержит недопустимых символов
-    const invalidChars = /[\/\0]/; // недопустимые символы: / и null
-    const isValid = !invalidChars.test(fileName) && fileName.length > 0;
+  // Проверяем, что имя не пустое и не содержит недопустимых символов
+  const invalidChars = /[\/\0]/; // недопустимые символы: / и null
+  const isValid = !invalidChars.test(fileName) && fileName.length > 0;
 
-    // Проверяем, что имя не начинается и не заканчивается пробелами
-    const trimmedFileName = fileName.trim();
-    const hasLeadingOrTrailingSpaces = (fileName !== trimmedFileName);
+  // Проверяем, что имя не начинается и не заканчивается пробелами
+  const trimmedFileName = fileName.trim();
+  const hasLeadingOrTrailingSpaces = (fileName !== trimmedFileName);
 
-    // Проверяем, что имя не состоит только из пробелов
-    const isOnlySpaces = trimmedFileName.length === 0;
+  // Проверяем, что имя не состоит только из пробелов
+  const isOnlySpaces = trimmedFileName.length === 0;
 
-    return isValid && !hasLeadingOrTrailingSpaces && !isOnlySpaces;
+  return isValid && !hasLeadingOrTrailingSpaces && !isOnlySpaces;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -134,7 +134,7 @@ function listFiles(id=0) {
       return;
     }
     document.getElementById(`path_${id}`).value = convert_path(pathArr[id]);
-    if (pathArr.length > 0)
+    if (pathArr[id].length > 0)
       addBackButton(id);
     for (const file of list) {
       const name_splitted = file.longname.split(/\s+/);
@@ -311,8 +311,16 @@ function create_file(name, id, onEnd=undefined) {
 }
 
 function create_directory_from_alert() {
+  const name_input = document.getElementById('name');
+  if (!isValidLinuxFileName(name_input.value)) {
+    name_input.className = "input_style input_warning";
+    return;
+  } else {
+    name_input.className = "input_style";
+  }
+  //
   create_directory(
-    document.getElementById('name').value,
+    name_input.value,
     Number(selected_file.id.split("_")[1]),
     function() {
       close_alert();
@@ -325,6 +333,13 @@ function create_directory(name, id, onEnd=undefined) {
   sftp_obj.mkdir(dirPath, (err) => {
     listFiles(id);
     if (onEnd) onEnd();
+    if (err) alert_error(err.toString());
+  });
+}
+
+function conn_new_file(remoteFilePath, filename, onloadFunc=undefined) {
+  conn.exec(`touch ${remoteFilePath}/${filename}`, (err, stream) => {
+    if (onloadFunc) onloadFunc(err);
     if (err) alert_error(err.toString());
   });
 }
