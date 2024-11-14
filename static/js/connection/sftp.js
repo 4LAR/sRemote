@@ -174,8 +174,12 @@ function clearFileList(id=0) {
 }
 
 function clearSelectionEvent(event, id) {
-  if (event.target.tagName == "UL")
+  const otherId = Math.abs(id - 1);
+  if (selected_files[otherId].length > 0) {
+    clearSelection(otherId);
+  } else if (event.target.tagName == "UL") {
     clearSelection(id);
+  }
 }
 
 function clearSelection(id) {
