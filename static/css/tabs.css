@@ -253,7 +253,6 @@ ul.tabs.drag .tabs_items > li > * {
   display: block;
   padding-top: 25px;
   background-color: var(--groups-bg-color);
-  transition: .2s all;
 }
 
 .tabs > li.group > ul {
