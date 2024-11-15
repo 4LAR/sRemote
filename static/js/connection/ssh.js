@@ -236,7 +236,7 @@ function fitToscreen() {
 
 // изменение размера шрифта при использовании CTRL + WHEEL
 document.addEventListener('wheel', (event) => {
-  if (event.ctrlKey) {
+  if (event.ctrlKey && current_menu == "terminal") {
     const delta = event.deltaY > 0 ? -1 : 1;
     currentFontSize += delta;
     currentFontSize = Math.max(8, Math.min(24, currentFontSize));
@@ -388,6 +388,7 @@ const menu_items = [
   "files"
 ]
 
+var current_menu = "";
 function open_menu(item) {
   for (const menu_el of menu_items) {
     if (menu_el == item) {
@@ -398,6 +399,7 @@ function open_menu(item) {
       document.getElementById(`menu_${menu_el}`).style.display = "none";
     }
   }
+  current_menu = item;
   switch (item) {
     case "terminal":
       fitToscreen();
