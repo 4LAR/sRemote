@@ -127,6 +127,12 @@ function printOnNewLine(text) {
   term.write(text);
 }
 
+// Фокусировка на терминале
+function focusOnTerminal() {
+  if (current_menu == "terminal")
+    term.focus();
+}
+
 // разбор ошибки и вывод её в терминал
 function assembly_error(err) {
   for (const key of Object.keys(err)) {
@@ -403,6 +409,7 @@ function open_menu(item) {
   switch (item) {
     case "terminal":
       fitToscreen();
+      focusOnTerminal();
       break;
     default:
       break;
