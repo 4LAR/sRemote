@@ -190,6 +190,14 @@ function clearSelection(id) {
   }
 }
 
+function clearCut(id) {
+  const ul = document.getElementById(`files_${id}`);
+  selected_files[id] = [];
+  for (let li of ul.children) {
+    li.classList.remove('cut');
+  }
+}
+
 // access_rights:"lrwxrwxrwx"
 // group:"root"
 // name:"sbin"
@@ -206,6 +214,11 @@ function appendFileList(file, id=0) {
     <p class="size">${file_size}</p>
     <p class="access_rights">${file.access_rights}</p>
   `;
+
+  if (clipboard.files.includes(file.name) && clipboard.path == convert_path(pathArr[id])) {
+    li.classList.add("cut");
+  }
+
   li.onclick = function(event) {
     var element = event.target;
     if (element.tagName != "LI") {
@@ -310,10 +323,6 @@ function remove(path, type, id) {
   }
 }
 
-function create_file(name, id, onEnd=undefined) {
-
-}
-
 function create_file_from_alert() {
   const name_input = document.getElementById('name');
   if (!isValidLinuxFileName(name_input.value)) {
@@ -372,9 +381,16 @@ function cut() {
   clipboard.files = JSON.parse(JSON.stringify(selected_files[id]));
   clipboard.path = convert_path(pathArr[id]);
   if (selected_li_file) {
-    clipboard.files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML)
+    clipboard.files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML);
   }
   clipboard.action = 'cut';
+  clearCut(id);
+  const filesList = document.getElementById(`files_${id}`).getElementsByTagName("li");
+  for (const file of filesList) {
+    if (clipboard.files.includes(file.getElementsByTagName("p")[0].innerHTML)) {
+      file.classList.add("cut");
+    }
+  }
   console.log("CUT", clipboard);
 }
 

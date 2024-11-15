@@ -101,6 +101,10 @@ div.files > ul > li.selected {
   border-left: 3px solid var(--select-color) !important;
 }
 
+div.files > ul > li.cut {
+  opacity: .6;
+}
+
 div.files > ul > li > img {
   position: absolute;
   left: 20px;
