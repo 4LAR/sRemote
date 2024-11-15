@@ -534,7 +534,6 @@ function sftp_context(data) {
       break;
     }
     case "Cut": {
-      console.log("asluidhjkf");
       cut();
       break;
     }
