@@ -54,6 +54,15 @@ div.files > div.toolBar > img.split:hover {
 
 /* -------------------------------------------------------------------------- */
 
+.loading {
+  display: none;
+  position: absolute;
+  top: 26px;
+  width: 100%;
+}
+
+/* -------------------------------------------------------------------------- */
+
 div.files {
   position: absolute;
   top: 0px;

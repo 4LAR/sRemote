@@ -10,6 +10,7 @@
     <link rel="stylesheet" href = "./static/css/main.css"/>
     <link rel="stylesheet" href = "./static/css/colors.css"/>
     <link rel="stylesheet" href = "./static/css/button.css"/>
+    <link rel="stylesheet" href = "./static/css/loading.css"/>
     <link rel="stylesheet" href = "./static/css/alerts/alert.css"/>
     <link rel="stylesheet" href = "./static/css/alerts/sftp.css"/>
     <link rel="stylesheet" href = "./static/css/alerts/connection.css"/>
@@ -36,6 +37,9 @@
           <img class="reload" src="./static/img/reload.svg" onclick="listFiles(0)">
           <input id="path_0"></input>
         </div>
+        <div id="files_loading_0" class="loading loadingOuter">
+          <div class="loadingInner"></div>
+        </div>
         <ul class="scroll_style block_select" id="files_0" onclick="clearSelectionEvent(event, 0)"></ul>
         <div class="upload-frame">
           <img src="./static/img/upload.svg">
@@ -47,6 +51,9 @@
           <img class="reload" src="./static/img/reload.svg" onclick="listFiles(1)">
           <input id="path_1"></input>
           <img class="split" src="./static/img/split.svg" onclick="split()">
+        </div>
+        <div id="files_loading_1" class="loading">
+          <div class="loadingInner"></div>
         </div>
         <ul class="scroll_style right block_select" id="files_1" onclick="clearSelectionEvent(event, 1)"></ul>
         <div class="upload-frame">

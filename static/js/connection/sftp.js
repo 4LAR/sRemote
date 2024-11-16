@@ -126,6 +126,7 @@ function convert_path(arr) {
 function listFiles(id=0) {
   clearFileList(id);
   selected_files[id] = [];
+  document.getElementById(`files_loading_${id}`).style.display = "block";
   var files = [];
   sftp_obj.readdir(convert_path(pathArr[id]), (err, list) => {
     if (err) {
@@ -166,6 +167,7 @@ function listFiles(id=0) {
     for (const file of files) {
       appendFileList(file, id);
     }
+    document.getElementById(`files_loading_${id}`).style.display = "none";
   });
 }
 
