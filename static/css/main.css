@@ -1,3 +1,6 @@
+:root {
+  --titleBar-height: 32px;
+}
 
 body {
   background-color: var(--bg-color);
@@ -34,10 +37,10 @@ ul {
 
 .terminal_list {
   position: absolute;
-  top: 0px;
+  top: var(--titleBar-height);
   left: 201px;
   width: calc(100% - 201px);
-  height: 100%;
+  height: calc(100% - var(--titleBar-height));
   margin: 0px;
   transition: .2s all;
 }

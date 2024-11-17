@@ -9,6 +9,7 @@
     <link rel="stylesheet" href = "./static/css/icons.css"/>
     <link rel="stylesheet" href = "./static/css/main.css"/>
     <link rel="stylesheet" href = "./static/css/button.css"/>
+    <link rel="stylesheet" href = "./static/css/titleBar.css"/>
     <link rel="stylesheet" href = "./static/css/tabs.css"/>
     <link rel="stylesheet" href = "./static/css/toolBar.css"/>
     <link rel="stylesheet" href = "./static/css/left_menu.css"/>
@@ -20,6 +21,20 @@
     <link rel="stylesheet" href = "./static/css/checkbox.css"/>
   </head>
   <body class="scroll_style">
+    <header class="titlebar">
+      <div class="drag-region">
+        <div class="title">
+          <!-- <img src="./logo.svg"> -->
+          <!-- <p>sRemote</p> -->
+        </div>
+        <div class="controls">
+          <button type="button" id="min-button">min</button>
+          <button type="button" id="max-button">max</button>
+          <button type="button" id="restore-button">restore</button>
+          <button type="button" id="close-button">close</button>
+        </div>
+      </div>
+    </header>
     <div class="body">
       <ul id="terminal_list" class="terminal_list"></ul>
     </div>

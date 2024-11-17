@@ -108,6 +108,7 @@ const createWindow = () => {
     minWidth:(DEBUG)? 1250: 1000,
     height: ((settings.options["General"]["saveWindowState"])? mainWindowState.height: 600),
     minHeight: 600,
+    frame: false,
     icon: path.join(__dirname, 'logo.ico'),
     resizable: true
   })

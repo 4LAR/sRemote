@@ -416,6 +416,7 @@ function conn_cp(remoteFilePath, destinationPath, onloadFunc=undefined) {
 
 function paste() {
   const targetId = Number(selected_file.id.split("_")[1]);
+  // console.log(clipboard.files);
   for (const file of clipboard.files) {
     const sourcePath = clipboard.path + "/" + file;
     const destPath = convert_path(pathArr[targetId]);
@@ -431,6 +432,8 @@ function paste() {
       conn_cp(sourcePath, destPath, (err) => {
         if (err) alert_error(err.toString());
         listFiles(targetId);
+        const otherId = Math.abs(targetId - 1);
+        if (split_flag) listFiles(otherId);
       });
     }
   }
