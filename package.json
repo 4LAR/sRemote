@@ -34,6 +34,7 @@
       "logo.png",
       "logo.ico",
       "settings.js",
+      "package.json",
       "main.js"
     ],
     "fileAssociations": [

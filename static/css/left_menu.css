@@ -1,12 +1,14 @@
 
 div.left_menu {
   position: fixed;
-  top: var(--titleBar-height);
+  top: calc(var(--titleBar-height) - 1px);
   left: 0px;
   width: 200px;
-  height: calc(100% - var(--titleBar-height));
+  height: calc(100% - var(--titleBar-height) + 1px);
   transition: .2s all;
+  border-top: 1px solid var(--bg-color);
   border-right: 1px solid var(--border-color);
+  z-index: 10;
 }
 
 div.left_menu > div.hover_hitbox {

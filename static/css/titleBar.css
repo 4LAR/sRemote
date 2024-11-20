@@ -4,30 +4,69 @@
   left: 0px;
   width: 100%;
   height: var(--titleBar-height);
-  z-index: 999999;
+  z-index: 9;
   box-sizing: border-box;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
+/* -------------------------------------------------------------------------- */
+
 .titlebar > div.drag-region {
-  width: 100%;
+  width: calc(100% - 73px);
   height: 100%;
   -webkit-app-region: drag;
 }
 
 .titlebar > div.drag-region > div.title {
-
+  height: 100%;
+  width: 200px;
 }
 
 .titlebar > div.drag-region > div.title > img {
-  height: 100%;
+  margin: 4px;
+  height: 70%;
 }
 
 .titlebar > div.drag-region > div.title > p {
+  position: absolute;
+  left: 35px;
+  top: 5px;
   margin: 0px;
+  color: var(--tabs-selected-font-color);
+  font-size: 0.9em;
 }
 
-.titlebar > div.drag-region > div.controls {
+/* -------------------------------------------------------------------------- */
+
+.titlebar > div.controls {
   position: absolute;
   top: 0px;
   right: 0px;
+  height: var(--titleBar-height);
+}
+
+.titlebar > div.controls > button {
+  background-color: transparent;
+  border: none;
+  height: calc(100% - 1px);
+  cursor: pointer;
+  margin-left: -4px;
+  transition: .1s all;
+  border-bottom: 1px solid transparent;
+}
+
+.titlebar > div.controls > button:hover {
+  border-bottom: 1px solid #fff;
+}
+
+.titlebar > div.controls > button > img {
+  filter: invert(var(--invert-buttons));
+  padding-top: 4px;
+  height: 60%;
+  transition: .1s all;
+}
+
+.titlebar > div.controls > button:hover > img {
+  filter: invert(var(--invert-buttons-hover));
 }

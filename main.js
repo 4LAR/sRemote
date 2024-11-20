@@ -100,7 +100,7 @@ const createWindow = () => {
   top.win = new BrowserWindow({
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: false
     },
     x: (settings.options["General"]["saveWindowState"])? mainWindowState.x: undefined,
     y: (settings.options["General"]["saveWindowState"])? mainWindowState.y: undefined,
@@ -222,6 +222,25 @@ const createWindow = () => {
     const menu = Menu.buildFromTemplate(template)
     menu.popup({ window: BrowserWindow.fromWebContents(event.sender) })
   })
+
+  // Обработчик для скрытия окна
+  ipcMain.on('hide-window', () => {
+    top.win.minimize();
+  });
+
+  // Обработчик для максимизации окна
+  ipcMain.on('maximize-minimize-window', () => {
+    if (top.win.isMaximized()) {
+      top.win.unmaximize();
+    } else {
+      top.win.maximize();
+    }
+  });
+
+  // Обработчик для закрытия окна
+  ipcMain.on('close-window', () => {
+    top.win.close();
+  });
 }
 
 if (!gotTheLock) {

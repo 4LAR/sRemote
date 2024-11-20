@@ -3,11 +3,11 @@
   position: fixed;
   display: none;
   left: 0;
-  top: var(--titleBar-height);
+  top: calc(var(--titleBar-height) - 1px);
   width: 100%;
-  height: calc(100% - var(--titleBar-height));
+  height: calc(100% - var(--titleBar-height) + 1px);
   background-color: var(--alert-settings-bg-color);
-  z-index: 5;
+  z-index: 12;
 }
 
 .settings_body {

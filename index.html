@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;">
-    <title>sRemote - v0.5.0</title>
     <link rel="stylesheet" href = "./static/css/libs/xterm.css"/>
     <link rel="stylesheet" href = "./static/css/colors.css"/>
     <link rel="stylesheet" href = "./static/css/icons.css"/>
@@ -21,18 +20,23 @@
     <link rel="stylesheet" href = "./static/css/checkbox.css"/>
   </head>
   <body class="scroll_style">
-    <header class="titlebar">
+    <header class="titlebar block_select">
       <div class="drag-region">
         <div class="title">
-          <!-- <img src="./logo.svg"> -->
-          <!-- <p>sRemote</p> -->
+          <img src="./logo.svg">
+          <p id="app_name"></p>
         </div>
-        <div class="controls">
-          <button type="button" id="min-button">min</button>
-          <button type="button" id="max-button">max</button>
-          <button type="button" id="restore-button">restore</button>
-          <button type="button" id="close-button">close</button>
-        </div>
+      </div>
+      <div class="controls">
+        <button type="button" id="hide-button">
+          <img src="./static/img/titleBar/hide.svg">
+        </button>
+        <button type="button" id="minmax-button">
+          <img src="./static/img/titleBar/min_max.svg">
+        </button>
+        <button type="button" id="close-button">
+          <img src="./static/img/titleBar/close.svg">
+        </button>
       </div>
     </header>
     <div class="body">
@@ -69,6 +73,7 @@
   <script type="text/javascript" src="./static/js/libs/xterm-addon-web-links.js"></script>
   <script type="text/javascript" src="./static/js/main.js"></script>
   <script type="text/javascript" src="./static/js/localization.js"></script>
+  <script type="text/javascript" src="./static/js/titleBar.js"></script>
   <script type="text/javascript" src="./static/js/alert.js"></script>
   <script type="text/javascript" src="./static/js/auth.js"></script>
   <script type="text/javascript" src="./static/js/tabs.js"></script>
