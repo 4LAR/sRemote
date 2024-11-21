@@ -6,8 +6,8 @@
   "author": "100LAR STUDIO <nikitstolarov@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^26.6.2",
-    "electron-builder": "^24.9.1",
+    "electron": "^12.2.3",
+    "electron-builder": "^23.3.1",
     "electron-reloader": "^1.2.3",
     "ssh2": "^1.15.0"
   },
