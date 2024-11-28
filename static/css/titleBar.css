@@ -56,8 +56,16 @@
   border-bottom: 1px solid transparent;
 }
 
+.titlebar > div.controls > button:focus {
+  outline: 0;
+}
+
 .titlebar > div.controls > button:hover {
   border-bottom: 1px solid #fff;
+}
+
+.titlebar > div.controls > button.close:hover {
+  background-color: #FF000050;
 }
 
 .titlebar > div.controls > button > img {
