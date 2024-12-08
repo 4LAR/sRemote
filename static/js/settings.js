@@ -125,7 +125,7 @@ function alert_settings() {
 
         <div class="checkbox" for="settings_General_defaultTitleBar">
           <input type="checkbox" id="settings_General_defaultTitleBar">
-          <label for="settings_General_defaultTitleBar">Использовать строку заголовка как в системе (только для Windows)</label>
+          <label for="settings_General_defaultTitleBar">${localization_dict.settings_General_defaultTitleBar}</label>
         </div>
       </div>
       <div id="settings_page_account">
