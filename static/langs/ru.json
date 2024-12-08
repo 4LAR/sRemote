@@ -48,6 +48,7 @@
   "settings_General_thame": "Выберите тему для sRemote",
   "settings_General_thame_light": "Светлая",
   "settings_General_thame_dark": "Темная",
+  "settings_General_defaultTitleBar": "Использовать строку заголовка как в системе (только для Windows)",
   "settings_Connections_autoConnect": "Автоматически подключаться ко всем сетям при запуске приложения",
   "settings_Connections_readyTimeout": "Время ожидания завершения SSH рукопожатия (в миллисекундах)",
   "settings_Connections_cacheData": "Кэшировать данные из терминала",

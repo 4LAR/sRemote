@@ -48,6 +48,7 @@
   "settings_General_thame": "Choose theme for sRemote",
   "settings_General_thame_light": "Light",
   "settings_General_thame_dark": "Dark",
+  "settings_General_defaultTitleBar": "Use the title bar as in the system (Windows only)",
   "settings_Connections_autoConnect": "Automatically connect to all networks upon application startup",
   "settings_Connections_readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete",
   "settings_Connections_cacheData": "Cache data from the terminal",
