@@ -31,6 +31,10 @@ ipcRenderer.on('get-config-response', (event, response) => {
     read_localization(SETTINGS_DICT["General"]["lang"]);
     read();
     first_get_config_flag = false;
+
+    if ((os.platform() !== "win32") || (SETTINGS_DICT["General"]["defaultTitleBar"])) {
+      root.style.setProperty('--titleBar-height', '0px');
+    }
   }
 });
 
@@ -118,6 +122,11 @@ function alert_settings() {
             <label for="settings_General_thame_dark">${localization_dict.settings_General_thame_dark}</label>
           </div>
         </div>
+
+        <div class="checkbox" for="settings_General_defaultTitleBar">
+          <input type="checkbox" id="settings_General_defaultTitleBar">
+          <label for="settings_General_defaultTitleBar">Использовать строку заголовка как в системе (только для Windows)</label>
+        </div>
       </div>
       <div id="settings_page_account">
         <div id="settings_account_login_container">
@@ -195,10 +204,10 @@ function alert_settings() {
   document.getElementById("settings_General_autoStart").checked = SETTINGS_DICT["General"]["autoStart"];
   document.getElementById("settings_General_keepBackground").checked = SETTINGS_DICT["General"]["keepBackground"];
   document.getElementById("settings_General_saveWindowState").checked = SETTINGS_DICT["General"]["saveWindowState"];
-
   document.getElementById("settings_General_thame_light").checked = SETTINGS_DICT["General"]["thame"] == "light";
   document.getElementById("settings_General_thame_dark").checked = SETTINGS_DICT["General"]["thame"] == "dark";
   // document.getElementById("settings_General_thame_system").checked = SETTINGS_DICT["General"]["thame"] == "system";
+  document.getElementById("settings_General_defaultTitleBar").checked = SETTINGS_DICT["General"]["defaultTitleBar"];
 
   document.getElementById("settings_Connections_autoConnect").checked = SETTINGS_DICT["Connections"]["autoConnect"];
   document.getElementById("settings_Connections_readyTimeout").value = SETTINGS_DICT["Connections"]["readyTimeout"];

@@ -1,6 +1,12 @@
 let { ipcRenderer } = require("electron")
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+
+const root = document.querySelector(':root');
+
+const currentOS = os.platform();
+const osRelease = os.release();
 
 /*----------------------------------------------------------------------------*/
 

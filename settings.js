@@ -23,13 +23,16 @@ class Settings {
           "keepBackground": false,
           "thame": "dark", // light, dark, system
           "saveWindowState": true,
+          "defaultTitleBar": false,
           "experimental": false
         },
         "Connections": {
           "autoConnect": false,
           "readyTimeout": 20000,
           "cacheData": false,
-          "maxCacheData": 5000
+          "maxCacheData": 5000,
+          "keepaliveCountMax": 3,
+          "keepaliveInterval": 0
         },
         "Account": {
           "url": "https://sRemote.100lar-web.ru/",

@@ -12,3 +12,10 @@ document.getElementById('minmax-button').addEventListener('click', () => {
 document.getElementById('close-button').addEventListener('click', () => {
   ipcRenderer.send('close-window');
 });
+
+ipcRenderer.on('maximize', (event, response) => {
+  document.getElementById('minmax-button').getElementsByTagName('IMG')[0].src = `./static/img/titleBar/${response? "min": "max"}.svg`
+});
+
+// console.log({ platform: currentOS, release: osRelease });
+// 'darwin', 'win32', 'linux', etc.

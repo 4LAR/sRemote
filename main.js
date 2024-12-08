@@ -1,5 +1,6 @@
 const {app, nativeImage, Tray, Menu, BrowserWindow, ipcMain, systemPreferences, dialog} = require("electron");
 const fs = require('fs');
+const os = require('os');
 const AutoLaunch = require('auto-launch');
 const path = require('path');
 const isPackaged = require('electron-is-packaged').isPackaged;
@@ -90,7 +91,6 @@ try {
 } catch {}
 
 /*----------------------------------------------------------------------------*/
-
 const createWindow = () => {
   const mainWindowState = windowStateKeeper({
    defaultWidth: 1000,
@@ -108,7 +108,7 @@ const createWindow = () => {
     minWidth:(DEBUG)? 1250: 1000,
     height: ((settings.options["General"]["saveWindowState"])? mainWindowState.height: 600),
     minHeight: 600,
-    frame: false,
+    frame: (os.platform() !== "win32") || (settings.options["General"]["defaultTitleBar"]),
     icon: path.join(__dirname, 'logo.ico'),
     resizable: true
   })
@@ -241,6 +241,14 @@ const createWindow = () => {
   ipcMain.on('close-window', () => {
     top.win.close();
   });
+
+  top.win.on('maximize', () => {
+    top.win.webContents.send('maximize', true);
+  })
+
+  top.win.on('unmaximize', () => {
+    top.win.webContents.send('maximize', false);
+  })
 }
 
 if (!gotTheLock) {
