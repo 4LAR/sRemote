@@ -442,6 +442,8 @@ function paste() {
   clipboard.files = [];
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 function download() {
   const id = Number(selected_file.id.split("_")[1]);
   const files = JSON.parse(JSON.stringify(selected_files[id]));
@@ -450,88 +452,107 @@ function download() {
     files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML);
   }
 
-  let completedDownloads = 0;
-
-  for (const file of files) {
-    const remoteFilePath = path + "/" + file;
+  const downloadPromises = files.map(file => {
+    const remoteFilePath = `${path}/${file}`;
     const localFilePath = `C:/Users/nikit/AppData/Roaming/sRemote/temp/${file}`;
 
+    return statFile(remoteFilePath)
+      .then(stats => {
+        if ((stats.mode & 0o40000) === 0o40000) {
+          return downloadFolder(file, remoteFilePath, localFilePath);
+        } else {
+          return downloadFile(file, remoteFilePath, localFilePath);
+        }
+      })
+      .catch(err => {
+        alert_error(`Ошибка при получении информации о файле ${file}: ${err.toString()}`);
+      });
+  });
+
+  Promise.all(downloadPromises)
+    .then(() => {
+      onAllDownloadsComplete();
+    })
+    .catch(err => {
+      console.error("Ошибка при загрузке файлов:", err);
+    });
+}
+
+function statFile(remoteFilePath) {
+  return new Promise((resolve, reject) => {
     sftp_obj.stat(remoteFilePath, (err, stats) => {
       if (err) {
-        alert_error(`Ошибка при получении информации о файле ${file}: ${err.toString()}`);
-        return;
-      }
-
-      // Проверяем тип файла по свойству `mode`
-      if ((stats.mode & 0o40000) === 0o40000) {
-        downloadFolder(file, remoteFilePath, localFilePath);
+        reject(err);
       } else {
-        downloadFile(file, remoteFilePath, localFilePath);
+        resolve(stats);
       }
     });
-  }
+  });
 }
 
 function downloadFolder(file, remoteFilePath, localFilePath) {
-  if (!fs.existsSync(localFilePath)) {
-    fs.mkdirSync(localFilePath);
-  }
-  sftp_obj.readdir(remoteFilePath, (err, list) => {
-    if (err) {
-      alert_error(`Ошибка получения списка файлов в директории ${file}: ${err.toString()}`);
-      return;
+  return new Promise((resolve, reject) => {
+    if (!fs.existsSync(localFilePath)) {
+      fs.mkdirSync(localFilePath);
     }
-    for (const file_r of list) {
-      console.log(file_r);
-      const fileName = file_r.filename;
-      if (file_r.longname[0] == "d") {
-        downloadFolder(fileName, path.join(remoteFilePath, fileName).replaceAll("\\", "/"), path.join(localFilePath, fileName).replaceAll("\\", "/"));
-      } else {
-        downloadFile(fileName, path.join(remoteFilePath, fileName).replaceAll("\\", "/"), path.join(localFilePath, fileName).replaceAll("\\", "/"));
+    sftp_obj.readdir(remoteFilePath, (err, list) => {
+      if (err) {
+        alert_error(`Ошибка получения списка файлов в директории ${file}: ${err.toString()}`);
+        reject(err);
+        return;
       }
-    }
+      const folderPromises = list.map(file_r => {
+        const fileName = file_r.filename;
+        if (file_r.longname[0] == "d") {
+          return downloadFolder(fileName, path.join(remoteFilePath, fileName).replaceAll("\\", "/"), path.join(localFilePath, fileName).replaceAll("\\", "/"));
+        } else {
+          return downloadFile(fileName, path.join(remoteFilePath, fileName).replaceAll("\\", "/"), path.join(localFilePath, fileName).replaceAll("\\", "/"));
+        }
+      });
+      Promise.all(folderPromises).then(resolve).catch(reject);
+    });
   });
 }
 
 function downloadFile(file, remoteFilePath, localFilePath) {
-  // Получаем размер файла перед началом загрузки
-  sftp_obj.stat(remoteFilePath, (err, stats) => {
-    if (err) {
-      alert_error(`Ошибка при получении информации о файле1 ${file}: ${err.toString()}`);
-      return;
-    }
+  return new Promise((resolve, reject) => {
+    statFile(remoteFilePath)
+      .then(stats => {
+        const totalBytes = stats.size;
+        let downloadedBytes = 0;
 
-    const totalBytes = stats.size; // Получаем размер файла
-    let downloadedBytes = 0;
+        const readStream = sftp_obj.createReadStream(remoteFilePath);
+        const writeStream = fs.createWriteStream(localFilePath);
 
-    const readStream = sftp_obj.createReadStream(remoteFilePath);
-    const writeStream = fs.createWriteStream(localFilePath);
+        readStream.on('data', (chunk) => {
+          downloadedBytes += chunk.length;
+          const progress = (downloadedBytes / totalBytes) * 100;
+          console.log(`Загрузка ${file}: ${progress.toFixed(2)}%`);
+        });
 
-    readStream.on('data', (chunk) => {
-      downloadedBytes += chunk.length;
-      const progress = (downloadedBytes / totalBytes) * 100;
-      console.log(`Загрузка ${file}: ${progress.toFixed(2)}%`);
-    });
+        readStream.on('end', () => {
+          console.log(`Файл ${file} успешно скачан в ${localFilePath}`);
+          resolve();
+        });
 
-    readStream.on('end', () => {
-      console.log(`Файл ${file} успешно скачан в ${localFilePath}`);
-    });
+        readStream.on('error', (err) => {
+          alert_error(`Ошибка при скачивании ${file}: ${err.toString()}`);
+          reject(err);
+        });
 
-    readStream.on('error', (err) => {
-      alert_error(`Ошибка при скачивании ${file}: ${err.toString()}`);
-    });
-
-    readStream.pipe(writeStream);
+        readStream.pipe(writeStream);
+      })
+      .catch(err => {
+        alert_error(`Ошибка при получении информации о файле ${file}: ${err.toString()}`);
+        reject(err);
+      });
   });
 }
 
-
 // Функция, которая будет вызвана после завершения загрузки всех файлов
 function onAllDownloadsComplete() {
-  // Ваш код здесь
   alert("Все файлы были успешно загружены!");
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 
 document.getElementById('menu_files').addEventListener('contextmenu', (event) => {
