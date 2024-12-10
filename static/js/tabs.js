@@ -63,7 +63,7 @@ function select_item(group_id, item_id) {
       if (group.id == group_id && item.id == item_id) {
         document.getElementById(`item_${group.id}_${item.id}`).className = "selected";
         openModal(`iframe_${group.id}_${item.id}`);
-        document.getElementById(`iframe_${group.id}_${item.id}`).contentWindow.focusOnTerminal();
+        try {document.getElementById(`iframe_${group.id}_${item.id}`).contentWindow.focusOnTerminal();} catch (e) {}
 
         in_group_flag = true;
       } else {

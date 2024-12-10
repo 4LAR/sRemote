@@ -16,6 +16,7 @@
 .settings_body {
   position: relative;
   overflow-y: scroll;
+  overflow-x: hidden;
   height: calc(100% - 70px);
   width: 100%;
   padding-left: 25%;
@@ -250,4 +251,23 @@ ul.settings_list > li > img {
   right: 30px;
   top: -10px;
   width: 120px;
+}
+
+/* -------------------------------------------------------------------------- */
+
+#settings_macros_list {
+  border-radius: 8px;
+  width: calc(100% - 20px);
+  border: 1px solid var(--alert-border-color);
+  background-color: var(--alert-settings-bg-color);
+  padding: 0px 10px;
+  box-sizing: border-box;
+}
+
+#settings_macros_list > li {
+  border-bottom: 1px solid var(--alert-border-color);
+}
+
+#settings_macros_list > li:last-child {
+  border-bottom: none;
 }

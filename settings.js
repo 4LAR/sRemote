@@ -24,7 +24,8 @@ class Settings {
           "thame": "dark", // light, dark, system
           "saveWindowState": true,
           "defaultTitleBar": false,
-          "experimental": false
+          "experimental": false,
+          "devTools": false
         },
         "Connections": {
           "autoConnect": false,

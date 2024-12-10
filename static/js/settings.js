@@ -11,7 +11,11 @@ function settings_change(e) {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = e.target.id.split("_")[3];
   } else if (e.target.id.split("_")[2] == "readyTimeout") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
-  } else if (e.target.id.split("_")[2] == "maxCacheData") {
+  } else if (e.target.id.split("_")[2] == "readyTimeout") {
+    SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
+  } else if (e.target.id.split("_")[2] == "keepaliveCountMax") {
+    SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
+  } else if (e.target.id.split("_")[2] == "keepaliveInterval") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
   } else if (e.target.tagName == "SELECT") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = document.getElementById(e.target.id).value;
@@ -81,7 +85,7 @@ function alert_settings() {
           <img src="./static/img/settings/connection.svg" alt="">
           <p>${localization_dict.settings_menu_connection}</p>
         </li>
-        <li id="settings_menu_macros" onclick="change_settings_page('macros')" style="display: none">
+        <li id="settings_menu_macros" onclick="change_settings_page('macros')">
           <div></div>
           <div class="selector"></div>
           <img src="./static/img/settings/macros.svg" alt="">
@@ -89,8 +93,7 @@ function alert_settings() {
         </li>
       </ul>
       <div id="settings_page_general">
-        <p class="settings_h">${localization_dict.settings_menu_general}</p>
-
+        <p></a>
         <div class="selector">
           <label>${localization_dict.settings_General_lang}:</label>
           ${select_generator({"English": "en", "Русский": "ru"}, "settings_General_lang", "input_style", SETTINGS_DICT["General"]["lang"])}
@@ -164,8 +167,7 @@ function alert_settings() {
 
       </div>
       <div id="settings_page_connection">
-        <p class="settings_h">${localization_dict.settings_menu_connection}</p>
-
+        <p></a>
         <div class="checkbox" for="settings_Connections_autoConnect">
           <input type="checkbox" id="settings_Connections_autoConnect">
           <label for="settings_Connections_autoConnect">${localization_dict.settings_Connections_autoConnect}</label>
@@ -185,11 +187,32 @@ function alert_settings() {
           <input type="number" class="input_style" id="settings_Connections_maxCacheData">
           <label for="settings_Connections_maxCacheData">${localization_dict.settings_Connections_maxCacheData}</label>
         </div>
+        <br>
+        <div class="number">
+          <input type="number" class="input_style" id="settings_Connections_keepaliveCountMax">
+          <label for="settings_Connections_keepaliveCountMax">${localization_dict.settings_Connections_keepaliveCountMax}</label>
+        </div>
+
+        <div class="number">
+          <input type="number" class="input_style" id="settings_Connections_keepaliveInterval">
+          <label for="settings_Connections_keepaliveInterval">${localization_dict.settings_Connections_keepaliveInterval}</label>
+        </div>
       </div>
 
       <div id="settings_page_macros">
-        <p class="settings_h">Macros</p>
-
+        <ul id="settings_macros_list">
+          <li>
+            <select>
+              <option>hotkey</option>
+              <option>alias</option>
+            </select>
+            <input type="text" value="name"/>
+            <textarea></textarea>
+          </li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+        </ul>
 
       </div>
 
@@ -213,7 +236,10 @@ function alert_settings() {
   document.getElementById("settings_Connections_readyTimeout").value = SETTINGS_DICT["Connections"]["readyTimeout"];
   document.getElementById("settings_Connections_cacheData").checked = SETTINGS_DICT["Connections"]["cacheData"];
   document.getElementById("settings_Connections_maxCacheData").value = SETTINGS_DICT["Connections"]["maxCacheData"];
+  document.getElementById("settings_Connections_keepaliveCountMax").value = SETTINGS_DICT["Connections"]["keepaliveCountMax"];
+  document.getElementById("settings_Connections_keepaliveInterval").value = SETTINGS_DICT["Connections"]["keepaliveInterval"];
   change_settings_page("general");
+  change_settings_page("macros");
 }
 
 get_config();

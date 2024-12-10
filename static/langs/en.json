@@ -53,6 +53,8 @@
   "settings_Connections_readyTimeout": "How long (in milliseconds) to wait for the SSH handshake to complete",
   "settings_Connections_cacheData": "Cache data from the terminal",
   "settings_Connections_maxCacheData": "Terminal cache size (in bytes)",
+  "settings_Connections_keepaliveCountMax": "How many consecutive unanswered SSH keepalive packets can be sent to the server before disconnection",
+  "settings_Connections_keepaliveInterval": "How often (in milliseconds) should keepalive packets be sent to the SSH server",
 
   "ssh_failed_to_connect": "Failed to connect to the remote server",
   "ssh_invalid_credentials": "Invalid credentials for authentication",

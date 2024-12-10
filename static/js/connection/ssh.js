@@ -329,7 +329,9 @@ function create_connection() {
       username: connection_config.username,
       password: (!connection_config.auth_scheme || connection_config.auth_scheme == "lap")? connection_config.password: undefined,
       privateKey: (connection_config.auth_scheme == "lak")? readFileSync(connection_config.privateKey): undefined,
-      readyTimeout: config.Connections.readyTimeout
+      readyTimeout: config.Connections.readyTimeout,
+      keepaliveCountMax: config.Connections.keepaliveCountMax,
+      keepaliveInterval: config.Connections.keepaliveInterval
     });
   } catch (e) {
     printOnNewLine(`[\x1b[31mERROR\x1b[0m] ${e}`);

@@ -26,8 +26,6 @@ const settings = new Settings_module("./settings.ini");
 let win;
 let top = {};
 
-const DEBUG = true;
-
 /*----------------------------------------------------------------------------*/
 
 const appLauncher = new AutoLaunch({
@@ -104,8 +102,8 @@ const createWindow = () => {
     },
     x: (settings.options["General"]["saveWindowState"])? mainWindowState.x: undefined,
     y: (settings.options["General"]["saveWindowState"])? mainWindowState.y: undefined,
-    width: (DEBUG)? 1250: ((settings.options["General"]["saveWindowState"])? mainWindowState.width: 1000),
-    minWidth:(DEBUG)? 1250: 1000,
+    width: ((settings.options["General"]["saveWindowState"])? mainWindowState.width: 1000),
+    minWidth: 1000,
     height: ((settings.options["General"]["saveWindowState"])? mainWindowState.height: 600),
     minHeight: 600,
     frame: (os.platform() !== "win32") || (settings.options["General"]["defaultTitleBar"]),
@@ -137,11 +135,12 @@ const createWindow = () => {
     });
   }
 
-  if (DEBUG) {
+  if (settings.options["General"]["devTools"]) {
     top.win.on("ready-to-show", () => {
       top.win.webContents.openDevTools();
     });
-  } else if (settings.options["General"]["saveWindowState"]) {
+  }
+  if (settings.options["General"]["saveWindowState"]) {
     mainWindowState.manage(top.win);
   }
 
