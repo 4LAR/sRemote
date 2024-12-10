@@ -464,10 +464,8 @@ function download() {
 
       // Проверяем тип файла по свойству `mode`
       if ((stats.mode & 0o40000) === 0o40000) {
-        console.log(`${remoteFilePath} - это папка.`);
         downloadFolder(file, remoteFilePath, localFilePath);
       } else {
-        console.log(`${remoteFilePath} - это файл.`);
         downloadFile(file, remoteFilePath, localFilePath);
       }
     });
@@ -475,7 +473,6 @@ function download() {
 }
 
 function downloadFolder(file, remoteFilePath, localFilePath) {
-  console.log(file, remoteFilePath, localFilePath);
   if (!fs.existsSync(localFilePath)) {
     fs.mkdirSync(localFilePath);
   }
@@ -486,11 +483,11 @@ function downloadFolder(file, remoteFilePath, localFilePath) {
     }
     for (const file_r of list) {
       console.log(file_r);
+      const fileName = file_r.filename;
       if (file_r.longname[0] == "d") {
-        const fileName = file_r.filename;
-        downloadFolder(fileName, path.join(remoteFilePath, fileName), path.join(localFilePath, fileName));
+        downloadFolder(fileName, path.join(remoteFilePath, fileName).replaceAll("\\", "/"), path.join(localFilePath, fileName).replaceAll("\\", "/"));
       } else {
-        downloadFile(fileName, path.join(remoteFilePath, fileName), path.join(localFilePath, fileName));
+        downloadFile(fileName, path.join(remoteFilePath, fileName).replaceAll("\\", "/"), path.join(localFilePath, fileName).replaceAll("\\", "/"));
       }
     }
   });
@@ -500,7 +497,7 @@ function downloadFile(file, remoteFilePath, localFilePath) {
   // Получаем размер файла перед началом загрузки
   sftp_obj.stat(remoteFilePath, (err, stats) => {
     if (err) {
-      alert_error(`Ошибка при получении информации о файле ${file}: ${err.toString()}`);
+      alert_error(`Ошибка при получении информации о файле1 ${file}: ${err.toString()}`);
       return;
     }
 
@@ -518,11 +515,6 @@ function downloadFile(file, remoteFilePath, localFilePath) {
 
     readStream.on('end', () => {
       console.log(`Файл ${file} успешно скачан в ${localFilePath}`);
-      completedDownloads++;
-      if (completedDownloads === files.length) {
-        console.log("Все файлы успешно загружены!");
-        // onAllDownloadsComplete();
-      }
     });
 
     readStream.on('error', (err) => {
