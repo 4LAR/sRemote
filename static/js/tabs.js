@@ -1,11 +1,18 @@
 
-//
+// Хрангилище для настроек, соединений и тп
 const Store = require('electron-store');
 const store = new Store();
 
-var TABS = []; //
+// Место где будут храниться временные файлы
+const tempDir = path.join(path.dirname(store.path), 'temp');
+console.log("temp dir:", tempDir);
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir);
+}
 
-//
+var TABS = []; // Сконвертированный список соединений
+
+// Статус соединений
 const STATUS_LIST = [
   "status_none",
   "status_warning",

@@ -217,6 +217,8 @@ function appendFileList(file, id=0) {
     <p class="access_rights">${file.access_rights}</p>
   `;
 
+  li.draggable = true;
+
   if (clipboard.files.includes(file.name) && clipboard.path == convert_path(pathArr[id])) {
     li.classList.add("cut");
   }
@@ -440,6 +442,104 @@ function paste() {
   clipboard.files = [];
 }
 
+function download() {
+  const id = Number(selected_file.id.split("_")[1]);
+  const files = JSON.parse(JSON.stringify(selected_files[id]));
+  const path = convert_path(pathArr[id]);
+  if (selected_li_file) {
+    files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML);
+  }
+
+  let completedDownloads = 0;
+
+  for (const file of files) {
+    const remoteFilePath = path + "/" + file;
+    const localFilePath = `C:/Users/nikit/AppData/Roaming/sRemote/temp/${file}`;
+
+    sftp_obj.stat(remoteFilePath, (err, stats) => {
+      if (err) {
+        alert_error(`Ошибка при получении информации о файле ${file}: ${err.toString()}`);
+        return;
+      }
+
+      // Проверяем тип файла по свойству `mode`
+      if ((stats.mode & 0o40000) === 0o40000) {
+        console.log(`${remoteFilePath} - это папка.`);
+        downloadFolder(file, remoteFilePath, localFilePath);
+      } else {
+        console.log(`${remoteFilePath} - это файл.`);
+        downloadFile(file, remoteFilePath, localFilePath);
+      }
+    });
+  }
+}
+
+function downloadFolder(file, remoteFilePath, localFilePath) {
+  console.log(file, remoteFilePath, localFilePath);
+  if (!fs.existsSync(localFilePath)) {
+    fs.mkdirSync(localFilePath);
+  }
+  sftp_obj.readdir(remoteFilePath, (err, list) => {
+    if (err) {
+      alert_error(`Ошибка получения списка файлов в директории ${file}: ${err.toString()}`);
+      return;
+    }
+    for (const file_r of list) {
+      console.log(file_r);
+      if (file_r.longname[0] == "d") {
+        const fileName = file_r.filename;
+        downloadFolder(fileName, path.join(remoteFilePath, fileName), path.join(localFilePath, fileName));
+      } else {
+        downloadFile(fileName, path.join(remoteFilePath, fileName), path.join(localFilePath, fileName));
+      }
+    }
+  });
+}
+
+function downloadFile(file, remoteFilePath, localFilePath) {
+  // Получаем размер файла перед началом загрузки
+  sftp_obj.stat(remoteFilePath, (err, stats) => {
+    if (err) {
+      alert_error(`Ошибка при получении информации о файле ${file}: ${err.toString()}`);
+      return;
+    }
+
+    const totalBytes = stats.size; // Получаем размер файла
+    let downloadedBytes = 0;
+
+    const readStream = sftp_obj.createReadStream(remoteFilePath);
+    const writeStream = fs.createWriteStream(localFilePath);
+
+    readStream.on('data', (chunk) => {
+      downloadedBytes += chunk.length;
+      const progress = (downloadedBytes / totalBytes) * 100;
+      console.log(`Загрузка ${file}: ${progress.toFixed(2)}%`);
+    });
+
+    readStream.on('end', () => {
+      console.log(`Файл ${file} успешно скачан в ${localFilePath}`);
+      completedDownloads++;
+      if (completedDownloads === files.length) {
+        console.log("Все файлы успешно загружены!");
+        // onAllDownloadsComplete();
+      }
+    });
+
+    readStream.on('error', (err) => {
+      alert_error(`Ошибка при скачивании ${file}: ${err.toString()}`);
+    });
+
+    readStream.pipe(writeStream);
+  });
+}
+
+
+// Функция, которая будет вызвана после завершения загрузки всех файлов
+function onAllDownloadsComplete() {
+  // Ваш код здесь
+  alert("Все файлы были успешно загружены!");
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 document.getElementById('menu_files').addEventListener('contextmenu', (event) => {
@@ -512,6 +612,9 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
         label: 'Rename',
         enabled: (selected_one || !!li_element),
         accelerator: "F2"
+      }, {
+        label: 'Download',
+        enabled: (selected_one || !!li_element)
       }
       // }, {
       //   type: 'separator'
@@ -551,6 +654,13 @@ function sftp_context(data) {
     }
     case "Delete": {
       break;
+    }
+    case "Download": {
+      try {
+        download();
+      } catch (e) {
+        console.error(e);
+      }
     }
     default:
       break;

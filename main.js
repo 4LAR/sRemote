@@ -248,6 +248,12 @@ const createWindow = () => {
   top.win.on('unmaximize', () => {
     top.win.webContents.send('maximize', false);
   })
+
+  ipcMain.on('ondragstart', (event, filePath) => {
+    event.sender.startDrag({
+      file: path.join(__dirname, filePath)
+    })
+  })
 }
 
 if (!gotTheLock) {
