@@ -1,5 +1,7 @@
-const packageJson = require('./package.json');
+packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, `package.json`), { encoding: 'utf8', flag: 'r' }))
+
 document.getElementById('app_name').innerHTML = `sRemote ${packageJson.version}`;
+document.title = `sRemote ${packageJson.version}`;
 
 document.getElementById('hide-button').addEventListener('click', () => {
   ipcRenderer.send('hide-window');
@@ -16,6 +18,3 @@ document.getElementById('close-button').addEventListener('click', () => {
 ipcRenderer.on('maximize', (event, response) => {
   document.getElementById('minmax-button').getElementsByTagName('IMG')[0].src = `./static/img/titleBar/${response? "min": "max"}.svg`
 });
-
-// console.log({ platform: currentOS, release: osRelease });
-// 'darwin', 'win32', 'linux', etc.
