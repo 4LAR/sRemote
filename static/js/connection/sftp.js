@@ -73,8 +73,6 @@ function alert_new_folderFile(fileFlag=false) {
   document.getElementById("name").focus()
 }
 
-// alert_new_folder_file();
-
 ////////////////////////////////////////////////////////////////////////////////
 
 var pathArr = [[], []];
@@ -678,7 +676,18 @@ function sftp_context(data) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function upload_file(file, remotePathArr) {
+function alert_upload_files() {
+  open_alert(`
+    <p class="name">Upload files</p>
+    <hr>
+    <ul id="upload_files_progress"></ul>
+    <p id="upload_main_files_progress">0% completed</p>
+  `, 'alert_sftp_upload')
+}
+
+// alert_upload_files();
+
+function upload_file(file, remotePathArr, totalFiles, uploadedFiles) {
   const remotePath = convert_path(remotePathArr) + "/" + file.name;
 
   return new Promise((resolve, reject) => {
@@ -688,21 +697,26 @@ function upload_file(file, remotePathArr) {
           return reject(err);
         }
         console.log(`Directory created: ${remotePath}`);
-        uploadDirectory(file.path, [...remotePathArr, file.name]).then(resolve).catch(reject);
+        uploadDirectory(file.path, [...remotePathArr, file.name], totalFiles, uploadedFiles).then(resolve).catch(reject);
       });
     } else {
-      sftp_obj.fastPut(file.path, remotePath, {}, (err) => {
+      sftp_obj.fastPut(file.path, remotePath, {
+        step: function(total_transferred, chunk, total) {
+          console.log(total_transferred, chunk, total);
+        }
+      }, (err) => {
         if (err) {
           return reject(err);
         }
         console.log(`File uploaded successfully: ${remotePath}`);
+        uploadedFiles++;
         resolve();
       });
     }
   });
 }
 
-function uploadDirectory(localPath, remotePathArr) {
+function uploadDirectory(localPath, remotePathArr, totalFiles, uploadedFiles) {
   return new Promise((resolve, reject) => {
     fs.readdir(localPath, (err, items) => {
       if (err) {
@@ -719,7 +733,7 @@ function uploadDirectory(localPath, remotePathArr) {
         return upload_file({
           name: item,
           path: path.join(localPath, item)
-        }, remotePathArr);
+        }, remotePathArr, totalFiles, uploadedFiles);
       });
 
       Promise.all(uploadPromises)
@@ -756,10 +770,13 @@ for (let id = 0; id < 2; id++) {
 
       // Создаем массив промисов для загрузки файлов
       let uploadPromises = [];
-      for (const file of files) {
-        uploadPromises.push(upload_file(file, pathArr[id]));
-      }
+      const totalFiles = files.length;
+      let uploadedFiles = 0;
 
+      for (const file of files) {
+        uploadPromises.push(upload_file(file, pathArr[id], totalFiles, uploadedFiles));
+      }
+      alert_upload_files();
       // Ждем завершения всех загрузок
       Promise.all(uploadPromises)
         .then(() => {
