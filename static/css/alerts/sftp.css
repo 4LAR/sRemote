@@ -27,3 +27,7 @@
   border: 1px solid var(--alert-border-color);
   height: 200px;
 }
+
+.alert_sftp_file .error_text {
+  color: var(--alert-font-color);
+}

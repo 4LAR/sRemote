@@ -50,7 +50,7 @@ function alert_error(text) {
   open_alert(`
     <p class="name">Error</p>
     <hr>
-    <p>${text}</p>
+    <p class="error_text">${text}</p>
     <div class="button submit" onclick="close_alert()">
       <p>Ok</p>
     </div>
@@ -376,6 +376,9 @@ function create_directory(name, id, onEnd=undefined) {
 function conn_new_file(remoteFilePath, filename, onloadFunc=undefined) {
   conn.exec(`touch ${remoteFilePath}/${filename}`, (err, stream) => {
     if (onloadFunc) onloadFunc(err);
+    stream.on('data', function(data) {}).stderr.on('data', function(data) {
+      alert_error(data.toString());
+    });
     if (err) alert_error(err.toString());
   });
 }
@@ -451,16 +454,14 @@ function download(localFilePath) {
   if (selected_li_file) {
     files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML);
   }
-
   const downloadPromises = files.map(file => {
     const remoteFilePath = `${path}/${file}`;
-
     return statFile(remoteFilePath)
       .then(stats => {
         if ((stats.mode & 0o40000) === 0o40000) {
-          return downloadFolder(file, remoteFilePath, localFilePath);
+          return downloadFolder(file, remoteFilePath, localFilePath + `/${file}`);
         } else {
-          return downloadFile(file, remoteFilePath, localFilePath);
+          return downloadFile(file, remoteFilePath, localFilePath + `/${file}`);
         }
       })
       .catch(err => {
@@ -515,6 +516,7 @@ function downloadFolder(file, remoteFilePath, localFilePath) {
 }
 
 function downloadFile(file, remoteFilePath, localFilePath) {
+  console.log("download file", remoteFilePath, file);
   return new Promise((resolve, reject) => {
     statFile(remoteFilePath)
       .then(stats => {
