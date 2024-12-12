@@ -77,6 +77,22 @@ ipcMain.on('save-connection-dialog', (event, response) => {
   });
 });
 
+ipcMain.on('save-files-folder-dialog', (event, response) => {
+  const result = dialog.showOpenDialog({
+    title: response.title,
+    properties: ['openDirectory']
+  }).then(result => {
+    if (result.canceled)
+      return;
+    top.win.webContents.send('save-files-folder-dialog-command', {
+      target: response.target,
+      id: response.id,
+      function: response.function,
+      result: result.filePaths[0]
+    });
+  });
+});
+
 /*----------------------------------------------------------------------------*/
 
 try {
@@ -247,12 +263,6 @@ const createWindow = () => {
 
   top.win.on('unmaximize', () => {
     top.win.webContents.send('maximize', false);
-  })
-
-  ipcMain.on('ondragstart', (event, filePath) => {
-    event.sender.startDrag({
-      file: path.join(__dirname, filePath)
-    })
   })
 }
 

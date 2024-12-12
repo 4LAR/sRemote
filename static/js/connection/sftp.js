@@ -217,7 +217,7 @@ function appendFileList(file, id=0) {
     <p class="access_rights">${file.access_rights}</p>
   `;
 
-  li.draggable = true;
+  // li.draggable = true;
 
   if (clipboard.files.includes(file.name) && clipboard.path == convert_path(pathArr[id])) {
     li.classList.add("cut");
@@ -444,7 +444,7 @@ function paste() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function download() {
+function download(localFilePath) {
   const id = Number(selected_file.id.split("_")[1]);
   const files = JSON.parse(JSON.stringify(selected_files[id]));
   const path = convert_path(pathArr[id]);
@@ -454,7 +454,6 @@ function download() {
 
   const downloadPromises = files.map(file => {
     const remoteFilePath = `${path}/${file}`;
-    const localFilePath = `C:/Users/nikit/AppData/Roaming/sRemote/temp/${file}`;
 
     return statFile(remoteFilePath)
       .then(stats => {
@@ -471,6 +470,7 @@ function download() {
 
   Promise.all(downloadPromises)
     .then(() => {
+      clearSelection(id);
       onAllDownloadsComplete();
     })
     .catch(err => {
@@ -553,6 +553,7 @@ function downloadFile(file, remoteFilePath, localFilePath) {
 function onAllDownloadsComplete() {
   alert("Все файлы были успешно загружены!");
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 
 document.getElementById('menu_files').addEventListener('contextmenu', (event) => {
@@ -573,7 +574,6 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
   selected_file = element;
   selected_li_file = li_element;
 
-  // if (li_element !== undefined && li_element.classList.contains('selected')) {
   if (selected_files[Number(element.id.split("_")[1])].length > 0) {
     selected = true;
   }
@@ -598,10 +598,11 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
           }
         ]
       }, {
-      // {
-      //   label: 'New folder',
-      //   enabled: true
-      // }, {
+        type: 'separator'
+      }, {
+        label: 'Download',
+        enabled: (selected || !!li_element)
+      }, {
         type: 'separator'
       }, {
         label: 'Cut',
@@ -623,18 +624,9 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
         accelerator: "Delete"
       }, {
         label: 'Rename',
-        enabled: (selected_one || !!li_element),
+        enabled: (selected_one || (!!li_element && selected_one)),
         accelerator: "F2"
-      }, {
-        label: 'Download',
-        enabled: (selected_one || !!li_element)
       }
-      // }, {
-      //   type: 'separator'
-      // }, {
-      //   label: 'Properties',
-      //   enabled: (selected_one || !!li_element)
-      // }
     ]
   })
 });
@@ -669,11 +661,13 @@ function sftp_context(data) {
       break;
     }
     case "Download": {
-      try {
-        download();
-      } catch (e) {
-        console.error(e);
-      }
+      ipcRenderer.send('save-files-folder-dialog', {
+        target: "connection",
+        id: `${group_id}_${item_id}`,
+        function: "download",
+        title: "Download path"
+      })
+      break;
     }
     default:
       break;

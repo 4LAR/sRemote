@@ -525,3 +525,9 @@ ipcRenderer.on('context-menu-command', (e, command) => {
     eval(`document.getElementById("iframe_${command.id}").contentWindow.${command.function}("${command.action}")`);
   }
 })
+
+ipcRenderer.on('save-files-folder-dialog-command', (e, command) => {
+  if (command.target == "connection") {
+    eval(`document.getElementById("iframe_${command.id}").contentWindow.${command.function}(${JSON.stringify(command.result)})`);
+  }
+})
