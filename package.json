@@ -22,7 +22,7 @@
     "ssh2": "^1.15.0"
   },
   "scripts": {
-    "start": "electron .",
+    "start": "electron --no-sandbox .",
     "dist": "electron-builder"
   },
   "build": {
