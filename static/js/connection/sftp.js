@@ -676,89 +676,156 @@ function sftp_context(data) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+let stopUpload = false;         // Флаг для остановки загрузки
+let totalTransferredBytes = 0;  // Сумма всех переданных байт
+let totalBytes = 0;             // Общий размер всех файлов
+
+function stop_upload() {
+  stopUpload = true;
+  console.log("Uploading has been stopped.");
+}
+
 function alert_upload_files() {
   open_alert(`
     <p class="name">Upload files</p>
     <hr>
-    <ul id="upload_files_progress"></ul>
-    <p id="upload_main_files_progress">0% completed</p>
-  `, 'alert_sftp_upload')
-}
-
-// alert_upload_files();
-
-function upload_file(file, remotePathArr, totalFiles, uploadedFiles) {
-  const remotePath = convert_path(remotePathArr) + "/" + file.name;
-
-  return new Promise((resolve, reject) => {
-    if (fs.lstatSync(file.path).isDirectory()) {
-      sftp_obj.mkdir(remotePath, (err) => {
-        if (err) {
-          return reject(err);
-        }
-        console.log(`Directory created: ${remotePath}`);
-        uploadDirectory(file.path, [...remotePathArr, file.name], totalFiles, uploadedFiles).then(resolve).catch(reject);
-      });
-    } else {
-      sftp_obj.fastPut(file.path, remotePath, {
-        step: function(total_transferred, chunk, total) {
-          console.log(total_transferred, chunk, total);
-        }
-      }, (err) => {
-        if (err) {
-          return reject(err);
-        }
-        console.log(`File uploaded successfully: ${remotePath}`);
-        uploadedFiles++;
-        resolve();
-      });
-    }
+    <ul id="upload_files_ul" class="scroll_style"></ul>
+    <div id="upload_main_files_progress">
+      <hr>
+      <progress id="overall_progress" value="0" max="100"></progress>
+    </div>
+  `, 'alert_sftp_upload', function() {
+    stop_upload();
   });
 }
 
-function uploadDirectory(localPath, remotePathArr, totalFiles, uploadedFiles) {
-  return new Promise((resolve, reject) => {
-    fs.readdir(localPath, (err, items) => {
-      if (err) {
-        return reject(err);
-      }
+function append_file_to_list(fileName, size) {
+  const uploadList = document.getElementById("upload_files_ul");
+  const listItem = document.createElement("li");
+  listItem.innerHTML = `
+    <p>${fileName} (${(size / 1024).toFixed(2)} KB)</p>
+    <progress value="0" max="100" data-file="${fileName}"></progress>
+  `;
+  uploadList.appendChild(listItem);
+}
 
-      let itemsCount = items.length;
-      if (itemsCount === 0) {
+function update_file_progress(fileName, percentage, status="") {
+  const fileProgress = document.querySelector(`progress[data-file="${fileName}"]`);
+  if (fileProgress) {
+    fileProgress.value = percentage;
+    fileProgress.className += status;
+  }
+}
+
+function update_overall_progress() {
+  const overallProgress = document.getElementById("overall_progress");
+  const percentage = Math.floor((totalTransferredBytes / totalBytes) * 100);
+  overallProgress.value = percentage;
+}
+
+function uploadDirectory(localPath, remotePathArr) {
+  return new Promise((resolve, reject) => {
+    fs.readdir(localPath, { withFileTypes: true }, (err, items) => {
+      if (err) return reject(err);
+
+      if (items.length === 0) {
         console.log(`Directory is empty: ${localPath}`);
         return resolve();
       }
 
-      let uploadPromises = items.map(item => {
-        return upload_file({
-          name: item,
-          path: path.join(localPath, item)
-        }, remotePathArr, totalFiles, uploadedFiles);
+      const uploadPromises = items.map(item => {
+        const itemPath = path.join(localPath, item.name);
+        const remoteItemPath = [...remotePathArr, item.name];
+
+        if (item.isDirectory()) {
+          return sftp_obj.mkdir(convert_path(remoteItemPath), (err) => {
+            if (err && err.code !== 4) return Promise.reject(err); // Ошибка 4 — уже существует
+            return uploadDirectory(itemPath, remoteItemPath);
+          });
+        } else {
+          return upload_file({ name: item.name, path: itemPath }, remotePathArr);
+        }
       });
 
       Promise.all(uploadPromises)
-        .then(() => resolve())
+        .then(resolve)
         .catch(reject);
     });
   });
 }
 
-////////////////////////////////////////////////////////////////////////////////
+function upload_file(file, remotePathArr) {
+  return new Promise((resolve, reject) => {
+    const remotePath = convert_path(remotePathArr) + "/" + file.name;
 
-for (let id = 0; id < 2; id++) {
-  const dropZone = document.getElementById(`files_div_${id}`);
-  document.addEventListener('DOMContentLoaded', () => {
+    if (fs.lstatSync(file.path).isDirectory()) {
+      sftp_obj.mkdir(remotePath, (err) => {
+        if (err && err.code !== 4) return reject(err);
+        uploadDirectory(file.path, [...remotePathArr, file.name])
+          .then(resolve)
+          .catch(reject);
+      });
+    } else {
+      const fileStream = fs.createReadStream(file.path);
+      const writeStream = sftp_obj.createWriteStream(remotePath);
+
+      const fileSize = fs.lstatSync(file.path).size;
+      let transferred = 0;
+
+      totalBytes += fileSize;
+      append_file_to_list(`${file.path.replaceAll("\\", "/")}/${file.name}`, fileSize);
+
+      fileStream.pipe(writeStream);
+
+      // Отслеживаем прогресс
+      fileStream.on('data', (chunk) => {
+        if (stopUpload) {
+          console.log(`Stopping upload for file: ${file.name}`);
+          fileStream.unpipe(writeStream); // Отключить поток от записи
+          fileStream.destroy();           // Прервать чтение из файла
+          writeStream.destroy();          // Прервать запись в файл на сервере
+          // reject(new Error("Upload stopped."));
+          return;
+        }
+
+        transferred += chunk.length;
+        totalTransferredBytes += chunk.length;
+        const percentage = Math.floor((transferred / fileSize) * 100);
+        update_file_progress(`${file.path.replaceAll("\\", "/")}/${file.name}`, percentage);
+        update_overall_progress();
+      });
+
+      // Обработка завершения
+      writeStream.on('close', () => {
+        update_file_progress(`${file.path.replaceAll("\\", "/")}/${file.name}`, 100, "end");
+        resolve();
+      });
+
+      // Обработка ошибок
+      fileStream.on('error', (err) => {
+        console.log(`Error reading file: ${file.name}`, err);
+        reject(err);
+      });
+
+      writeStream.on('error', (err) => {
+        console.log(`Error writing file: ${file.name}`, err);
+        reject(err);
+      });
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  for (let id = 0; id < 2; id++) {
+    const dropZone = document.getElementById(`files_div_${id}`);
 
     dropZone.addEventListener('dragover', (event) => {
       event.preventDefault();
-      if (!dropZone.classList.contains('drag-over')) {
-        dropZone.classList.add('drag-over');
-      }
+      dropZone.classList.add('drag-over');
     });
 
     dropZone.addEventListener('dragleave', (event) => {
-      const relatedTarget = event.relatedTarget;
-      if (!dropZone.contains(relatedTarget)) {
+      if (!dropZone.contains(event.relatedTarget)) {
         dropZone.classList.remove('drag-over');
       }
     });
@@ -766,25 +833,26 @@ for (let id = 0; id < 2; id++) {
     dropZone.addEventListener('drop', (event) => {
       event.preventDefault();
       dropZone.classList.remove('drag-over');
-      const files = event.dataTransfer.files;
 
-      // Создаем массив промисов для загрузки файлов
-      let uploadPromises = [];
-      const totalFiles = files.length;
-      let uploadedFiles = 0;
+      const files = Array.from(event.dataTransfer.files);
+      totalTransferredBytes = 0;
+      totalBytes = 0;
 
-      for (const file of files) {
-        uploadPromises.push(upload_file(file, pathArr[id], totalFiles, uploadedFiles));
-      }
       alert_upload_files();
-      // Ждем завершения всех загрузок
+      stopUpload = false;
+
+      const uploadPromises = files.map(file => upload_file(file, pathArr[id]));
+
       Promise.all(uploadPromises)
         .then(() => {
           console.log("All files uploaded successfully for drop zone:", id);
+          close_alert();
           listFiles(id);
-        }).catch(err => {
-          if (err) alert_error(err.toString());
+        })
+        .catch(err => {
+          listFiles(id);
+          alert_error(err.toString());
         });
     });
-  });
-}
+  }
+});
