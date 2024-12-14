@@ -445,13 +445,36 @@ function paste() {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+let activeStreams = [];
+
+function stop_download() {
+  stopDownloadFlag = true;
+
+  activeStreams.forEach(stream => {
+    try {
+      stream.destroy();
+    } catch (err) {
+      console.error("Ошибка при остановке потока:", err);
+    }
+  });
+
+  activeStreams = [];
+}
+
 function download(localFilePath) {
+  stopUpload = false;
+  totalTransferredBytes = 0;
+  totalBytes = 0;
+
   const id = Number(selected_file.id.split("_")[1]);
   const files = JSON.parse(JSON.stringify(selected_files[id]));
   const path = convert_path(pathArr[id]);
   if (selected_li_file) {
     files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML);
   }
+
+  alert_upload_files();
+
   const downloadPromises = files.map(file => {
     const remoteFilePath = `${path}/${file}`;
     return statFile(remoteFilePath)
@@ -461,16 +484,14 @@ function download(localFilePath) {
         } else {
           return downloadFile(file, remoteFilePath, localFilePath + `/${file}`);
         }
-      })
-      .catch(err => {
-        alert_error(`Ошибка при получении информации о файле ${file}: ${err.toString()}`);
       });
   });
 
   Promise.all(downloadPromises)
     .then(() => {
-      clearSelection(id);
-      onAllDownloadsComplete();
+      if (!stopUpload) {
+        onAllDownloadsComplete();
+      }
     })
     .catch(err => {
       console.error("Ошибка при загрузке файлов:", err);
@@ -514,44 +535,74 @@ function downloadFolder(file, remoteFilePath, localFilePath) {
 }
 
 function downloadFile(file, remoteFilePath, localFilePath) {
-  console.log("download file", remoteFilePath, file);
+  console.log("Download file:", remoteFilePath, file);
   return new Promise((resolve, reject) => {
+    if (stopUpload) {
+      console.log(`Скачивание файла ${file} отменено.`);
+      return reject(new Error("Скачивание отменено пользователем."));
+    }
+
     statFile(remoteFilePath)
       .then(stats => {
-        const totalBytes = stats.size;
+        totalBytes += stats.size;
+        const current_totalBytes = stats.size;
         let downloadedBytes = 0;
+
+        append_file_to_list(file, current_totalBytes);
 
         const readStream = sftp_obj.createReadStream(remoteFilePath);
         const writeStream = fs.createWriteStream(localFilePath);
 
+        // Добавляем потоки в активный список
+        activeStreams.push(readStream, writeStream);
+
         readStream.on('data', (chunk) => {
+          if (stopUpload) {
+            readStream.destroy();
+            writeStream.destroy();
+            console.log(`Скачивание файла ${file} было остановлено.`);
+            return reject(new Error("Скачивание остановлено пользователем."));
+          }
+
           downloadedBytes += chunk.length;
-          const progress = (downloadedBytes / totalBytes) * 100;
-          console.log(`Загрузка ${file}: ${progress.toFixed(2)}%`);
+          const progress = (downloadedBytes / current_totalBytes) * 100;
+
+          // Обновляем прогресс файла
+          update_file_progress(file, progress);
+
+          // Обновляем общий прогресс
+          totalTransferredBytes += chunk.length;
+          update_overall_progress();
         });
 
         readStream.on('end', () => {
           console.log(`Файл ${file} успешно скачан в ${localFilePath}`);
+          update_file_progress(file, 100, 'end');
           resolve();
         });
 
         readStream.on('error', (err) => {
-          alert_error(`Ошибка при скачивании ${file}: ${err.toString()}`);
+          console.error(`Ошибка при скачивании ${file}: ${err}`);
+          update_file_progress(file, 0, " error");
           reject(err);
+        });
+
+        // Удаляем потоки из активного списка при завершении
+        readStream.on('close', () => {
+          activeStreams = activeStreams.filter(s => s !== readStream && s !== writeStream);
         });
 
         readStream.pipe(writeStream);
       })
       .catch(err => {
-        alert_error(`Ошибка при получении информации о файле ${file}: ${err.toString()}`);
+        console.error(`Ошибка при получении информации о файле ${file}: ${err}`);
         reject(err);
       });
   });
 }
 
-// Функция, которая будет вызвана после завершения загрузки всех файлов
 function onAllDownloadsComplete() {
-  alert("Все файлы были успешно загружены!");
+  close_alert();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -592,9 +643,9 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
         label: 'Create',
         submenu: [
           {
-            label: "File"
-          }, {
             label: "Folder"
+          }, {
+            label: "File"
           }
         ]
       }, {
@@ -685,9 +736,9 @@ function stop_upload() {
   console.log("Uploading has been stopped.");
 }
 
-function alert_upload_files() {
+function alert_upload_files(download_flag=false) {
   open_alert(`
-    <p class="name">Upload files</p>
+    <p class="name">${download_flag? "Download": "Upload"} files</p>
     <hr>
     <ul id="upload_files_ul" class="scroll_style"></ul>
     <div id="upload_main_files_progress">
@@ -695,7 +746,11 @@ function alert_upload_files() {
       <progress id="overall_progress" value="0" max="100"></progress>
     </div>
   `, 'alert_sftp_upload', function() {
-    stop_upload();
+    if (download_flag) {
+      stop_upload();
+    } else {
+      stop_download();
+    }
   });
 }
 
