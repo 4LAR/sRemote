@@ -109,22 +109,22 @@ function isValidLinuxFileName(fileName) {
 
 function alert_error(text) {
   open_alert(`
-    <p class="name">Error</p>
+    <p class="name">${localization_dict.sftp_error}</p>
     <hr>
     <p class="error_text">${text}</p>
     <div class="button submit" onclick="close_alert()">
-      <p>Ok</p>
+      <p>${localization_dict.ok}</p>
     </div>
   `, 'alert_sftp_file')
 }
 
 function alert_new_folderFile(fileFlag=false) {
   open_alert(`
-    <p class="name">Create ${(fileFlag)? "file": "folder"}</p>
+    <p class="name">Create ${(fileFlag)? localization_dict.sftp_file: localization_dict.sftp_folder}</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="${(fileFlag)? "File": "Folder"} name">
+    <input id="name" class="input_style" type="text" placeholder="${(fileFlag)? localization_dict.sftp_file: localization_dict.sftp_folder} name">
     <div class="button submit" onclick="${(fileFlag)? "create_file_from_alert()": "create_directory_from_alert()"}">
-      <p>Create</p>
+      <p>${localization_dict.create}</p>
     </div>
   `, 'alert_sftp_file')
   document.getElementById("name").focus()
@@ -142,11 +142,11 @@ function alert_new_folderFile(fileFlag=false) {
 
 function alert_rename() {
   open_alert(`
-    <p class="name">${"Rename"}</p>
+    <p class="name">${localization_dict.sftp_rename}</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="Name file or folder" value="${selected_li_file.getElementsByTagName("p")[0].innerHTML}">
+    <input id="name" class="input_style" type="text" placeholder="${localization_dict.sftp_name_of}" value="${selected_li_file.getElementsByTagName("p")[0].innerHTML}">
     <div class="button submit" onclick="rename_alert()">
-      <p>Rename</p>
+      <p>${localization_dict.sftp_rename}</p>
     </div>
   `, 'alert_sftp_file')
   document.getElementById("name").focus()

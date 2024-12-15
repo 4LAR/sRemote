@@ -22,6 +22,7 @@
   "save": "Сохранить",
   "create": "Создать",
   "apply": "Применить",
+  "ok": "Ок",
 
   "delete_connection": "Удаление соединения",
   "delete_info_pre": "соединение",
@@ -60,5 +61,16 @@
   "ssh_invalid_credentials": "Недействительные данные для аутентификации",
   "ssh_host_terminated": "Удаленный хост завершил текущее соединение",
   "ssh_close_connection": "Закрываем соединение...",
-  "ssh_connect": "Подключаемся..."
+  "ssh_connect": "Подключаемся...",
+
+  "ssh_menu_terminal": "Терминал",
+  "ssh_menu_files": "Файлы",
+
+  "sftp_drop": "Перетащите файлы сюда",
+  "sftp_connection_warning": "Для этого необходимо подключиться",
+  "sftp_error": "Ошибка",
+  "sftp_file": "файл",
+  "sftp_folder": "папка",
+  "sftp_name_of": "Имя файла или папки",
+  "sftp_rename": "Переименовать"
 }

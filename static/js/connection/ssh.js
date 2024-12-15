@@ -391,6 +391,13 @@ if (config["Connections"]["autoConnect"]) {
 
 /*----------------------------------------------------------------------------*/
 
+document.getElementById("menu_terminal_button_text").innerHTML = localization_dict.ssh_menu_terminal;
+document.getElementById("menu_files_button_text").innerHTML = localization_dict.ssh_menu_files;
+
+document.getElementById("connection_warning_text").innerHTML = localization_dict.sftp_connection_warning;
+document.getElementById("files_0_text").innerHTML = localization_dict.sftp_drop;
+document.getElementById("files_1_text").innerHTML = localization_dict.sftp_drop;
+
 const menu_items = [
   "terminal",
   "files"

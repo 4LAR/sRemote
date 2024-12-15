@@ -22,6 +22,7 @@
   "save": "Save",
   "create": "Create",
   "apply": "Apply",
+  "ok": "Ok",
 
   "delete_connection": "Delete connection",
   "delete_info_pre": "The",
@@ -60,5 +61,16 @@
   "ssh_invalid_credentials": "Invalid credentials for authentication",
   "ssh_host_terminated": "Remote host terminated an existing connection",
   "ssh_close_connection": "CLOSE CONNECTION...",
-  "ssh_connect": "CONNECT..."
+  "ssh_connect": "CONNECT...",
+
+  "ssh_menu_terminal": "Terminal",
+  "ssh_menu_files": "Files",
+
+  "sftp_drop": "Drop your files here",
+  "sftp_connection_warning": "To do this, you need to connect",
+  "sftp_error": "Error",
+  "sftp_file": "file",
+  "sftp_folder": "folder",
+  "sftp_name_of": "Name file or folder",
+  "sftp_rename": "Rename"
 }
