@@ -84,7 +84,8 @@ var selected_files = [[], []];
 var clipboard = {
   path: "",
   files: [],
-  action: null
+  action: null,
+  fromid: 0
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -383,9 +384,10 @@ function conn_new_file(remoteFilePath, filename, onloadFunc=undefined) {
 
 function cut() {
   const id = Number(selected_file.id.split("_")[1]);
+  clipboard.fromid = id;
   clipboard.files = JSON.parse(JSON.stringify(selected_files[id]));
   clipboard.path = convert_path(pathArr[id]);
-  if (selected_li_file) {
+  if (selected_li_file && !clipboard.files.includes(selected_li_file.getElementsByTagName("p")[0].innerHTML)) {
     clipboard.files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML);
   }
   clipboard.action = 'cut';
@@ -401,9 +403,11 @@ function cut() {
 
 function copy() {
   const id = Number(selected_file.id.split("_")[1]);
+  clearCut(id);
+  clipboard.fromid = id;
   clipboard.files = JSON.parse(JSON.stringify(selected_files[id]));
   clipboard.path = convert_path(pathArr[id]);
-  if (selected_li_file) {
+  if (selected_li_file && !clipboard.files.includes(selected_li_file.getElementsByTagName("p")[0].innerHTML)) {
     clipboard.files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML)
   }
   clipboard.action = 'copy';
@@ -419,28 +423,39 @@ function conn_cp(remoteFilePath, destinationPath, onloadFunc=undefined) {
 
 function paste() {
   const targetId = Number(selected_file.id.split("_")[1]);
-  // console.log(clipboard.files);
+  let completedOperations = 0;
+  const totalOperations = clipboard.files.length;
+
   for (const file of clipboard.files) {
     const sourcePath = clipboard.path + "/" + file;
     const destPath = convert_path(pathArr[targetId]);
-    console.log(sourcePath, destPath, file);
+
     if (clipboard.action === 'cut') {
       // Перемещение файла
       sftp_obj.rename(sourcePath, destPath + "/" + file, (err) => {
         if (err) alert_error(err.toString());
-        listFiles(targetId);
+        completedOperations++;
+        checkCompletion();
       });
     } else if (clipboard.action === 'copy') {
       // Копирование файла
       conn_cp(sourcePath, destPath, (err) => {
         if (err) alert_error(err.toString());
-        listFiles(targetId);
-        const otherId = Math.abs(targetId - 1);
-        if (split_flag) listFiles(otherId);
+        completedOperations++;
+        checkCompletion();
       });
     }
   }
-  clipboard.files = [];
+
+  function checkCompletion() {
+    if (completedOperations === totalOperations) {
+      listFiles(targetId);
+      if (clipboard.fromid != targetId) {
+        listFiles(clipboard.fromid);
+      }
+      clipboard.files = []; // Очищаем буфер обмена
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
