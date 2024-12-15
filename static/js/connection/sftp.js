@@ -314,16 +314,105 @@ function back(id) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function remove(path, type, id) {
-  if (type == "folder") {
-    sftp_obj.unlink(path, (err) => {
-      listFiles(id);
-    });
-  } else {
-    sftp_obj.rmdir(path, (err) => {
-      listFiles(id);
-    });
+function copy() {
+  const id = Number(selected_file.id.split("_")[1]);
+  clearCut(id);
+  clipboard.fromid = id;
+  clipboard.files = JSON.parse(JSON.stringify(selected_files[id]));
+  clipboard.path = convert_path(pathArr[id]);
+  if (selected_li_file && !clipboard.files.includes(selected_li_file.getElementsByTagName("p")[0].innerHTML)) {
+    clipboard.files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML)
   }
+  clipboard.action = 'copy';
+  console.log("COPY", clipboard);
+}
+
+
+
+// Функция для рекурсивного удаления папки и её содержимого
+function deleteRecursively(filePath) {
+  return statFile(filePath)
+    .then(stats => {
+      if ((stats.mode & 0o40000) === 0o40000) {
+        // Это папка
+        return readDir(filePath).then((files) => {
+          const deletePromises = files.map((file) =>
+            deleteRecursively(`${filePath}/${file}`)
+          );
+          return Promise.all(deletePromises).then(() => {
+            return new Promise((resolve, reject) => {
+              sftp_obj.rmdir(filePath, (err) => {
+                if (err) {
+                  console.error(`Ошибка удаления папки: ${filePath}`, err);
+                  reject(err);
+                } else {
+                  console.log(`Папка удалена: ${filePath}`);
+                  resolve();
+                }
+              });
+            });
+          });
+        });
+      } else {
+        // Это файл
+        return new Promise((resolve, reject) => {
+          sftp_obj.unlink(filePath, (err) => {
+            if (err) {
+              console.error(`Ошибка удаления файла: ${filePath}`, err);
+              reject(err);
+            } else {
+              console.log(`Файл удалён: ${filePath}`);
+              resolve();
+            }
+          });
+        });
+      }
+    });
+}
+
+// Получение списка файлов в папке
+function readDir(remotePath) {
+  return new Promise((resolve, reject) => {
+    sftp_obj.readdir(remotePath, (err, fileList) => {
+      if (err) {
+        reject(err);
+      } else {
+        const files = fileList.map((file) => file.filename); // Получаем только имена файлов
+        resolve(files);
+      }
+    });
+  });
+}
+
+function remove() {
+  const id = Number(selected_file.id.split("_")[1]);
+  clearCut(id);
+  const filesToRemove = JSON.parse(JSON.stringify(selected_files[id]));
+  const basePath = convert_path(pathArr[id]);
+
+  // Если выбран конкретный файл, добавляем его к списку для удаления
+  if (selected_li_file && !filesToRemove.includes(selected_li_file.getElementsByTagName("p")[0].innerHTML)) {
+    filesToRemove.push(selected_li_file.getElementsByTagName("p")[0].innerHTML);
+  }
+
+  console.log(filesToRemove);
+
+  const deletePromises = filesToRemove.map((file) => {
+    const filePath = `${basePath}/${file}`;
+    console.log(filePath);
+    return deleteRecursively(filePath);
+  });
+
+  Promise.all(deletePromises)
+    .then(() => {
+      console.log("Все файлы успешно удалены.");
+      listFiles(id);
+    })
+    .catch((err) => {
+      console.error("Ошибка при удалении файлов:", err);
+    });
+
+  console.log("REMOVE", { id, files: filesToRemove });
 }
 
 function create_file_from_alert() {
@@ -724,6 +813,7 @@ function sftp_context(data) {
       break;
     }
     case "Delete": {
+      remove();
       break;
     }
     case "Download": {
