@@ -67,6 +67,16 @@ function alert_new_folderFile(fileFlag=false) {
     </div>
   `, 'alert_sftp_file')
   document.getElementById("name").focus()
+
+  document.getElementById("name").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      if (fileFlag) {
+        create_file_from_alert();
+      } else {
+        create_directory_from_alert();
+      }
+    }
+  });
 }
 
 function alert_rename() {
@@ -79,6 +89,11 @@ function alert_rename() {
     </div>
   `, 'alert_sftp_file')
   document.getElementById("name").focus()
+  document.getElementById("name").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      rename_alert();
+    }
+  });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -805,13 +820,15 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
       }, {
         type: 'separator'
       }, {
-        label: 'Delete',
-        enabled: (selected || !!li_element),
-        accelerator: "Delete"
-      }, {
         label: 'Rename',
         enabled: (!!li_element && !selected_one),
         accelerator: "F2"
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Delete',
+        enabled: (selected || !!li_element),
+        accelerator: "Delete"
       }
     ]
   })
