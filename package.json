@@ -1,10 +1,10 @@
 {
   "name": "sRemote",
-  "version": "0.5.0-dev",
+  "version": "0.5.0",
   "description": "SSH Terminal",
   "main": "main.js",
   "author": "100LAR STUDIO <nikitstolarov@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^12.2.3",
     "electron-builder": "^23.3.1",
