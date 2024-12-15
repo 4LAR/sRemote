@@ -70,7 +70,7 @@
   "sftp_connection_warning": "Для этого необходимо подключиться",
   "sftp_error": "Ошибка",
   "sftp_file": "файл",
-  "sftp_folder": "папка",
+  "sftp_folder": "директорию",
   "sftp_name_of": "Имя файла или папки",
   "sftp_rename": "Переименовать"
 }

@@ -120,9 +120,9 @@ function alert_error(text) {
 
 function alert_new_folderFile(fileFlag=false) {
   open_alert(`
-    <p class="name">Create ${(fileFlag)? localization_dict.sftp_file: localization_dict.sftp_folder}</p>
+    <p class="name">${localization_dict.create} ${(fileFlag)? localization_dict.sftp_file: localization_dict.sftp_folder}</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="${(fileFlag)? localization_dict.sftp_file: localization_dict.sftp_folder} name">
+    <input id="name" class="input_style" type="text" placeholder="...">
     <div class="button submit" onclick="${(fileFlag)? "create_file_from_alert()": "create_directory_from_alert()"}">
       <p>${localization_dict.create}</p>
     </div>
