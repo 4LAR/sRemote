@@ -1,5 +1,6 @@
 
 var onclose_alert_function = undefined;
+var alert_opened = false;
 function open_alert(html, type="alert_sftp", onclose=undefined) {
   document.getElementById("files_alert_body").innerHTML = html;
   document.getElementById("files_alert").className = type;
@@ -8,6 +9,7 @@ function open_alert(html, type="alert_sftp", onclose=undefined) {
 
   openModal('files_bg_alert');
   openModal('files_alert');
+  alert_opened = true;
 }
 
 function close_alert(onclose=true) {
@@ -17,13 +19,72 @@ function close_alert(onclose=true) {
   if (onclose_alert_function && onclose) {
     onclose_alert_function();
   }
+  alert_opened = false;
 }
 
 close_alert();
 
-document.addEventListener('keydown', function(event){
+function simulate_selected(id) {
+  if (id !== null) {
+    const list = document.getElementById(`files_${id}`).getElementsByTagName("li");
+    const firstSelectedName = selected_files[id][0]; // Имя первого выбранного файла
+
+    for (const file of list) {
+      const fileName = file.getElementsByTagName("p")[0].innerHTML;
+      if (fileName === firstSelectedName) {
+        selected_file = { id: `file_${id}` };
+        selected_li_file = file;
+        break;
+      }
+    }
+  } else {
+    selected_file = null;
+    selected_li_file = null;
+  }
+}
+
+document.addEventListener('keydown', function(event) {
   if (event.keyCode == 27) {
     close_alert();
+  }
+
+  if (alert_opened) return;
+
+  const key = event.key;
+  const ctrlOrCmd = event.ctrlKey || event.metaKey;
+
+  // Логика для заполнения `selected_file` и `selected_li_file`
+  let id;
+  if (selected_files[0].length > 0) {
+    id = 0;
+  } else if (selected_files[1].length > 0) {
+    id = 1;
+  } else {
+    id = null; // Если ничего не выбрано
+  }
+
+  // Вывод текущих данных для отладки
+  console.log({ selected_file, selected_li_file });
+
+  // Проверяем наличие выделения
+  const selected = id !== null && selected_files[id]?.length > 0;
+  const selectedOne = id !== null && selected_files[id]?.length === 1;
+
+  // Горячие клавиши
+  if (key === 'F2' && selectedOne) {
+    simulate_selected(id);
+    alert_rename();
+  } else if (ctrlOrCmd && key === 'x' && selected) {
+    simulate_selected(id);
+    cut();
+  } else if (ctrlOrCmd && key === 'c' && selected) {
+    simulate_selected(id);
+    copy();
+  // } else if (ctrlOrCmd && key === 'v' && clipboard.files.length > 0) {
+  //   paste();
+  } else if (key === 'Delete' && selected) {
+    simulate_selected(id);
+    remove();
   }
 });
 
@@ -815,8 +876,8 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
         accelerator: "CommandOrControl+C"
       }, {
         label: 'Paste',
-        enabled: (clipboard.files.length > 0),
-        accelerator: "CommandOrControl+V"
+        enabled: (clipboard.files.length > 0)
+        // accelerator: "CommandOrControl+V"
       }, {
         type: 'separator'
       }, {
