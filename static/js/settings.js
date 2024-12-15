@@ -11,6 +11,8 @@ function settings_change(e) {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = e.target.id.split("_")[3];
   } else if (e.target.id.split("_")[2] == "readyTimeout") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
+  } else if (e.target.id.split("_")[2] == "maxCacheData") {
+    SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
   } else if (e.target.id.split("_")[2] == "readyTimeout") {
     SETTINGS_DICT[e.target.id.split("_")[1]][e.target.id.split("_")[2]] = Math.abs(document.getElementById(e.target.id).value);
   } else if (e.target.id.split("_")[2] == "keepaliveCountMax") {

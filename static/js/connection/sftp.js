@@ -520,7 +520,6 @@ function cut() {
       file.classList.add("cut");
     }
   }
-  console.log("CUT", clipboard);
 }
 
 function copy() {
@@ -533,7 +532,6 @@ function copy() {
     clipboard.files.push(selected_li_file.getElementsByTagName("p")[0].innerHTML)
   }
   clipboard.action = 'copy';
-  console.log("COPY", clipboard);
 }
 
 function conn_cp(remoteFilePath, destinationPath, onloadFunc=undefined) {
@@ -591,7 +589,7 @@ function stop_download() {
     try {
       stream.destroy();
     } catch (err) {
-      console.error("Ошибка при остановке потока:", err);
+      alert_error(err.toString())
     }
   });
 
@@ -631,7 +629,7 @@ function download(localFilePath) {
       }
     })
     .catch(err => {
-      console.error("Ошибка при загрузке файлов:", err);
+      alert_error(err.toString())
     });
 }
 
