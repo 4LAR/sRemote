@@ -57,10 +57,6 @@ function alert_error(text) {
   `, 'alert_sftp_file')
 }
 
-function alert_rename() {
-
-}
-
 function alert_new_folderFile(fileFlag=false) {
   open_alert(`
     <p class="name">Create ${(fileFlag)? "file": "folder"}</p>
@@ -68,6 +64,18 @@ function alert_new_folderFile(fileFlag=false) {
     <input id="name" class="input_style" type="text" placeholder="${(fileFlag)? "File": "Folder"} name">
     <div class="button submit" onclick="${(fileFlag)? "create_file_from_alert()": "create_directory_from_alert()"}">
       <p>Create</p>
+    </div>
+  `, 'alert_sftp_file')
+  document.getElementById("name").focus()
+}
+
+function alert_rename() {
+  open_alert(`
+    <p class="name">${"Rename"}</p>
+    <hr>
+    <input id="name" class="input_style" type="text" placeholder="Name file or folder" value="${selected_li_file.getElementsByTagName("p")[0].innerHTML}">
+    <div class="button submit" onclick="rename_alert()">
+      <p>Rename</p>
     </div>
   `, 'alert_sftp_file')
   document.getElementById("name").focus()
@@ -314,6 +322,36 @@ function back(id) {
 
 ////////////////////////////////////////////////////////////////////////////////
 
+function rename_alert() {
+  const name_input = document.getElementById('name');
+  if (!isValidLinuxFileName(name_input.value)) {
+    name_input.className = "input_style input_warning";
+    return;
+  } else {
+    name_input.className = "input_style";
+  }
+
+  rename(
+    name_input.value,
+    Number(selected_file.id.split("_")[1]),
+    function() {
+      close_alert();
+    }
+  );
+}
+
+function rename(newName, id, onEnd = undefined) {
+  const selectedPath = `${convert_path(pathArr[id])}/${selected_li_file.getElementsByTagName("p")[0].innerHTML}`;
+  const parentPath = selectedPath.substring(0, selectedPath.lastIndexOf("/"));
+  const newPath = `${convert_path(pathArr[id])}/${newName}`;
+
+  sftp_obj.rename(selectedPath, newPath, (err) => {
+    listFiles(id);
+    if (onEnd) onEnd();
+    if (err) alert_error(err.toString());
+  });
+}
+
 function copy() {
   const id = Number(selected_file.id.split("_")[1]);
   clearCut(id);
@@ -326,8 +364,6 @@ function copy() {
   clipboard.action = 'copy';
   console.log("COPY", clipboard);
 }
-
-
 
 // Функция для рекурсивного удаления папки и её содержимого
 function deleteRecursively(filePath) {
@@ -343,10 +379,8 @@ function deleteRecursively(filePath) {
             return new Promise((resolve, reject) => {
               sftp_obj.rmdir(filePath, (err) => {
                 if (err) {
-                  console.error(`Ошибка удаления папки: ${filePath}`, err);
                   reject(err);
                 } else {
-                  console.log(`Папка удалена: ${filePath}`);
                   resolve();
                 }
               });
@@ -358,10 +392,9 @@ function deleteRecursively(filePath) {
         return new Promise((resolve, reject) => {
           sftp_obj.unlink(filePath, (err) => {
             if (err) {
-              console.error(`Ошибка удаления файла: ${filePath}`, err);
+              alert_error(`Ошибка получения списка файлов в директории ${file}: ${err.toString()}`);
               reject(err);
             } else {
-              console.log(`Файл удалён: ${filePath}`);
               resolve();
             }
           });
@@ -779,7 +812,7 @@ document.getElementById('menu_files').addEventListener('contextmenu', (event) =>
         accelerator: "Delete"
       }, {
         label: 'Rename',
-        enabled: (selected_one || (!!li_element && selected_one)),
+        enabled: (!!li_element && !selected_one),
         accelerator: "F2"
       }
     ]
@@ -810,6 +843,7 @@ function sftp_context(data) {
       break;
     }
     case "Rename": {
+      alert_rename();
       break;
     }
     case "Delete": {
