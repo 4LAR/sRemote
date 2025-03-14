@@ -42,14 +42,44 @@ function alert_create_edit_connection_event(event) {
   alert_create_edit_connection(...get_ids_from_event(event), event, true);
 }
 
+// function generate_selector_icons() {
+//   const icons = [
+//     "terminal",
+//     "server",
+//     "notebook"
+//   ];
+//
+//   let result = "<div></div>";
+//   for (const ico of icons) {
+//     result
+//   }
+//
+//   return;
+// }
+
 function alert_create_edit_connection(group_id, item_id, event, edit_flag=false) {
   if (group_id === undefined)
     group_id = get_id_group_from_event(event);
   open_alert(`
     <p class="name">${(edit_flag)? localization_dict.edit_connection_title: localization_dict.create_connection_title}</p>
     <hr>
-    <input id="name" class="input_style" type="text" placeholder="${localization_dict.connection_name}">
-    <p class="name_info">${localization_dict.random_name}</p>
+    <label class="select-image">
+      <input type="checkbox" id=""/>
+      <label>
+        <input type="radio" id="zalupa" name="zalupa"/>
+        <img src="./static/img/type/terminal.svg">
+      </label>
+      <label>
+        <input type="radio" id="zalupa" name="zalupa"/>
+        <img src="./static/img/type/terminal.svg">
+      </label>
+      <label>
+        <input type="radio" id="zalupa" name="zalupa"/>
+        <img src="./static/img/type/terminal.svg">
+      </label>
+    </label>
+    <input id="connectioname" class="input_style" type="text" placeholder="${localization_dict.connection_name}">
+    <p class="name_info_connection">${localization_dict.random_name}</p>
     <p class="connection_page_name">${localization_dict.connection}</p>
     <input id="host" class="input_style" type="text" placeholder="${localization_dict.host}">
     <input id="port" class="input_style" type="text" placeholder="${localization_dict.port}">
@@ -87,12 +117,12 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
       <p>${localization_dict.delete}</p>
     </div>`: ""}
   `, "alert")
-  document.getElementById("name").focus()
+  document.getElementById("connectioname").focus()
   if (edit_flag) {
     var index = get_indexes_by_id(group_id, item_id);
     console.log(TABS[index[0]]);
     console.log(TABS[index[0]].items[index[1]]);
-    document.getElementById("name").value = TABS[index[0]].items[index[1]].name;
+    document.getElementById("connectioname").value = TABS[index[0]].items[index[1]].name;
     document.getElementById("host").value = TABS[index[0]].items[index[1]].host;
     document.getElementById("port").value = TABS[index[0]].items[index[1]].port;
     document.getElementById("auth_scheme").value = TABS[index[0]].items[index[1]].auth_scheme;
@@ -122,7 +152,7 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
 // alert_create_edit_connection(undefined, undefined, false);
 
 function save_data_connection(group_id, item_id, edit_flag=false) {
-  var name = document.getElementById("name");
+  var name = document.getElementById("connectioname");
   var host = document.getElementById("host");
   var port = document.getElementById("port");
   var login_lap = document.getElementById("login_lap");

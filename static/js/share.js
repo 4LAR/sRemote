@@ -47,7 +47,7 @@ function alert_import_connection(data) {
     document.getElementById("name").value = data.data.name;
     for (const item of data.data.items) {
       append_to_ul("import_items_list", `
-        <img class="ico" src="./static/img/terminal.svg">
+        <img class="ico" src="./static/img/type/terminal.svg">
         <p class="name">${item.name}</p>
         <p class="host">${item.host}:${item.port}</p>
       `)

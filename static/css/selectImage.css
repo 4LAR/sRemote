@@ -1,0 +1,16 @@
+
+label.select-image {
+  height: 100px;
+}
+
+label.select-image > label {
+  display: none;
+}
+
+label.select-image > label:first-child {
+  display: block;
+}
+
+label.select-image > input[type="checkbox"]:checked ~ label {
+  display: block;
+}

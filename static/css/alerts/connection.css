@@ -29,9 +29,30 @@
   height: 210px;
 }
 
+.alert_body .select_icon {
+  position: absolute;
+}
+
+.alert_body #connectioname {
+  width: calc(100% - 150px);
+  margin-bottom: 10px;
+  margin-left: 115px;
+}
+
+.alert_body .name_info_connection {
+  margin: 0px;
+  padding: 0px;
+  font-size: .9em;
+  margin-top: -8px;
+  margin-left: 115px;
+  margin-bottom: 10px;
+  color: var(--alert-info-color);
+}
+
 .alert_body #name {
   width: calc(100% - 35px);
   margin-bottom: 10px;
+  margin-left: 0px;
 }
 
 .alert_body .name_info {
