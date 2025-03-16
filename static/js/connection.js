@@ -37,25 +37,79 @@ function show_password(id, indicator_id) {
 }
 
 function alert_create_edit_connection_event(event) {
-  console.log(event.target);
-  console.log(get_ids_from_event(event));
   alert_create_edit_connection(...get_ids_from_event(event), event, true);
 }
 
-// function generate_selector_icons() {
-//   const icons = [
-//     "terminal",
-//     "server",
-//     "notebook"
-//   ];
-//
-//   let result = "<div></div>";
-//   for (const ico of icons) {
-//     result
-//   }
-//
-//   return;
-// }
+function eventImageSelector(element) {
+  const mainObj = element.parentElement;
+  if (element.className == "hitbox") {
+    mainObj.classList.add("opened");
+    return;
+  }
+
+  const optionsList = Array.from(element.parentElement.getElementsByTagName('DIV')).filter(element => !element.classList.contains("hitbox"));
+
+  for (const option of optionsList)
+    option.classList.remove("selected");
+
+  element.classList.add("selected");
+  mainObj.classList.remove("opened");
+}
+
+function select_image(id="", image="") {
+  const mainObj = document.getElementById(id);
+
+  const optionsList = Array.from(mainObj.getElementsByTagName('DIV')).filter(element => !element.classList.contains("hitbox"));
+
+  for (const option of optionsList) {
+    const srcImage = option.getElementsByTagName("IMG")[0].src.split("/");
+    if (srcImage[srcImage.length - 1].split(".")[0] == image) {
+      option.classList.add("selected");
+    } else {
+      option.classList.remove("selected");
+    }
+  }
+}
+
+function get_selector_icons(id="") {
+  const mainObj = document.getElementById(id);
+
+  const selected = Array.from(mainObj.getElementsByTagName('DIV')).filter(element => !element.classList.contains("hitbox") && element.classList.contains("selected"))[0];
+  const srcImage = selected.getElementsByTagName("IMG")[0].src.split("/");
+  return srcImage[srcImage.length - 1].split(".")[0];
+}
+
+function generate_selector_icons(id="", selected=undefined) {
+  const icons = [
+    "terminal",
+    "server",
+    "notebook"
+  ];
+
+  let result = "";
+  let first = true;
+  for (const ico of icons) {
+    var selected_flag = false;
+    if (first && !selected) {
+      selected_flag = true;
+    } else if (!!selected && ico == selected) {
+      selected_flag = true;
+    }
+    result += `
+      <div class="${(selected_flag)? "selected": ""}" onclick="eventImageSelector(this)">
+        <img src="./static/img/type/${ico}.svg">
+      </div>
+    `;
+    first = false;
+  }
+
+  return `
+    <div class="select-image scroll_style" id="${id}">
+      <div class="hitbox" onclick="eventImageSelector(this)"></div>
+      ${result}
+    </div>
+  `
+}
 
 function alert_create_edit_connection(group_id, item_id, event, edit_flag=false) {
   if (group_id === undefined)
@@ -63,21 +117,7 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
   open_alert(`
     <p class="name">${(edit_flag)? localization_dict.edit_connection_title: localization_dict.create_connection_title}</p>
     <hr>
-    <label class="select-image">
-      <input type="checkbox" id=""/>
-      <label>
-        <input type="radio" id="zalupa" name="zalupa"/>
-        <img src="./static/img/type/terminal.svg">
-      </label>
-      <label>
-        <input type="radio" id="zalupa" name="zalupa"/>
-        <img src="./static/img/type/terminal.svg">
-      </label>
-      <label>
-        <input type="radio" id="zalupa" name="zalupa"/>
-        <img src="./static/img/type/terminal.svg">
-      </label>
-    </label>
+    ${generate_selector_icons("ico")}
     <input id="connectioname" class="input_style" type="text" placeholder="${localization_dict.connection_name}">
     <p class="name_info_connection">${localization_dict.random_name}</p>
     <p class="connection_page_name">${localization_dict.connection}</p>
@@ -120,21 +160,21 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
   document.getElementById("connectioname").focus()
   if (edit_flag) {
     var index = get_indexes_by_id(group_id, item_id);
-    console.log(TABS[index[0]]);
-    console.log(TABS[index[0]].items[index[1]]);
-    document.getElementById("connectioname").value = TABS[index[0]].items[index[1]].name;
-    document.getElementById("host").value = TABS[index[0]].items[index[1]].host;
-    document.getElementById("port").value = TABS[index[0]].items[index[1]].port;
-    document.getElementById("auth_scheme").value = TABS[index[0]].items[index[1]].auth_scheme;
+    const item = TABS[index[0]].items[index[1]];
+    select_image("ico", item.ico);
+    document.getElementById("connectioname").value = item.name;
+    document.getElementById("host").value = item.host;
+    document.getElementById("port").value = item.port;
+    document.getElementById("auth_scheme").value = item.auth_scheme;
     change_auth_scheme();
-    if (TABS[index[0]].items[index[1]].auth_scheme == "lap") {
-      document.getElementById("login_lap").value = TABS[index[0]].items[index[1]].username;
-      document.getElementById("password").value = TABS[index[0]].items[index[1]].password;
-    } else if (TABS[index[0]].items[index[1]].auth_scheme == "lak") {
-      document.getElementById("login_lak").value = TABS[index[0]].items[index[1]].username;
-      document.getElementById("privateKey").value = TABS[index[0]].items[index[1]].privateKey;
+    if (item.auth_scheme == "lap") {
+      document.getElementById("login_lap").value = item.username;
+      document.getElementById("password").value = item.password;
+    } else if (item.auth_scheme == "lak") {
+      document.getElementById("login_lak").value = item.username;
+      document.getElementById("privateKey").value = item.privateKey;
     }
-    document.getElementById("first_command").value = atob(TABS[index[0]].items[index[1]].first_command);
+    document.getElementById("first_command").value = atob(item.first_command);
   }
 
   document.getElementById('PrivateKeyInput').addEventListener('change', (event) => {
@@ -152,15 +192,16 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
 // alert_create_edit_connection(undefined, undefined, false);
 
 function save_data_connection(group_id, item_id, edit_flag=false) {
-  var name = document.getElementById("connectioname");
-  var host = document.getElementById("host");
-  var port = document.getElementById("port");
-  var login_lap = document.getElementById("login_lap");
-  var login_lak = document.getElementById("login_lak");
-  var auth_scheme = document.getElementById("auth_scheme");
-  var password = document.getElementById("password");
-  var privateKey = document.getElementById("privateKey");
-  var first_command = document.getElementById("first_command");
+  const name = document.getElementById("connectioname");
+  const host = document.getElementById("host");
+  const port = document.getElementById("port");
+  const login_lap = document.getElementById("login_lap");
+  const login_lak = document.getElementById("login_lak");
+  const auth_scheme = document.getElementById("auth_scheme");
+  const password = document.getElementById("password");
+  const privateKey = document.getElementById("privateKey");
+  const first_command = document.getElementById("first_command");
+  const ico = get_selector_icons("ico");
 
   var error_flag = false;
   for (const el of ((auth_scheme.value == "lap")? [host, login_lap, password]: [host, login_lak, privateKey])) {
@@ -174,6 +215,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
   if (error_flag) return;
 
   var insert_data = {
+    "ico": ico,
     "name": (name.value.length > 0)? name.value: generateRandomName(),
     "host": host.value,
     "port": (port.value.length > 0)? port.value: "22",
@@ -191,15 +233,17 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
     config_file[index[0]].items[index[1]] = insert_data;
 
     try {
-      TABS[index[0]].items[index[1]].name = insert_data.name;
-      TABS[index[0]].items[index[1]].host = insert_data.host;
-      TABS[index[0]].items[index[1]].port = insert_data.port;
-      TABS[index[0]].items[index[1]].auth_scheme = insert_data.auth_scheme;
-      TABS[index[0]].items[index[1]].username = insert_data.username;
-      TABS[index[0]].items[index[1]].password = insert_data.password;
-      TABS[index[0]].items[index[1]].privateKey = insert_data.privateKey;
-      TABS[index[0]].items[index[1]].first_command = insert_data.first_command;
-      TABS[index[0]].items[index[1]].search = insert_data.name + insert_data.host + ":" + insert_data.port;
+      const item = TABS[index[0]].items[index[1]];
+      item.ico = insert_data.ico;
+      item.name = insert_data.name;
+      item.host = insert_data.host;
+      item.port = insert_data.port;
+      item.auth_scheme = insert_data.auth_scheme;
+      item.username = insert_data.username;
+      item.password = insert_data.password;
+      item.privateKey = insert_data.privateKey;
+      item.first_command = insert_data.first_command;
+      item.search = insert_data.name + insert_data.host + ":" + insert_data.port;
 
       document.getElementById(`item_${group_id}_${item_id}`).innerHTML = generate_item_by_data(insert_data, group_id, item_id);
       document.getElementById(`li_${group_id}_${item_id}`).innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&group_id=${group_id}&item_id=${item_id}&data_path=${path.dirname(store.path)}' style="display: none" id="iframe_${group_id}_${item_id}"></div>`;
@@ -218,6 +262,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
     try {
       TABS[index].items.push({
         "id": `${(TABS[index].items.length > 0)? (Number(TABS[index].items[TABS[index].items.length - 1].id) + 1): "1"}`,
+        "ico": ico,
         "name": insert_data.name,
         "host": insert_data.host,
         "port": insert_data.port,

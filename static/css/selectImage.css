@@ -1,16 +1,71 @@
 
-label.select-image {
-  height: 100px;
+div.select-image {
+  position: absolute;
+  z-index: 2;
+  width: 72px;
+  max-height: calc(100% - 100px);
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border-color);
+  border-radius: 5px;
 }
 
-label.select-image > label {
+div.select-image.opened {
+  overflow-y: scroll;
+}
+
+div.select-image > input {
   display: none;
 }
 
-label.select-image > label:first-child {
+div.select-image > div {
+  display: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 5px;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  height: 55px;
+}
+
+div.select-image > div.hitbox {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: #fff;
+  z-index: 2;
+}
+
+div.select-image.opened > div.hitbox {
+  display: none;
+}
+
+div.select-image > div:hover {
+
+}
+
+div.select-image > div:nth-child(2) {
+  border-radius: 4px 0 0 0;
+}
+
+div.select-image > div:last-child {
+  border-radius: 0 0 0 4px;
+}
+
+div.select-image.opened > div {
   display: block;
 }
 
-label.select-image > input[type="checkbox"]:checked ~ label {
+div.select-image > div.selected {
   display: block;
+}
+
+div.select-image.opened > div.selected {
+  border-left: 3px solid var(--select-color);
+}
+
+div.select-image > div > img {
+  filter: invert(.6);
+  width: 55px;
 }

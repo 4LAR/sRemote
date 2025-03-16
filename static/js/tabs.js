@@ -138,7 +138,7 @@ function open_group(event) {
 //
 function generate_item_by_data(data, group_id, item_id="") {
   return `
-    <img id="status_${group_id}_${item_id}" class="status_none" src="./static/img/type/terminal.svg">
+    <img id="status_${group_id}_${item_id}" class="status_none" src="./static/img/type/${data.ico}.svg">
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
     <div class="reconnect" onclick="reconnect_event(event)">
@@ -258,8 +258,9 @@ function read() {
       for (const item of group.items) {
         item_id++;
         //
-        TABS[group_id].items.push({
+        const insertedItemId = TABS[group_id].items.push({
           "id": item_id,
+          "ico": item.ico || "terminal",
           "name": item.name || "TEST",
           "host": item.host || "0.0.0.0",
           "port": item.port || "22",
@@ -271,7 +272,7 @@ function read() {
           "search": item.name + item.host + ":" + item.port
         });
         //
-        append_item(item, group_id, item_id);
+        append_item(TABS[group_id].items[insertedItemId - 1], group_id, item_id);
       }
       auto_height_items(group_id);
     }

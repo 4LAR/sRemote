@@ -105,7 +105,8 @@ function show_font_alert(size) {
 
 const term = new Terminal({
   cursorBlink: true,
-  macOptionIsMeta: true
+  macOptionIsMeta: true,
+  // rendererType: 'canvas'
 });
 
 if (config["Connections"]["cacheData"]) {
