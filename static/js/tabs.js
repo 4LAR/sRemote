@@ -258,9 +258,10 @@ function read() {
       for (const item of group.items) {
         item_id++;
         //
+        const ico = fs.existsSync(`./static/img/type/${item.ico}.svg`)? item.ico: "terminal";
         const insertedItemId = TABS[group_id].items.push({
           "id": item_id,
-          "ico": item.ico || "terminal",
+          "ico": ico,
           "name": item.name || "TEST",
           "host": item.host || "0.0.0.0",
           "port": item.port || "22",
