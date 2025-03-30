@@ -13,6 +13,25 @@ const AUTH_SCHEMAS = [
   "lak"
 ]
 
+const DATA_GROUP_TO_READ = [
+  { key: "uuid", default: uuid },
+  { key: "name", default: generateRandomName() },
+  { key: "open_flag", default: false }
+]
+
+const DATA_CONNECTION_TO_READ = [
+  { key: "uuid", default: uuid },
+  { key: "ico", default: "terminal" },
+  { key: "name", default: "TEST" },
+  { key: "host", default: "0.0.0.0" },
+  { key: "port", default: "22" },
+  { key: "auth_scheme", default: "lap" },
+  { key: "username", default: "user" },
+  { key: "password", default: "password" },
+  { key: "privateKey", default: "" },
+  { key: "first_command", default: "" }
+];
+
 function change_auth_scheme() {
   var auth_scheme = document.getElementById("auth_scheme").value;
   for (const el of AUTH_SCHEMAS) {
@@ -216,6 +235,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
 
   var insert_data = {
     "ico": ico,
+    "uuid": uuid(),
     "name": (name.value.length > 0)? name.value: generateRandomName(),
     "host": host.value,
     "port": (port.value.length > 0)? port.value: "22",
@@ -230,6 +250,8 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
 
   if (edit_flag) {
     var index = get_indexes_by_id(group_id, item_id);
+    var item_in_TABS = config_file[index[0]].items[index[1]];
+    insert_data.uuid = item_in_TABS.uuid;
     config_file[index[0]].items[index[1]] = insert_data;
 
     try {
@@ -376,20 +398,20 @@ function save_data_group(group_id, edit_flag=false) {
     }
   } else {
     try {
+      const new_uuid = uuid();
       var insert_data = {
-        "id": (TABS.length > 0)? (Number(TABS[TABS.length - 1].id) + 1): 0,
+        "uuid": new_uuid,
         "name": (name.value.length > 0)? name.value: generateRandomName(),
         "open_flag": false,
         "items": []
       };
 
-      config_file.push({
-        "name": insert_data.name,
-        "open_flag": false,
-        "items": []
-      });
+      config_file.push(insert_data);
 
-      TABS.push(insert_data)
+      TABS.push({
+        "id": (TABS.length > 0)? (Number(TABS[TABS.length - 1].id) + 1): 0,
+        ...insert_data
+      })
       append_group(insert_data, insert_data.id);
     } catch (e) {
       console.warn(e);

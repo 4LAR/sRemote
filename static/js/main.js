@@ -2,6 +2,7 @@ let { ipcRenderer } = require("electron")
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { v6: uuid } = require('uuid');
 
 const root = document.querySelector(':root');
 

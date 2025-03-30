@@ -240,16 +240,27 @@ function read() {
 
   try {
     var group_id = -1;
+    let errorRead = false;
     //
     for (const group of config_file) {
       group_id++;
       //
-      TABS.push({
+      let insertedGroup = {
         "id": group_id,
-        "name": group.name,
-        "open_flag": group.open_flag || false,
         "items": []
-      });
+      };
+
+      for (const param of DATA_GROUP_TO_READ) {
+        if (group[param.key] !== undefined) {
+          insertedGroup[param.key] = group[param.key];
+        } else {
+          insertedGroup[param.key] = param.default;
+          errorRead = true;
+          console.warn("Error read group", group[param.key], param.key, param.default);
+        }
+      }
+
+      TABS.push(insertedGroup);
 
       append_group(group, group_id, group.open_flag);
 
@@ -258,28 +269,53 @@ function read() {
       for (const item of group.items) {
         item_id++;
         //
-        const ico = fs.existsSync(path.join(__dirname, 'static', 'img', 'type', `${item.ico}.svg`))? item.ico: "terminal";
-        const insertedItemId = TABS[group_id].items.push({
-          "id": item_id,
-          "ico": ico,
-          "name": item.name || "TEST",
-          "host": item.host || "0.0.0.0",
-          "port": item.port || "22",
-          "auth_scheme": item.auth_scheme || "lap",
-          "username": item.username || "user",
-          "password": item.password || "password",
-          "privateKey": item.privateKey || "",
-          "first_command": item.first_command || "",
-          "search": item.name + item.host + ":" + item.port
-        });
-        //
+        let insertedItem = {
+          "id": item_id
+        };
+
+        for (const param of DATA_CONNECTION_TO_READ) {
+          if (item[param.key] !== undefined) {
+            insertedItem[param.key] = item[param.key];
+          } else {
+            insertedItem[param.key] = (typeof param.default === 'function')? param.default() :param.default;
+            errorRead = true;
+            console.warn("Error read connection", item[param.key], param.key, param.default);
+          }
+        }
+
+        insertedItem["ico"] = fs.existsSync(path.join(__dirname, 'static', 'img', 'type', `${insertedItem["ico"]}.svg`))? insertedItem["ico"]: "terminal";
+        insertedItem["search"] = insertedItem.name + insertedItem.host + ":" + insertedItem.port;
+
+        const insertedItemId = TABS[group_id].items.push(insertedItem);
+
         append_item(TABS[group_id].items[insertedItemId - 1], group_id, item_id);
       }
       auto_height_items(group_id);
     }
+
+    if (errorRead) {
+      let insertData = [];
+      for (group of TABS) {
+        let insert_group = {
+          items: []
+        };
+        for (const param of DATA_GROUP_TO_READ)
+          insert_group[param.key] = group[param.key];
+        let insertedGroupId = insertData.push(insert_group) - 1;
+        for (item of group.items) {
+          let insert_item = {};
+          for (const param of DATA_CONNECTION_TO_READ)
+            insert_item[param.key] = item[param.key];
+          insertData[insertedGroupId].items.push(insert_item);
+        }
+      }
+      store.set('connections', insertData);
+    }
+
     tabs_loaded_flag = true;
     close_loading();
   } catch (e) {
+    console.error("Loadading connections error", e);
     // store.set('connections', []);
     // ipcRenderer.send('relaunch');
   }
