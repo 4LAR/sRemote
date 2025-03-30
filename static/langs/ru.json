@@ -1,7 +1,7 @@
 {
   "create_connection_title": "Создание нового соединения",
   "edit_connection_title": "Редактирование соединения",
-  "connection_name": "Навзание",
+  "connection_name": "Название",
   "random_name": "Сгенерируется случайное имя, если вы его не укажите.",
   "connection": "Соединение",
   "host": "Адрес",
