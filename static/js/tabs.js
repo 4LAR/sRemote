@@ -254,9 +254,9 @@ function read() {
         if (group[param.key] !== undefined) {
           insertedGroup[param.key] = group[param.key];
         } else {
-          insertedGroup[param.key] = param.default;
+          insertedGroup[param.key] = (typeof param.default === 'function')? param.default() :param.default;;
           errorRead = true;
-          console.warn("Error read group", group[param.key], param.key, param.default);
+          console.warn("Error read group", group[param.key], param.key);
         }
       }
 
@@ -279,7 +279,7 @@ function read() {
           } else {
             insertedItem[param.key] = (typeof param.default === 'function')? param.default() :param.default;
             errorRead = true;
-            console.warn("Error read connection", item[param.key], param.key, param.default);
+            console.warn("Error read connection", item[param.key], param.key);
           }
         }
 
