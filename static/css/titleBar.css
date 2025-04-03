@@ -1,10 +1,11 @@
 .titlebar {
+  display: var(--titleBar-display);
   position: fixed;
   top: 0px;
   left: 0px;
   width: 100%;
   height: var(--titleBar-height);
-  z-index: 9;
+  z-index: 999999;
   box-sizing: border-box;
   background-color: var(--bg-color);
   border-bottom: 1px solid var(--border-color);

@@ -1,5 +1,7 @@
 :root {
+  --default-titleBar-height: -28px;
   --titleBar-height: 28px;
+  --titleBar-display: none;
 }
 
 body {
@@ -75,13 +77,42 @@ iframe {
 
 div.main_loading {
   position: fixed;
-  top: 0px;
+  top: calc(var(--default-titleBar-height) - 1px);
   left: 0px;
   width: 100%;
-  height: 100%;
+  height: calc(100% - var(--default-titleBar-height));
   background-color: var(--bg-color);
   z-index: 99999;
   transition: .5s all;
+  border-top: 1px solid var(--border-color);
+}
+
+div.main_loading > div.main_password {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+}
+
+div.main_loading > div.main_password > input {
+  background-color: var(--input-bg);
+  height: 34px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: var(--alert-font-color);
+  width: 100%;
+}
+
+div.main_loading > div.main_password > input:focus {
+  outline: none;
+  border: 1px solid var(--input-focus);
+}
+
+div.main_loading > div.main_password > input:placeholder {
+  color: var(--alert-font-sub-color);
 }
 
 div.main_loading.loaded {

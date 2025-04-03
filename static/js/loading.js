@@ -3,7 +3,7 @@ var tabs_loaded_flag = false;
 var dom_loaded_flag = false;
 
 document.addEventListener("DOMContentLoaded", function() {
-  dom_loaded_flag = true;
+  // dom_loaded_flag = true;
   close_loading();
 });
 

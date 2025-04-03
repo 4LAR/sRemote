@@ -41,6 +41,8 @@ ipcRenderer.on('get-config-response', (event, response) => {
     if ((os.platform() !== "win32") || (SETTINGS_DICT["General"]["defaultTitleBar"])) {
       root.style.setProperty('--titleBar-height', '0px');
       document.getElementById('app_name').style.display = "none";
+    } else {
+      root.style.setProperty('--titleBar-display', 'block');
     }
   }
 });
