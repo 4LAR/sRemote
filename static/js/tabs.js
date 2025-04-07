@@ -1,8 +1,4 @@
 
-// Хрангилище для настроек, соединений и тп
-const Store = require('electron-store');
-const store = new Store();
-
 // Место где будут храниться временные файлы
 const tempDir = path.join(path.dirname(store.path), 'temp');
 console.log("temp dir:", tempDir);

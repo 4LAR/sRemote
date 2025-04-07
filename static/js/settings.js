@@ -78,7 +78,7 @@ function alert_settings() {
           <img src="./static/img/settings/general.svg" alt="">
           <p>${localization_dict.settings_menu_general}</p>
         </li>
-        <li id="settings_menu_account" onclick="change_settings_page('account')" style="display: none">
+        <li id="settings_menu_account" onclick="change_settings_page('account')">
           <div></div>
           <div class="selector"></div>
           <img src="./static/img/settings/account.svg" alt="">
@@ -90,7 +90,7 @@ function alert_settings() {
           <img src="./static/img/settings/connection.svg" alt="">
           <p>${localization_dict.settings_menu_connection}</p>
         </li>
-        <li id="settings_menu_macros" onclick="change_settings_page('macros')" style="display: none">
+        <li id="settings_menu_macros" onclick="change_settings_page('macros')">
           <div></div>
           <div class="selector"></div>
           <img src="./static/img/settings/macros.svg" alt="">
