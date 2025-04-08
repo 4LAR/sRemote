@@ -32,17 +32,33 @@ function textDecrypt(password, text, hash=undefined) {
   return result;
 }
 
-encrT = textEncrypt("60798", "HELLO WORLD");
-console.log(encrT);
-console.log(textDecrypt("60798", encrT.data, encrT.hash));
-console.log(textDecrypt("123213", encrT.data, encrT.hash));
+// encrT = textEncrypt("60798", "HELLO WORLD");
+// console.log(encrT);
+// console.log(textDecrypt("60798", encrT.data, encrT.hash));
+// console.log(textDecrypt("123213", encrT.data, encrT.hash));
 
 class ConnectionsStore {
+  isEncrypted = false;
+  _password = undefined;
   constructor(storeObj=undefined, key='connections') {
     this.storeObj = storeObj;
+    this.key = key;
+    // this.;
+    // this._data = this.storeObj.get(this.key);
+    this._checkEncrypt();
+  }
+
+  _checkEncrypt() {
+    
   }
 
   get() {
+    if (!this.isEncrypted)
+      return this.storeObj.get(this.key)
+
+    if (this.isEncrypted && !this._password)
+      throw "Data is encrypted";
+
 
   }
 
@@ -50,11 +66,11 @@ class ConnectionsStore {
 
   }
 
-  isEncrypted() {
-
-  }
-
-  decrypt() {
-
+  decrypt(password) {
+    _password = password;
+    this._checkEncrypt();
   }
 }
+
+connectionsStore = new ConnectionsStore(store, 'connections');
+console.log(connectionsStore.get());
