@@ -246,7 +246,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
     "first_command": btoa(first_command.value)
   }
 
-  var config_file = store.get('connections');
+  var config_file = connectionsStore.get();
 
   if (edit_flag) {
     var index = get_indexes_by_id(group_id, item_id);
@@ -309,7 +309,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
     auto_height_items(group_id);
   }
 
-  store.set('connections', config_file);
+  connectionsStore.set(config_file);
 
   close_alert();
 }
@@ -336,9 +336,9 @@ function alert_delete_connection(group_id, item_id, event) {
 //
 function delete_connection(group_id, item_id) {
   var index = get_indexes_by_id(group_id, item_id);
-  var config_file = store.get('connections');
+  var config_file = connectionsStore.get();
   config_file[index[0]].items.splice(index[1], 1);
-  store.set('connections', config_file);
+  connectionsStore.set(config_file);
 
   TABS[index[0]].items.splice(index[1], 1);
   document.getElementById(`item_${group_id}_${item_id}`).remove();
@@ -385,7 +385,7 @@ function alert_edit_create_group(event=undefined, edit_flag=false) {
 
 function save_data_group(group_id, edit_flag=false) {
   var name = document.getElementById("name");
-  var config_file = store.get('connections');
+  var config_file = connectionsStore.get();
   if (edit_flag) {
     var index = get_index_group_by_id(group_id);
     try {
@@ -417,7 +417,7 @@ function save_data_group(group_id, edit_flag=false) {
       console.warn(e);
     }
   }
-  store.set('connections', config_file);
+  connectionsStore.set(config_file);
   close_alert();
 }
 
@@ -441,7 +441,7 @@ function alert_delete_group(group_id, event) {
 
 function delete_group(group_id) {
   var index = get_index_group_by_id(group_id);
-  var config_file = store.get('connections');
+  var config_file = connectionsStore.get();
   for (const item of TABS[index].items) {
     try {
       var index_item = get_indexes_by_id(group_id, item.id);
@@ -458,7 +458,7 @@ function delete_group(group_id) {
   }
   TABS.splice(index, 1);
   config_file.splice(index, 1);
-  store.set('connections', config_file);
+  connectionsStore.set(config_file);
   document.getElementById(`group_${group_id}`).remove();
 
   close_alert(false);

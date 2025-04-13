@@ -1,7 +1,7 @@
 
 
 function share(group_id, item_id=undefined) {
-  const config_file = store.get('connections');
+  const config_file = connectionsStore.get();
   var save_data = {};
   var name = "";
   if (item_id !== undefined) {
@@ -121,7 +121,7 @@ function alert_import_connection(data) {
 // импорт
 function import_data(type, data) {
   var name = document.getElementById("name");
-  var config_file = store.get('connections');
+  var config_file = connectionsStore.get();
   if (type === "group") {
     // импорт групп
     try {
@@ -221,7 +221,7 @@ function import_data(type, data) {
       console.warn(e);
     }
   }
-  store.set('connections', config_file);
+  connectionsStore.set(config_file);
   close_alert();
 }
 

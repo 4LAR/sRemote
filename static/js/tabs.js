@@ -126,9 +126,9 @@ function open_group(event) {
 
   auto_height_items(group_id);
 
-  var config_file = store.get('connections');
+  var config_file = connectionsStore.get();
   config_file[index].open_flag = TABS[index].open_flag;
-  store.set('connections', config_file);
+  connectionsStore.set(config_file);
 }
 
 //
@@ -224,14 +224,14 @@ function read() {
   //
   if (store.has('connections')) {
     try {
-      config_file = store.get('connections');
+      config_file = connectionsStore.get();
     } catch (e) {
       config_file = [];
-      store.set('connections', config_file);
+      connectionsStore.set(config_file);
     }
   } else {
     config_file = [];
-    store.set('connections', config_file);
+    connectionsStore.set(config_file);
   }
 
   try {
@@ -305,14 +305,14 @@ function read() {
           insertData[insertedGroupId].items.push(insert_item);
         }
       }
-      store.set('connections', insertData);
+      connectionsStore.set(insertData);
     }
 
     tabs_loaded_flag = true;
     close_loading();
   } catch (e) {
     console.error("Loadading connections error", e);
-    // store.set('connections', []);
+    // connectionsStore.set([]);
     // ipcRenderer.send('relaunch');
   }
 }
@@ -404,7 +404,7 @@ function initializeSortableForGroup(groupId) {
     onEnd: function (evt) {
       last_drag_connection_id = undefined;
       evt.item.style.opacity = '1';
-      let config_file = store.get('connections');
+      let config_file = connectionsStore.get();
       const newIndex = evt.newIndex;
       const oldIndex = evt.oldIndex;
 
@@ -457,7 +457,7 @@ function initializeSortableForGroup(groupId) {
       }
 
       // Сохраняем изменения в store
-      store.set('connections', config_file);
+      connectionsStore.set(config_file);
     }
   });
 }
@@ -522,7 +522,7 @@ const sortable_groups = new Sortable(document.getElementById('tabs'), {
   onEnd: function (evt) {
     evt.item.style.opacity = '1';
 
-    let config_file = store.get('connections');
+    let config_file = connectionsStore.get();
     let newTabs = [];
     let newConfig = Array(config_file.length).fill({});
 
@@ -547,7 +547,7 @@ const sortable_groups = new Sortable(document.getElementById('tabs'), {
     }
 
     updateGroupsIds([...Array(groups.length).keys()]);
-    store.set('connections', newConfig);
+    connectionsStore.set(newConfig);
 
   }
 });

@@ -43,13 +43,7 @@ class ConnectionsStore {
   constructor(storeObj=undefined, key='connections') {
     this.storeObj = storeObj;
     this.key = key;
-    // this.;
-    // this._data = this.storeObj.get(this.key);
-    this._checkEncrypt();
-  }
-
-  _checkEncrypt() {
-    
+    this.isEncrypted = !Array.isArray(this.storeObj.get(this.key));
   }
 
   get() {
@@ -59,18 +53,59 @@ class ConnectionsStore {
     if (this.isEncrypted && !this._password)
       throw "Data is encrypted";
 
-
+    return JSON.parse(textDecrypt(
+      this._password,
+      this.storeObj.get(this.key).data,
+      this.storeObj.get(this.key).hash
+    ));
   }
 
-  set() {
+  set(data) {
+    if (!this.isEncrypted) {
+      store.set('connections', config_file);
+    }
 
+    const encrypted_data = textEncrypt(this._password, JSON.stringify(data));
+    store.set('connections', encrypted_data);
   }
 
   decrypt(password) {
-    _password = password;
-    this._checkEncrypt();
+    try {
+      textDecrypt(
+        password,
+        this.storeObj.get(this.key).data,
+        this.storeObj.get(this.key).hash
+      )
+      this._password = password;
+      return true;
+    } catch (e) {
+      console.error(e);
+    }
+    return false;
   }
 }
 
 connectionsStore = new ConnectionsStore(store, 'connections');
-console.log(connectionsStore.get());
+console.log(connectionsStore.isEncrypted);
+connectionsStore.decrypt("4040")
+
+// try {
+//   console.log(connectionsStore.get());
+// } catch (e) {
+//   console.log(e);
+// }
+//
+// console.log(connectionsStore.decrypt("1234"));
+// try {
+//   console.log(connectionsStore.get());
+// } catch (e) {
+//   console.log(e);
+// }
+//
+// console.log(connectionsStore.decrypt("4040"));
+// try {
+//   console.log(connectionsStore.get());
+// } catch (e) {
+//   console.log(e);
+// }
+// console.log(connectionsStore.set([1, 2, 3, 4]));

@@ -35,7 +35,7 @@ ipcRenderer.on('get-config-response', (event, response) => {
   if (first_get_config_flag) {
     set_thame(SETTINGS_DICT["General"]["thame"]);
     read_localization(SETTINGS_DICT["General"]["lang"]);
-    // read();
+    read();
     first_get_config_flag = false;
 
     if ((os.platform() !== "win32") || (SETTINGS_DICT["General"]["defaultTitleBar"])) {
