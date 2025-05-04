@@ -227,7 +227,10 @@ function read() {
       config_file = connectionsStore.get();
     } catch (e) {
       config_file = [];
-      connectionsStore.set(config_file);
+      console.log(e);
+      document.getElementById('main_password_block').style.display = "flex";
+      document.getElementById("main_password").focus();
+      return;
     }
   } else {
     config_file = [];

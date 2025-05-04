@@ -101,4 +101,11 @@ function convert_size(size_bytes, name_bool=false) {
     return s + ' ' + size_name[i]
 }
 
+// onkeydown
+function onEnter(el, func=()=>{}) {
+  if(event.key === 'Enter') {
+    func();
+  }
+}
+
 /*----------------------------------------------------------------------------*/

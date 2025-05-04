@@ -65,8 +65,12 @@
       <div class="alert_body" id="alert_body"></div>
     </div>
     <div class="main_loading" id="main_loading">
-      <div class="main_password">
-        <input type="password" placeholder="Password">
+      <div class="main_password" id="main_password_block">
+        <input id="main_password" class="error" type="password" placeholder="Password" onkeydown="onEnter(this, enter_main_password)">
+        <p id="main_password_error">test</p>
+        <button type="button" name="button" onclick="enter_main_password()">
+          <img src="./static/img/arrow.svg">
+        </button>
       </div>
     </div>
   </body>

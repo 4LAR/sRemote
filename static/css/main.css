@@ -88,6 +88,7 @@ div.main_loading {
 }
 
 div.main_loading > div.main_password {
+  display: none;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -118,4 +119,32 @@ div.main_loading > div.main_password > input:placeholder {
 div.main_loading.loaded {
   pointer-events: none;
   opacity: 0;
+}
+
+div.main_loading > div.main_password > button {
+  outline: none;
+  height: 38px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  border: 1px solid var(--input-border-color);
+  background-color: var(--input-bg);
+  padding: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+div.main_loading > div.main_password > button:hover {
+  border: 1px solid var(--input-focus);
+}
+
+div.main_loading > div.main_password > button > img {
+  height: 100%;
+  transform: rotate(180deg);
+  filter: invert(var(--tabs-invert-selected-buttons));
+}
+
+div.main_loading > div.main_password > p#main_password_error {
+  position: absolute;
+  top: 40px;
+  color: #fff;
 }

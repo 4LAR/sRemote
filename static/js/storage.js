@@ -87,7 +87,15 @@ class ConnectionsStore {
 
 connectionsStore = new ConnectionsStore(store, 'connections');
 console.log(connectionsStore.isEncrypted);
-connectionsStore.decrypt("4040")
+
+function enter_main_password() {
+  if (connectionsStore.decrypt(document.getElementById('main_password').value)) {
+    document.getElementById('main_password_block').style.display = "none";
+    read();
+  }
+}
+
+// connectionsStore.decrypt("4040")
 
 // try {
 //   console.log(connectionsStore.get());
