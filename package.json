@@ -18,12 +18,14 @@
     "electron-window-state": "^5.0.3",
     "html2canvas": "^1.4.1",
     "ini": "^4.1.1",
+    "minimist": "^1.2.8",
     "sortablejs": "^1.15.2",
     "ssh2": "^1.15.0",
     "uuid": "^11.1.0"
   },
   "scripts": {
     "start": "electron --no-sandbox .",
+    "dev": "electron --no-sandbox . --config config_dev",
     "dist": "electron-builder"
   },
   "build": {

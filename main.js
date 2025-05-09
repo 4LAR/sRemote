@@ -6,7 +6,12 @@ const path = require('path');
 const isPackaged = require('electron-is-packaged').isPackaged;
 const windowStateKeeper = require('electron-window-state');
 const Store = require('electron-store');
+const minimist = require('minimist');
+
 Store.initRenderer();
+
+const args = minimist(process.argv.slice(isPackaged ? 1 : 2));
+console.log(args);
 
 const gotTheLock = app.requestSingleInstanceLock();
 
@@ -20,8 +25,7 @@ if (process.env.PORTABLE_EXECUTABLE_DIR !== undefined) {
 console.log("APP_PATH", APP_PATH);
 
 const Settings_module = require('./settings');
-
-const settings = new Settings_module("./settings.ini");
+const settings = new Settings_module(args.config || 'config');
 
 let win;
 let top = {};
@@ -127,7 +131,9 @@ const createWindow = () => {
     resizable: true
   })
 
-  top.win.loadFile('index.html');
+  top.win.loadFile('index.html', {
+    query: { args: JSON.stringify(args) }
+  });
   top.win.removeMenu();
 
   if (settings.options["General"]["keepBackground"]) {

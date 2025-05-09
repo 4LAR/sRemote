@@ -2,7 +2,9 @@ const crypto = require('crypto');
 
 // Хранилище для настроек, соединений и тп
 const Store = require('electron-store');
-const store = new Store();
+const store = new Store({
+  name: args.config || 'config'
+});
 
 function textEncrypt(password, text) {
   const algorithm = 'aes-256-ctr';
@@ -40,10 +42,14 @@ function textDecrypt(password, text, hash=undefined) {
 class ConnectionsStore {
   isEncrypted = false;
   _password = undefined;
-  constructor(storeObj=undefined, key='connections') {
+  constructor(storeObj=undefined, key=this.key) {
     this.storeObj = storeObj;
     this.key = key;
+    if (!this.storeObj.has(this.key)) {
+      store.set(this.key, []);
+    }
     this.isEncrypted = !Array.isArray(this.storeObj.get(this.key));
+
   }
 
   get() {
@@ -62,11 +68,12 @@ class ConnectionsStore {
 
   set(data) {
     if (!this.isEncrypted) {
-      store.set('connections', config_file);
+      store.set(this.key, data);
+      return;
     }
 
     const encrypted_data = textEncrypt(this._password, JSON.stringify(data));
-    store.set('connections', encrypted_data);
+    store.set(this.key, encrypted_data);
   }
 
   decrypt(password) {

@@ -1,6 +1,5 @@
 const fs = require('fs');
 const Store = require('electron-store');
-const store = new Store();
 
 function randomString(size) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -8,9 +7,14 @@ function randomString(size) {
 }
 
 class Settings {
-  constructor(path = 'settings.ini', options = null) {
-    this.path = path;
+  constructor(name='config', options=null) {
+    this.name = name;
     this.errorPrompt = 'SETTINGS: ';
+    this.store = new Store({
+      name: this.name
+    });
+    console.log("Config name:", this.name);
+    console.log(this.store.get('settings'));
 
     if (options) {
       this.options = options;
@@ -18,7 +22,6 @@ class Settings {
       this.options = {
         "General": {
           "lang": "en",
-          "password": "",
           "autoStart": false,
           "keepBackground": false,
           "thame": "dark", // light, dark, system
@@ -57,7 +60,7 @@ class Settings {
       }
     }
 
-    store.set('settings', config);
+    this.store.set('settings', config);
   }
 
   setSettings(section, parameter, state) {
@@ -65,11 +68,11 @@ class Settings {
   }
 
   readSettings() {
-    if (!store.has('settings')) {
+    if (!this.store.has('settings')) {
       this.saveSettings();
       this.readSettings();
     } else {
-      const config = store.get('settings');
+      const config = this.store.get('settings');
       let errorBool = false;
 
       for (const section in this.options) {
