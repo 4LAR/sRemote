@@ -400,6 +400,7 @@ function save_data_group(group_id, edit_flag=false) {
     try {
       const new_uuid = uuid();
       var insert_data = {
+        "id": (TABS.length > 0)? (Number(TABS[TABS.length - 1].id) + 1): 0,
         "uuid": new_uuid,
         "name": (name.value.length > 0)? name.value: generateRandomName(),
         "open_flag": false,
