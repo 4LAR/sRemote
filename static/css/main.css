@@ -75,6 +75,12 @@ iframe {
 
 /*----------------------------------------------------------------------------*/
 
+.hidden_scroll_style::-webkit-scrollbar {
+  display: none;
+}
+
+/*----------------------------------------------------------------------------*/
+
 div.main_loading {
   position: fixed;
   top: calc(var(--default-titleBar-height) - 1px);

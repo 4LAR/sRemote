@@ -93,7 +93,7 @@ class ConnectionsStore {
 }
 
 connectionsStore = new ConnectionsStore(store, 'connections');
-console.log(connectionsStore.isEncrypted);
+console.log("isEncrypted:", connectionsStore.isEncrypted);
 
 function enter_main_password() {
   if (connectionsStore.decrypt(document.getElementById('main_password').value)) {

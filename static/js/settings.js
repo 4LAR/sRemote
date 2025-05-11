@@ -183,12 +183,12 @@ function alert_settings() {
           <label for="settings_Connections_readyTimeout">${localization_dict.settings_Connections_readyTimeout}</label>
         </div>
 
-        <div class="checkbox" for="settings_Connections_cacheData">
+        <div class="checkbox" for="settings_Connections_cacheData" style="display: none">
           <input type="checkbox" id="settings_Connections_cacheData">
           <label for="settings_Connections_cacheData">${localization_dict.settings_Connections_cacheData}</label>
         </div>
 
-        <div class="number">
+        <div class="number" style="display: none">
           <input type="number" class="input_style" id="settings_Connections_maxCacheData">
           <label for="settings_Connections_maxCacheData">${localization_dict.settings_Connections_maxCacheData}</label>
         </div>

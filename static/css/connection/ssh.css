@@ -9,7 +9,135 @@ body {
   line-height: 1.5;
 }
 
-#terminal {
+/* -------------------------------------------------------------------------- */
+
+div.tabs-list {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 20px;
+  width: calc(100% - 19px);
+  /* border-bottom: 1px solid var(--border-color); */
+  border-bottom: 1px solid var(--terminal-bg);
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+div.tabs-list > div.container {
+  display: flex;
+  height: calc(100% - 1px);
+  border-bottom: 1px solid var(--border-color);
+}
+
+div.tabs-list > div.container > div {
+  position: relative;
+  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  cursor: pointer;
+  white-space: nowrap;
+  padding-left: 5px;
+  padding-right: 19px;
+  height: 20px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--border-color);
+}
+
+div.tabs-list > div.container > div.selected {
+  background-color: var(--terminal-bg);
+  border-bottom: 1px solid var(--terminal-bg);
+}
+
+div.tabs-list > div.container > div > p {
+  padding: 0px;
+  margin: 0px;
+}
+
+div.tabs-list > div.container > div > p,
+div.tabs-list > div.container > div > input {
+  padding: 0px;
+  height: 16px;
+  border: none;
+  outline: none;
+  background-color: var(--bg-color);
+  color: var(--tabs-font-color);
+  cursor: pointer;
+  width: 100px;
+}
+
+div.tabs-list > div.container > div.selected > p,
+div.tabs-list > div.container > div.selected > input {
+  color: var(--tabs-selected-font-color);
+  background-color: var(--terminal-bg);
+}
+
+div.tabs-list > div.container > div > img {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  height: 16px;
+  transform: rotate(45deg);
+  filter: invert(var(--invert-buttons));
+  transition: .1s all;
+  opacity: 0;
+}
+
+div.tabs-list > div.container > div:hover > img {
+  opacity: 1;
+}
+
+div.tabs-list > div.container > div > img:hover {
+  filter: invert(var(--invert-buttons-hover));
+}
+
+div.tabs-list > div.container > div:only-child > img {
+  display: none;
+}
+
+div.tabs-list > div.container > div:last-of-type {
+  margin-right: 100px;
+}
+
+div.tabs-list > div.add {
+  display: inline-block;
+  position: fixed;
+  top: 31px;
+  right: 0px;
+  border: none;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+  box-sizing: border-box;
+  cursor: pointer;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  border-left: 1px solid var(--border-color);
+}
+
+div.tabs-list > div.add > img {
+  width: 100%;
+  filter: invert(var(--invert-buttons));
+  transition: .1s all;
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+div.tabs-list > div.add:hover > img {
+  filter: invert(var(--invert-buttons-hover));
+}
+
+/* -------------------------------------------------------------------------- */
+
+div.terminal-list {
+  top: 20px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 20px);
+  position: absolute;
+}
+
+div.terminal-list > div {
+  display: none;
   position: absolute;
   top: 0px;
   bottom: 0px;
@@ -18,6 +146,16 @@ body {
   background-color: var(--terminal-bg);
   padding-left: 10px;
 }
+
+div.terminal-list > div.selected {
+  display: block;
+}
+
+/* -------------------------------------------------------------------------- */
+
+
+
+/* -------------------------------------------------------------------------- */
 
 .xterm .xterm-viewport {
   background-color: transparent;

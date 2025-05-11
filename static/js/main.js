@@ -108,4 +108,30 @@ function onEnter(el, func=()=>{}) {
   }
 }
 
+function calculateWidthInput(input) {
+  const tempSpan = document.createElement('span');
+  tempSpan.style.visibility = 'hidden';
+  tempSpan.style.whiteSpace = 'pre';
+  tempSpan.style.font = window.getComputedStyle(input).font;
+  tempSpan.textContent = input.value || input.placeholder || '';
+
+  document.body.appendChild(tempSpan);
+  const width = tempSpan.getBoundingClientRect().width;
+  document.body.removeChild(tempSpan);
+
+  return width;
+}
+
+function spliceNoMutate(myArray,indexToRemove) {
+  return myArray.slice(0,indexToRemove).concat(myArray.slice(indexToRemove+1));
+}
+
+/*----------------------------------------------------------------------------*/
+
+function getAllMethods(obj) {
+  return Object.getOwnPropertyNames(obj).filter(
+    (property) => typeof obj[property] === 'function'
+  );
+}
+
 /*----------------------------------------------------------------------------*/
