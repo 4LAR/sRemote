@@ -213,6 +213,28 @@ class ShellManager {
     const terminal_list = document.getElementById('terminal_list');
     var terminal_div = document.createElement("div");
     terminal_div.id = `terminal_${current_id}`;
+    terminal_div.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      navigator.clipboard.readText().then((toPaste) => {
+        ipcRenderer.send('show-context-menu', {
+          target: "connection",
+          id: `${group_id}_${item_id}`,
+          function: "ssh_context",
+          template: [
+            {
+              label: 'Copy',
+              enabled: term.hasSelection(),
+              accelerator: "CommandOrControl+Shift+C"
+            }, {
+              label: 'Paste',
+              enabled: (toPaste.length > 0),
+              accelerator: "CommandOrControl+Shift+V"
+            }
+          ]
+        })
+      });
+
+    });
     terminal_list.appendChild(terminal_div);
     term.open(terminal_div);
     term.resize(100, 50);
@@ -235,6 +257,10 @@ class ShellManager {
       }
     }
     return -1;
+  }
+
+  get_shell() {
+    return this.shells[this._get_index_by_id(this.current_shell)];
   }
 
   close_tab(id) {
@@ -343,3 +369,32 @@ function reconnect() {
 }
 
 window.onresize = debounce(fitToscreen, wait_ms);
+
+/*----------------------------------------------------------------------------*/
+
+function ssh_context(data) {
+  const current_shell = shellManager.get_shell();
+  switch (data) {
+    case "Copy": {
+      const toCopy = current_shell.terminal.getSelection();
+      navigator.clipboard.writeText(toCopy);
+      current_shell.terminal.focus();
+      break;
+    }
+    case "Paste": {
+      navigator.clipboard.readText().then((toPaste) => {
+        current_shell.stream.write(toPaste);
+      });
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+/*----------------------------------------------------------------------------*/
+
+// если нам надо сразу подключаться
+if (config["Connections"]["autoConnect"]) {
+  connect();
+}
