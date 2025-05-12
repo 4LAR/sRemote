@@ -66,6 +66,7 @@ function open_tab(id) {
     }
   }
   shellManager.fit(id);
+  shellManager.focus(id);
 }
 
 shellManager.add_shell(name="main", auto_connect=false);

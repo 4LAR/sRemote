@@ -96,7 +96,6 @@ class ShellManager {
 
   focus(id=undefined) {
     const index = this._get_index_by_id((id !== undefined)? id: this.current_shell);
-    console.log(this.shells);
     this.shells[index].terminal.focus();
   }
 
@@ -299,7 +298,7 @@ function fitToscreen() {
 
 // Фокусировка на терминале
 function focusOnTerminal() {
-  // shellManager.focus();
+  shellManager.focus();
 }
 
 function disconnect() {
