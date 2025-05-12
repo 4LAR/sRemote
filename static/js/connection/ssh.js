@@ -239,10 +239,14 @@ class ShellManager {
     }
 
     //
-    this.shells[index].terminal.dispose();
-    delete this.shells[index].terminal;
-    this.shells[index].stream.end();
-    delete this.shells[index].stream;
+    if (this.shells[index].terminal) {
+      this.shells[index].terminal.dispose();
+      delete this.shells[index].terminal;
+    }
+    if (this.shells[index].stream) {
+      this.shells[index].stream.end();
+      delete this.shells[index].stream;
+    }
     document.getElementById(`tab_${id}`).remove();
     document.getElementById(`terminal_${id}`).remove();
     this.shells.splice(index, 1);
@@ -252,7 +256,11 @@ class ShellManager {
     let term = this.shells[id].terminal;
 
     this.shells[id].shell = this.conn.shell((err, stream) => {
-      if (err) throw err;
+      if (err) {
+        this.close_tab(this.shells[id].id);
+        // this.count_create_shells--;
+        return;
+      };
 
       const onData_listener = term.onData(function(data) {
         stream.write(data);
