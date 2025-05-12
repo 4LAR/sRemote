@@ -225,6 +225,7 @@ const createWindow = () => {
             event.sender.send('context-menu-command', {
               target: response.target,
               id: response.id,
+              arg: response.arg,
               function: response.function,
               action: `${subret}${el.label}`
             })

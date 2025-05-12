@@ -207,6 +207,36 @@ function append_item(data, group_id, item_id) {
   );
   document.getElementById(`item_${group_id}_${item_id}`).draggable = true;
 
+  document.getElementById(`item_${group_id}_${item_id}`).addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    const ids = get_ids_from_event({target: {id: this.id}});
+    const status_connection = document.getElementById(`iframe_${ids[0]}_${ids[1]}`).contentWindow.connected_flag;
+    ipcRenderer.send('show-context-menu', {
+      target: "main",
+      function: "tabs_context",
+      arg: `${ids[0]}_${ids[1]}`,
+      template: [
+        {
+          label: (status_connection)? 'Disconnect': 'Connect',
+          enabled: true
+        }, {
+          type: 'separator'
+        }, {
+          label: 'Edit',
+          enabled: true
+        }, {
+          label: 'Duplicate',
+          enabled: true
+        }, {
+          type: 'separator'
+        }, {
+          label: 'Delete',
+          enabled: true
+        },
+      ]
+    });
+  });
+
   append_to_ul(
     "terminal_list", `
       <iframe src='ssh.html?data=${JSON.stringify(data)}&config=${JSON.stringify(SETTINGS_DICT)}&group_id=${group_id}&item_id=${item_id}&data_path=${path.dirname(store.path)}' style="display: none" id="iframe_${group_id}_${item_id}"></div>
@@ -560,9 +590,36 @@ const sortable_groups = new Sortable(document.getElementById('tabs'), {
 
 /*----------------------------------------------------------------------------*/
 
+function tabs_context(data, id) {
+  const ids = id.split("_");
+  switch (data) {
+    case "Connect":
+      document.getElementById(`iframe_${id}`).contentWindow.connect();
+      break;
+    case "Disconnect":
+      document.getElementById(`iframe_${id}`).contentWindow.disconnect();
+      break;
+    case "Edit":
+      alert_create_edit_connection(ids[0], ids[1], undefined, true)
+      break;
+    case "Duplicate":
+
+      break;
+    case "Delete":
+      alert_delete_connection(ids[0], ids[1], event=undefined, return_flag=false);
+      break;
+    default:
+      break;
+  }
+}
+
+/*----------------------------------------------------------------------------*/
+
 ipcRenderer.on('context-menu-command', (e, command) => {
   if (command.target == "connection") {
     eval(`document.getElementById("iframe_${command.id}").contentWindow.${command.function}("${command.action}")`);
+  } else {
+    eval(`${command.function}("${command.action}", "${command.arg}")`);
   }
 })
 

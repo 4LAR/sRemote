@@ -1,4 +1,4 @@
-let connected_flag = false;
+var connected_flag = false;
 
 function local_update_status(set_status) {
   status = set_status;
@@ -67,6 +67,7 @@ class ShellManager {
   connect_flag = false;
   conn = undefined;
   stop = true;
+  start_connect = false;
 
   constructor(connection_config, config, thame) {
     this.connection_config = connection_config;
@@ -87,17 +88,21 @@ class ShellManager {
 
     }).on('end', function() {
       connected_flag = false;
+      this.start_connect = false;
       local_update_status(0);
     }).on('error', function(err) {
       assembly_error(err);
       console.error(err);
       local_update_status(1);
       connected_flag = false;
+      this.start_connect = false;
     })
   }
 
   connect() {
+    if (this.start_connect) return;
     local_update_status(2);
+    this.start_connect = true;
     this.conn.connect({
       host: this.connection_config.host,
       port: this.connection_config.port,

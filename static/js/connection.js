@@ -317,7 +317,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
 /*----------------------------------------------------------------------------*/
 
 //
-function alert_delete_connection(group_id, item_id, event) {
+function alert_delete_connection(group_id, item_id, event, return_flag=true) {
   var index = get_indexes_by_id(group_id, item_id);
   open_alert(`
     <p class="name_delete">${localization_dict.delete_connection}?</p>
@@ -326,7 +326,7 @@ function alert_delete_connection(group_id, item_id, event) {
       <p>${localization_dict.delete_forever}</p>
     </div>
   `, "delete_alert", function() {
-    alert_create_edit_connection(group_id, item_id, undefined, true);
+    if (return_flag) alert_create_edit_connection(group_id, item_id, undefined, true);
   });
   if (event) {
     event.stopPropagation();
