@@ -19,6 +19,25 @@ function printOnNewLine(term, text) {
   term.write(text);
 }
 
+// разбор ошибки и вывод её в терминал
+function assembly_error(err) {
+  let text = "";
+  switch (err.level) {
+    case "client-socket":
+      text = `[\x1b[31mERROR\x1b[0m] Failed to connect to the remote server. (${err.code})`;
+      break;
+    case "client-authentication":
+      text = `[\x1b[31mERROR\x1b[0m] Invalid credentials for authentication.`;
+      break;
+    default:
+      text = `[\x1b[31mERROR\x1b[0m] ${err.level}`;
+      break;
+  }
+  for (const shell of shellManager.shells) {
+    printOnNewLine(shell.terminal, text);
+  }
+}
+
 // копирование вставка
 function customKeyEventHandler(e, term) {
   if (e.type !== "keydown") {
@@ -47,6 +66,7 @@ class ShellManager {
   shells = [];
   connect_flag = false;
   conn = undefined;
+  stop = true;
 
   constructor(connection_config, config, thame) {
     this.connection_config = connection_config;
@@ -60,6 +80,7 @@ class ShellManager {
         if (this.shells[index] !== undefined)
           this.connect_shell(index, () => {
             this.fit();
+            newLine(this.shells[index].terminal);
           });
       }
       local_update_status(3);
@@ -68,7 +89,7 @@ class ShellManager {
       connected_flag = false;
       local_update_status(0);
     }).on('error', function(err) {
-      // assembly_error(err);
+      assembly_error(err);
       console.error(err);
       local_update_status(1);
       connected_flag = false;
@@ -271,11 +292,19 @@ class ShellManager {
         term.write(data);
       });
 
-      const onclose = stream.on('close', function() {
-        onData_listener.dispose();
-        ondata.close()
-        onclose.close()
-        printOnNewLine(term, `[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_host_terminated}`);
+      const onclose = stream.on('close', () => {
+        if (connected_flag) {
+          if (this.shells.length > 1) {
+            this.close_tab(this.shells[id].id);
+          } else {
+            this.disconnect();
+          }
+        } else {
+          onData_listener.dispose();
+          ondata.close();
+          onclose.close();
+          printOnNewLine(term, `[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_host_terminated}`);
+        }
       });
 
       if (on_connect !== undefined) {
