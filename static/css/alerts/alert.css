@@ -1,4 +1,17 @@
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.alert-on-create {
+  animation: fadeIn 0.1s forwards;
+}
+
+.alert-on-close {
+  animation: fadeIn 0.1s forwards;
+}
+
 .bg_alert_connection {
   position: absolute;
   display: none;

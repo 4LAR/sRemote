@@ -3,7 +3,7 @@
 var onclose_alert_function = undefined;
 function open_alert(html, type="alert", onclose=undefined) {
   document.getElementById("alert_body").innerHTML = html;
-  document.getElementById("alert").className = type;
+  document.getElementById("alert").className = type + " alert-on-create";
 
   onclose_alert_function = onclose;
 
