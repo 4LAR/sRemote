@@ -48,6 +48,8 @@ function add_tab() {
 }
 
 function open_tab(id) {
+  const index = shellManager._get_index_by_id(id);
+  if (index < 0) return;
   shellManager.current_shell = id;
   for (const tab of tabs_list.getElementsByClassName('container')[0].getElementsByTagName('DIV')) {
     if (Number(tab.id.split("_")[1]) == id) {

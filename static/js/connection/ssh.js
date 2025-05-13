@@ -66,7 +66,6 @@ class ShellManager {
   shells = [];
   connect_flag = false;
   conn = undefined;
-  stop = true;
   start_connect = false;
 
   constructor(connection_config, config, thame) {
@@ -86,11 +85,11 @@ class ShellManager {
       }
       local_update_status(3);
 
-    }).on('end', function() {
+    }).on('end', () => {
       connected_flag = false;
       this.start_connect = false;
       local_update_status(0);
-    }).on('error', function(err) {
+    }).on('error', (err) => {
       assembly_error(err);
       console.error(err);
       local_update_status(1);
@@ -122,6 +121,7 @@ class ShellManager {
 
   focus(id=undefined) {
     const index = this._get_index_by_id((id !== undefined)? id: this.current_shell);
+    if (index < 0) return;
     this.shells[index].terminal.focus();
   }
 
@@ -203,6 +203,7 @@ class ShellManager {
       }
     });
     div.getElementsByTagName('IMG')[0].onclick = (event) => {
+      event.preventDefault();
       this.close_tab(current_id);
     };
     tabs_list.appendChild(div);
@@ -295,6 +296,7 @@ class ShellManager {
       delete this.shells[index].terminal;
     }
     if (this.shells[index].stream) {
+      this.shells[index].stream.close();
       this.shells[index].stream.end();
       delete this.shells[index].stream;
     }
@@ -309,7 +311,7 @@ class ShellManager {
     this.shells[id].shell = this.conn.shell((err, stream) => {
       if (err) {
         this.close_tab(this.shells[id].id);
-        // this.count_create_shells--;
+        this.count_create_shells--;
         return;
       };
 
@@ -324,18 +326,14 @@ class ShellManager {
       });
 
       const onclose = stream.on('close', () => {
-        if (connected_flag) {
-          if (this.shells.length > 1) {
-            this.close_tab(this.shells[id].id);
-          } else {
-            this.disconnect();
-          }
-        } else {
-          onData_listener.dispose();
-          ondata.close();
-          onclose.close();
-          printOnNewLine(term, `[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_host_terminated}`);
-        }
+        // if (!connected_flag) {
+        //   this.disconnect();
+        //   return;
+        // }
+        onData_listener.dispose();
+        ondata.close();
+        onclose.close();
+        printOnNewLine(term, `[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_host_terminated}`);
       });
 
       if (on_connect !== undefined) {
