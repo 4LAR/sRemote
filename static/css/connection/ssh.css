@@ -65,6 +65,10 @@ div.tabs-list > div.container > div > input {
   width: 100px;
 }
 
+div.tabs-list > div.container > div > input:read-only {
+  pointer-events: none;
+}
+
 div.tabs-list > div.container > div.selected > p,
 div.tabs-list > div.container > div.selected > input {
   color: var(--tabs-selected-font-color);
