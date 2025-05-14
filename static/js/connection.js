@@ -102,6 +102,7 @@ function generate_selector_icons(id="", selected=undefined) {
   const icons = [
     "terminal",
     "server",
+    "git",
     "notebook"
   ];
 
