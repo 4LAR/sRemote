@@ -38,28 +38,6 @@ function assembly_error(err) {
   }
 }
 
-// копирование вставка
-function customKeyEventHandler(e, term) {
-  if (e.type !== "keydown") {
-    return true;
-  }
-  if (e.ctrlKey && e.shiftKey) {
-    const code = e.code;
-    if (code === "KeyV") {
-      navigator.clipboard.readText().then((toPaste) => {
-        term.writeText(toPaste);
-      });
-      return false;
-    } else if (code === "KeyC" || code === "KeyX") {
-      const toCopy = term.getSelection();
-      navigator.clipboard.writeText(toCopy);
-      term.focus();
-      return false;
-    }
-  }
-  return true;
-}
-
 class ShellManager {
   current_shell = 1;
   count_create_shells = 0;
@@ -214,7 +192,7 @@ class ShellManager {
 
     term.loadAddon(this.shells[inserted_id].fit);
     term.loadAddon(new SearchAddon.SearchAddon());
-    term.attachCustomKeyEventHandler((e) => {customKeyEventHandler(e, term)});
+    term.attachCustomKeyEventHandler(mainHotkey);
 
     const terminal_list = document.getElementById('terminal_list');
     var terminal_div = document.createElement("div");
@@ -375,19 +353,30 @@ window.onresize = debounce(fitToscreen, wait_ms);
 
 /*----------------------------------------------------------------------------*/
 
-function ssh_context(data) {
+function terminalCopy() {
   const current_shell = shellManager.get_shell();
+  const toCopy = current_shell.terminal.getSelection();
+  navigator.clipboard.writeText(toCopy);
+  current_shell.terminal.focus();
+}
+
+function terminalPaste() {
+  const current_shell = shellManager.get_shell();
+  navigator.clipboard.readText().then((toPaste) => {
+    current_shell.stream.write(toPaste);
+  });
+}
+
+/*----------------------------------------------------------------------------*/
+
+function ssh_context(data) {
   switch (data) {
     case "Copy": {
-      const toCopy = current_shell.terminal.getSelection();
-      navigator.clipboard.writeText(toCopy);
-      current_shell.terminal.focus();
+      terminalCopy();
       break;
     }
     case "Paste": {
-      navigator.clipboard.readText().then((toPaste) => {
-        current_shell.stream.write(toPaste);
-      });
+      terminalPaste();
       break;
     }
     default:

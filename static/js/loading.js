@@ -1,4 +1,10 @@
 
+// Хранилище для настроек, соединений и тп
+const Store = require('electron-store');
+const store = new Store({
+  name: args.config || 'config'
+});
+
 var tabs_loaded_flag = false;
 var dom_loaded_flag = false;
 

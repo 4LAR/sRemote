@@ -71,6 +71,11 @@ function open_tab(id) {
   shellManager.focus(id);
 }
 
+function openTabIndex(index) {
+  if (index >= shellManager.shells.length) return;
+  open_tab(shellManager.shells[index].id);
+}
+
 shellManager.add_shell(name="main", auto_connect=false);
 
 // function transformScroll(event) {
