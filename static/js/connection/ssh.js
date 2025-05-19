@@ -45,6 +45,7 @@ class ShellManager {
   connect_flag = false;
   conn = undefined;
   start_connect = false;
+  font_size = 15;
 
   constructor(connection_config, config, thame) {
     this.connection_config = connection_config;
@@ -107,6 +108,7 @@ class ShellManager {
     for (const shell of this.shells) {
       if ((id !== undefined)? (shell.id == id): shell.id == this.current_shell) {
         shell.fit.fit();
+        shell.terminal.setOption('fontSize', this.font_size);
         try {
           shell.stream.setWindow(shell.terminal.rows, shell.terminal.cols);
         } catch (e) {
@@ -189,6 +191,7 @@ class ShellManager {
     //
     if (this.thame !== undefined)
       term.setOption('theme', light_thame);
+      term.setOption('fontSize', this.font_size);
 
     term.loadAddon(this.shells[inserted_id].fit);
     term.loadAddon(new SearchAddon.SearchAddon());
@@ -350,6 +353,19 @@ function reconnect() {
 }
 
 window.onresize = debounce(fitToscreen, wait_ms);
+
+/*----------------------------------------------------------------------------*/
+
+// изменение размера шрифта при использовании CTRL + WHEEL
+document.addEventListener('wheel', (event) => {
+  if (event.ctrlKey && current_menu == "terminal") {
+    const delta = event.deltaY > 0 ? -1 : 1;
+    shellManager.font_size += delta;
+    shellManager.font_size = Math.max(8, Math.min(24, shellManager.font_size));
+    fitToscreen();
+    show_font_alert(shellManager.font_size);
+  }
+});
 
 /*----------------------------------------------------------------------------*/
 

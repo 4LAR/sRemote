@@ -35,7 +35,7 @@ class HotkeyStore {
   keydown(evt, parentEl=undefined) {
     if (!evt) evt = event;
     if (evt.type !== "keydown") return true;
-    console.log(evt.ctrlKey, evt.altKey, evt.shiftKey, evt.code, parentEl);
+    // console.log(evt.ctrlKey, evt.altKey, evt.shiftKey, evt.code, parentEl);
     let strKeys = "";
 
     if (evt.ctrlKey) strKeys += "ctrl+";
@@ -47,7 +47,7 @@ class HotkeyStore {
     if (evt.code.indexOf("Digit") != -1) strKeys += evt.code;
     if (evt.code.indexOf("Arrow") != -1) strKeys += evt.code;
     if (evt.code[0] == "F") strKeys += evt.code;
-    console.log(strKeys);
+
     const operation = this._get_hotkey(strKeys);
     if (!operation) return true;
     evt.preventDefault();

@@ -40,6 +40,15 @@ open_menu("terminal");
 
 /*----------------------------------------------------------------------------*/
 
+var debounce_font_alert = debounce(close_font_alert, 500);
+function show_font_alert(size) {
+  openModal("font_size");
+  document.getElementById("font_size").innerHTML = `font-size: ${size}px`;
+  debounce_font_alert();
+}
+
+/*----------------------------------------------------------------------------*/
+
 const tabs_list = document.getElementById('tabs_list');
 const terminal_list = document.getElementById('terminal_list');
 
