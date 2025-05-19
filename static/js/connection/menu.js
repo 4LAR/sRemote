@@ -76,6 +76,22 @@ function openTabIndex(index) {
   open_tab(shellManager.shells[index].id);
 }
 
+function openLeftTab() {
+  const index = shellManager._get_index_by_id(shellManager.current_shell);
+  if (index <= 0) return;
+  open_tab(shellManager.shells[index - 1].id);
+}
+
+function openRightTab() {
+  const index = shellManager._get_index_by_id(shellManager.current_shell);
+  if (index >= shellManager.shells.length - 1) return;
+  open_tab(shellManager.shells[index + 1].id);
+}
+
+function closeCurrentTab() {
+  shellManager.close_tab(shellManager.current_shell);
+}
+
 shellManager.add_shell(name="main", auto_connect=false);
 
 // function transformScroll(event) {
