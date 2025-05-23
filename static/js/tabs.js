@@ -246,9 +246,11 @@ function append_item(data, group_id, item_id) {
     ""
   );
   //
-  document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.update_status = update_status;
-  document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.localization_dict = localization_dict;
-  document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.addEventListener('keydown', customKeyEventHandler);
+  const iframe = document.getElementById(`iframe_${group_id}_${item_id}`);
+  iframe.contentWindow.update_status = update_status;
+  iframe.contentWindow.localization_dict = localization_dict;
+  iframe.contentWindow.addEventListener('keydown', (e) => hotkeyStore.keydown(e, iframe));
+  iframe.contentWindow.mainHotkey = (e) => hotkeyStore.keydown(e, iframe);
 }
 
 //
@@ -393,23 +395,6 @@ function left_menu() {
     document.getElementById("dropdown_left_menu").style.transform = "rotate(-90deg)";
   }
 }
-
-// обработка горячих клавиш
-function customKeyEventHandler(e) {
-  if (e.type !== "keydown") {
-    return true;
-  }
-  if (e.ctrlKey && e.shiftKey) {
-    const code = e.code;
-    if (code === "KeyB") {
-      left_menu();
-      return false;
-    }
-  }
-  return true;
-}
-
-window.addEventListener('keydown', customKeyEventHandler);
 
 /*----------------------------------------------------------------------------*/
 var last_drag_connection_id = undefined;

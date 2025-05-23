@@ -38,28 +38,6 @@ function assembly_error(err) {
   }
 }
 
-// копирование вставка
-function customKeyEventHandler(e, term) {
-  if (e.type !== "keydown") {
-    return true;
-  }
-  if (e.ctrlKey && e.shiftKey) {
-    const code = e.code;
-    if (code === "KeyV") {
-      navigator.clipboard.readText().then((toPaste) => {
-        term.writeText(toPaste);
-      });
-      return false;
-    } else if (code === "KeyC" || code === "KeyX") {
-      const toCopy = term.getSelection();
-      navigator.clipboard.writeText(toCopy);
-      term.focus();
-      return false;
-    }
-  }
-  return true;
-}
-
 class ShellManager {
   current_shell = 1;
   count_create_shells = 0;
@@ -67,6 +45,7 @@ class ShellManager {
   connect_flag = false;
   conn = undefined;
   start_connect = false;
+  font_size = 15;
 
   constructor(connection_config, config, thame) {
     this.connection_config = connection_config;
@@ -129,6 +108,7 @@ class ShellManager {
     for (const shell of this.shells) {
       if ((id !== undefined)? (shell.id == id): shell.id == this.current_shell) {
         shell.fit.fit();
+        shell.terminal.setOption('fontSize', this.font_size);
         try {
           shell.stream.setWindow(shell.terminal.rows, shell.terminal.cols);
         } catch (e) {
@@ -211,10 +191,11 @@ class ShellManager {
     //
     if (this.thame !== undefined)
       term.setOption('theme', light_thame);
+      term.setOption('fontSize', this.font_size);
 
     term.loadAddon(this.shells[inserted_id].fit);
     term.loadAddon(new SearchAddon.SearchAddon());
-    term.attachCustomKeyEventHandler((e) => {customKeyEventHandler(e, term)});
+    term.attachCustomKeyEventHandler(mainHotkey);
 
     const terminal_list = document.getElementById('terminal_list');
     var terminal_div = document.createElement("div");
@@ -375,19 +356,43 @@ window.onresize = debounce(fitToscreen, wait_ms);
 
 /*----------------------------------------------------------------------------*/
 
-function ssh_context(data) {
+// изменение размера шрифта при использовании CTRL + WHEEL
+document.addEventListener('wheel', (event) => {
+  if (event.ctrlKey && current_menu == "terminal") {
+    const delta = event.deltaY > 0 ? -1 : 1;
+    shellManager.font_size += delta;
+    shellManager.font_size = Math.max(8, Math.min(24, shellManager.font_size));
+    fitToscreen();
+    show_font_alert(shellManager.font_size);
+  }
+});
+
+/*----------------------------------------------------------------------------*/
+
+function terminalCopy() {
   const current_shell = shellManager.get_shell();
+  const toCopy = current_shell.terminal.getSelection();
+  navigator.clipboard.writeText(toCopy);
+  current_shell.terminal.focus();
+}
+
+function terminalPaste() {
+  const current_shell = shellManager.get_shell();
+  navigator.clipboard.readText().then((toPaste) => {
+    current_shell.stream.write(toPaste);
+  });
+}
+
+/*----------------------------------------------------------------------------*/
+
+function ssh_context(data) {
   switch (data) {
     case "Copy": {
-      const toCopy = current_shell.terminal.getSelection();
-      navigator.clipboard.writeText(toCopy);
-      current_shell.terminal.focus();
+      terminalCopy();
       break;
     }
     case "Paste": {
-      navigator.clipboard.readText().then((toPaste) => {
-        current_shell.stream.write(toPaste);
-      });
+      terminalPaste();
       break;
     }
     default:

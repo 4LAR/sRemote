@@ -1,11 +1,5 @@
 const crypto = require('crypto');
 
-// Хранилище для настроек, соединений и тп
-const Store = require('electron-store');
-const store = new Store({
-  name: args.config || 'config'
-});
-
 function textEncrypt(password, text) {
   const algorithm = 'aes-256-ctr';
   const key = Buffer.concat([Buffer.from(password), Buffer.alloc(32)], 32);

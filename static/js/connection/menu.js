@@ -40,6 +40,15 @@ open_menu("terminal");
 
 /*----------------------------------------------------------------------------*/
 
+var debounce_font_alert = debounce(close_font_alert, 500);
+function show_font_alert(size) {
+  openModal("font_size");
+  document.getElementById("font_size").innerHTML = `font-size: ${size}px`;
+  debounce_font_alert();
+}
+
+/*----------------------------------------------------------------------------*/
+
 const tabs_list = document.getElementById('tabs_list');
 const terminal_list = document.getElementById('terminal_list');
 
@@ -69,6 +78,27 @@ function open_tab(id) {
   }
   shellManager.fit(id);
   shellManager.focus(id);
+}
+
+function openTabIndex(index) {
+  if (index >= shellManager.shells.length) return;
+  open_tab(shellManager.shells[index].id);
+}
+
+function openLeftTab() {
+  const index = shellManager._get_index_by_id(shellManager.current_shell);
+  if (index <= 0) return;
+  open_tab(shellManager.shells[index - 1].id);
+}
+
+function openRightTab() {
+  const index = shellManager._get_index_by_id(shellManager.current_shell);
+  if (index >= shellManager.shells.length - 1) return;
+  open_tab(shellManager.shells[index + 1].id);
+}
+
+function closeCurrentTab() {
+  shellManager.close_tab(shellManager.current_shell);
 }
 
 shellManager.add_shell(name="main", auto_connect=false);
