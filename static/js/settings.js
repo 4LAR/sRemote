@@ -96,6 +96,12 @@ function alert_settings() {
           <img src="./static/img/settings/macros.svg" alt="">
           <p>Macros</p>
         </li>
+        <li id="settings_menu_extensions" onclick="change_settings_page('extensions')">
+          <div></div>
+          <div class="selector"></div>
+          <img src="./static/img/settings/extensions.svg" alt="">
+          <p>Extensions</p>
+        </li>
       </ul>
       <div id="settings_page_general">
         <p></a>
@@ -221,6 +227,11 @@ function alert_settings() {
 
       </div>
 
+      <div id="settings_page_extensions">
+
+
+      </div>
+
     </div>
     <div class="settings_buttons_bar">
       <div id="settings_save_button" class="not_active_button save" onclick="save_settings()">
@@ -254,7 +265,8 @@ const settings_pages = [
   "general",
   "account",
   "connection",
-  "macros"
+  "macros",
+  "extensions"
 ];
 
 function change_settings_page(page_name) {
