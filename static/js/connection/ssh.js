@@ -108,7 +108,7 @@ class ShellManager {
     for (const shell of this.shells) {
       if ((id !== undefined)? (shell.id == id): shell.id == this.current_shell) {
         shell.fit.fit();
-        shell.terminal.setOption('fontSize', this.font_size);
+        shell.terminal.options.fontSize = this.font_size;
         try {
           shell.stream.setWindow(shell.terminal.rows, shell.terminal.cols);
         } catch (e) {
@@ -190,11 +190,11 @@ class ShellManager {
 
     //
     if (this.thame !== undefined)
-      term.setOption('theme', light_thame);
-      term.setOption('fontSize', this.font_size);
+      term.options.theme = light_thame;
+    term.options.fontSize = this.font_size;
 
     term.loadAddon(this.shells[inserted_id].fit);
-    term.loadAddon(new SearchAddon.SearchAddon());
+    // term.loadAddon(new SearchAddon.SearchAddon());
     term.attachCustomKeyEventHandler(mainHotkey);
 
     const terminal_list = document.getElementById('terminal_list');

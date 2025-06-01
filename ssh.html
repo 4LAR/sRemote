@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" href = "./static/css/libs/xterm.css"/>
+    <link rel="stylesheet" href="node_modules/xterm/css/xterm.css" />
     <link rel="stylesheet" href = "./static/css/connection/ssh.css"/>
     <link rel="stylesheet" href = "./static/css/connection/sftp.css"/>
     <link rel="stylesheet" href = "./static/css/connection/menu.css"/>
@@ -80,10 +80,12 @@
       </div>
     </div> -->
   </body>
-  <script type="text/javascript" src="./static/js/libs/xterm.js"></script>
+  <!-- <script type="text/javascript" src="./static/js/libs/xterm.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-fit.js"></script>
   <script type="text/javascript" src="./static/js/libs/xterm-addon-search.js"></script>
-  <script type="text/javascript" src="./static/js/libs/xterm-addon-web-links.js"></script>
+  <script type="text/javascript" src="./static/js/libs/xterm-addon-web-links.js"></script> -->
+  <script src="node_modules/xterm/lib/xterm.js"></script>
+  <script src="node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
   <script src="node_modules/sortablejs/Sortable.min.js"></script>
   <script type="text/javascript">
     window.require = parent.window.require
