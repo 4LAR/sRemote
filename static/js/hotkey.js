@@ -19,7 +19,7 @@ class HotkeyStore {
     		"alt+Digit8": "connection:openTabIndex(7)",
     		"alt+Digit9": "connection:openTabIndex(8)",
     		"alt+Digit0": "connection:openTabIndex(9)",
-    		"ctrl+shift+KeyN": "connection:add_tab()",
+        "ctrl+shift+KeyT": "connection:add_tab()",
     		"ctrl+shift+KeyW": "connection:closeCurrentTab()",
     		"ctrl+alt+ArrowLeft": "connection:openLeftTab()",
     		"ctrl+alt+ArrowRight": "connection:openRightTab()"
