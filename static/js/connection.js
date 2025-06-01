@@ -176,6 +176,10 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
     ${(edit_flag)? `<div class="button predelete" onclick="alert_delete_connection(${group_id}, ${item_id})">
       <p>${localization_dict.delete}</p>
     </div>`: ""}
+
+    <div class="other-settings">
+
+    </div>
   `, "alert")
   document.getElementById("connectioname").focus()
   if (edit_flag) {
