@@ -15,8 +15,8 @@ div.tabs-list {
   position: absolute;
   top: 0px;
   left: 0px;
-  height: 25px;
-  width: calc(100% - 19px);
+  height: 26px;
+  width: calc(100% - 24px);
   /* border-bottom: 1px solid var(--border-color); */
   border-bottom: 1px solid var(--terminal-bg);
   overflow-x: scroll;
@@ -38,7 +38,7 @@ div.tabs-list > div.container > div {
   white-space: nowrap;
   padding-left: 5px;
   padding-right: 19px;
-  height: 25px;
+  height: 26px;
   box-sizing: border-box;
   border-bottom: 1px solid var(--border-color);
 }
@@ -56,7 +56,7 @@ div.tabs-list > div.container > div > p {
 div.tabs-list > div.container > div > p,
 div.tabs-list > div.container > div > input {
   padding: 0px;
-  padding-top: 4px;
+  padding-top: 5px;
   height: 16px;
   border: none;
   outline: none;
@@ -78,7 +78,7 @@ div.tabs-list > div.container > div.selected > input {
 
 div.tabs-list > div.container > div > img {
   position: absolute;
-  top: 2px;
+  top: 3px;
   right: 2px;
   height: 20px;
   transform: rotate(45deg);
@@ -109,8 +109,8 @@ div.tabs-list > div.add {
   top: 31px;
   right: 0px;
   border: none;
-  width: 25px;
-  height: 25px;
+  width: 26px;
+  height: 26px;
   padding: 0px;
   box-sizing: border-box;
   cursor: pointer;
@@ -134,10 +134,10 @@ div.tabs-list > div.add:hover > img {
 /* -------------------------------------------------------------------------- */
 
 div.terminal-list {
-  top: 25px;
+  top: 26px;
   left: 0px;
   width: 100%;
-  height: calc(100% - 25px);
+  height: calc(100% - 26px);
   position: absolute;
 }
 
