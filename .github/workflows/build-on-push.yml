@@ -23,19 +23,8 @@ jobs:
     - name: Install dependencies
       run: npm i
 
-    - name: Get current date
-      id: date
-      run: echo "CURRENT_DATE=$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
-
     - name: Build dev version
-      shell: bash
-      run: |
-        if [ "${{ runner.os }}" = "Windows" ]; then
-          versionSuffix=$(date -u +"%Y%m%d-%H%M")
-          npm run electron-builder -- --config.extraMetadata.version=$npm_package_version-$versionSuffix
-        else
-          npm run dist:dev
-        fi
+      run: npm run dist:dev
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4

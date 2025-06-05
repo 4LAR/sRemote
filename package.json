@@ -29,7 +29,7 @@
     "start": "electron --no-sandbox .",
     "dev": "electron --no-sandbox . --config config_dev",
     "dist": "electron-builder",
-    "dist:dev": "electron-builder --config.extraMetadata.version=$npm_package_version-$(date +\"%Y%m%d-%H%M\")"
+    "dist:dev": "node build.js"
   },
   "build": {
     "asar": true,
