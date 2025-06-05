@@ -1,0 +1,56 @@
+name: Build on Push to Main
+
+on:
+  push:
+    branches: [ main, master ] # Активируется при пуше в основную ветку
+  workflow_dispatch: # Позволяет запускать вручную
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Get current date
+      id: date
+      run: echo "CURRENT_DATE=$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
+
+    - name: Build dev version
+      run: npm run dist:dev
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: sRemote-dev-${{ matrix.os }}-${{ env.CURRENT_DATE }}
+        path: dist/
+
+    - name: Create GitHub Release
+      if: matrix.os == 'ubuntu-latest' # Создаем релиз только один раз
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: dev-${{ env.CURRENT_DATE }}
+        name: "sRemote Dev Build (${{ env.CURRENT_DATE }})"
+        body: "Automatic development build"
+        prerelease: true
+        draft: false
+        files: |
+          dist/*.deb
+          dist/*.snap
+          dist/*.exe
+          dist/*.dmg
+          dist/*.zip
+          dist/*.AppImage
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
