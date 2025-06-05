@@ -28,10 +28,11 @@ jobs:
       run: echo "CURRENT_DATE=$(date +'%Y%m%d-%H%M')" >> $GITHUB_ENV
 
     - name: Build dev version
+      shell: bash
       run: |
-        if [[ "${{ runner.os }}" == "Windows" ]]; then
-          $versionSuffix = Get-Date -Format "yyyyMMdd-HHmm"
-          npm run electron-builder -- --config.extraMetadata.version=$env:npm_package_version-$versionSuffix
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          versionSuffix=$(date -u +"%Y%m%d-%H%M")
+          npm run electron-builder -- --config.extraMetadata.version=$npm_package_version-$versionSuffix
         else
           npm run dist:dev
         fi
