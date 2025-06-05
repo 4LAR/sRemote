@@ -15,7 +15,7 @@
 }
 
 .alert_group {
-  position: absolute;
+  position: fixed;
   display: none;
   left: 50%;
   top: 50%;

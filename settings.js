@@ -24,11 +24,14 @@ class Settings {
           "lang": "en",
           "autoStart": false,
           "keepBackground": false,
-          "thame": "dark", // light, dark, system
           "saveWindowState": true,
-          "defaultTitleBar": false,
           "experimental": false,
           "devTools": false
+        },
+        "Appearance": {
+          "thame": "dark", // light, dark, system
+          "defaultTitleBar": false,
+          "animationWindow": true
         },
         "Connections": {
           "autoConnect": false,

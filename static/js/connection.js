@@ -323,19 +323,20 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
 
 //
 function alert_delete_connection(group_id, item_id, event, return_flag=true) {
-  var index = get_indexes_by_id(group_id, item_id);
-  open_alert(`
-    <p class="name_delete">${localization_dict.delete_connection}?</p>
-    <p class="delete_info">${localization_dict.delete_info_pre} '${TABS[index[0]].items[index[1]].name}' ${localization_dict.delete_info_last}</p>
-    <div class="button delete" onclick="delete_connection(${group_id}, ${item_id})">
-      <p>${localization_dict.delete_forever}</p>
-    </div>
-  `, "delete_alert", function() {
-    if (return_flag) alert_create_edit_connection(group_id, item_id, undefined, true);
-  });
-  if (event) {
-    event.stopPropagation();
-  }
+  const func = function() {
+    var index = get_indexes_by_id(group_id, item_id);
+    open_alert(`
+      <p class="name_delete">${localization_dict.delete_connection}?</p>
+      <p class="delete_info">${localization_dict.delete_info_pre} '${TABS[index[0]].items[index[1]].name}' ${localization_dict.delete_info_last}</p>
+      <div class="button delete" onclick="delete_connection(${group_id}, ${item_id})">
+        <p>${localization_dict.delete_forever}</p>
+      </div>
+    `, "delete_alert", function() {
+      if (return_flag) alert_create_edit_connection(group_id, item_id, undefined, true);
+    });
+  };
+  if (return_flag) close_alert(true, func);
+  if (event) event.stopPropagation();
 }
 
 //
@@ -359,7 +360,6 @@ function delete_connection(group_id, item_id) {
 
 function alert_edit_create_group(event=undefined, edit_flag=false) {
   const group_id = (event)? get_id_group_from_event(event): 0;
-  console.log(group_id);
   open_alert(`
     <p class="name">${(edit_flag)? localization_dict.edit_group_title: localization_dict.create_group_title}</p>
     <hr>
@@ -430,19 +430,27 @@ function save_data_group(group_id, edit_flag=false) {
 /*----------------------------------------------------------------------------*/
 
 function alert_delete_group(group_id, event) {
-  var index = get_index_group_by_id(group_id);
-  open_alert(`
-    <p class="name_delete">${localization_dict.delete_group}?</p>
-    <p class="delete_info">${localization_dict.delete_info_group_pre} '${TABS[index].name}' ${localization_dict.delete_info_group_last}</p>
-    <div class="button delete" onclick="delete_group(${group_id})">
-      <p>${localization_dict.delete_forever}</p>
-    </div>
-  `, "delete_alert", function() {
-    alert_edit_create_group(group_id, undefined, true);
-  });
-  if (event) {
-    event.stopPropagation();
-  }
+  const func = function() {
+    var index = get_index_group_by_id(group_id);
+    open_alert(`
+      <p class="name_delete">${localization_dict.delete_group}?</p>
+      <p class="delete_info">${localization_dict.delete_info_group_pre} '${TABS[index].name}' ${localization_dict.delete_info_group_last}</p>
+      <div class="button delete" onclick="delete_group(${group_id})">
+        <p>${localization_dict.delete_forever}</p>
+      </div>
+    `, "delete_alert", function() {
+      alert_edit_create_group({
+        target: {
+          parentElement: {
+            id: `_${group_id}`
+          }
+        },
+        stopPropagation: function() {}
+      }, true);
+    });
+  };
+  close_alert(true, func);
+  if (event) event.stopPropagation();
 }
 
 function delete_group(group_id) {

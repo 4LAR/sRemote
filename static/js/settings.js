@@ -33,12 +33,12 @@ ipcRenderer.on('get-config-response', (event, response) => {
   SETTINGS_DICT = response;
 
   if (first_get_config_flag) {
-    set_thame(SETTINGS_DICT["General"]["thame"]);
+    set_thame(SETTINGS_DICT["Appearance"]["thame"]);
     read_localization(SETTINGS_DICT["General"]["lang"]);
     read();
     first_get_config_flag = false;
 
-    if ((os.platform() !== "win32") || (SETTINGS_DICT["General"]["defaultTitleBar"])) {
+    if ((os.platform() !== "win32") || (SETTINGS_DICT["Appearance"]["defaultTitleBar"])) {
       root.style.setProperty('--titleBar-height', '0px');
       document.getElementById('app_name').style.display = "none";
     } else {
@@ -70,41 +70,46 @@ function alert_settings() {
   open_alert(`
     <p class="name_settings">${localization_dict.settings_title}</p>
     <hr class="hr_settings">
+    <ul class="settings_list">
+      <li id="settings_menu_general" onclick="change_settings_page('general')">
+        <div></div>
+        <div class="selector"></div>
+        <img src="./static/img/settings/general.svg" alt="">
+        <p>${localization_dict.settings_menu_general}</p>
+      </li>
+      <li id="settings_menu_appearance" onclick="change_settings_page('appearance')">
+        <div></div>
+        <div class="selector"></div>
+        <img src="./static/img/settings/appearance.svg" alt="">
+        <p>${localization_dict.settings_menu_appearance}</p>
+      </li>
+      <li id="settings_menu_account" onclick="change_settings_page('account')">
+        <div></div>
+        <div class="selector"></div>
+        <img src="./static/img/settings/account.svg" alt="">
+        <p>${localization_dict.settings_menu_account}</p>
+      </li>
+      <li id="settings_menu_connection" onclick="change_settings_page('connection')">
+        <div></div>
+        <div class="selector"></div>
+        <img src="./static/img/settings/connection.svg" alt="">
+        <p>${localization_dict.settings_menu_connection}</p>
+      </li>
+      <li id="settings_menu_macros" onclick="change_settings_page('macros')">
+        <div></div>
+        <div class="selector"></div>
+        <img src="./static/img/settings/macros.svg" alt="">
+        <p>Macros</p>
+      </li>
+      <li id="settings_menu_extensions" onclick="change_settings_page('extensions')">
+        <div></div>
+        <div class="selector"></div>
+        <img src="./static/img/settings/extensions.svg" alt="">
+        <p>Extensions</p>
+      </li>
+    </ul>
     <div class="settings_body scroll_style block_select" onchange="settings_change(event)">
-      <ul class="settings_list">
-        <li id="settings_menu_general" onclick="change_settings_page('general')">
-          <div></div>
-          <div class="selector"></div>
-          <img src="./static/img/settings/general.svg" alt="">
-          <p>${localization_dict.settings_menu_general}</p>
-        </li>
-        <li id="settings_menu_account" onclick="change_settings_page('account')">
-          <div></div>
-          <div class="selector"></div>
-          <img src="./static/img/settings/account.svg" alt="">
-          <p>${localization_dict.settings_menu_account}</p>
-        </li>
-        <li id="settings_menu_connection" onclick="change_settings_page('connection')">
-          <div></div>
-          <div class="selector"></div>
-          <img src="./static/img/settings/connection.svg" alt="">
-          <p>${localization_dict.settings_menu_connection}</p>
-        </li>
-        <li id="settings_menu_macros" onclick="change_settings_page('macros')">
-          <div></div>
-          <div class="selector"></div>
-          <img src="./static/img/settings/macros.svg" alt="">
-          <p>Macros</p>
-        </li>
-        <li id="settings_menu_extensions" onclick="change_settings_page('extensions')">
-          <div></div>
-          <div class="selector"></div>
-          <img src="./static/img/settings/extensions.svg" alt="">
-          <p>Extensions</p>
-        </li>
-      </ul>
-      <div id="settings_page_general">
-        <p></a>
+      <div class="settings_page" id="settings_page_general">
         <div class="selector">
           <label>${localization_dict.settings_General_lang}:</label>
           ${select_generator({"English": "en", "Русский": "ru"}, "settings_General_lang", "input_style", SETTINGS_DICT["General"]["lang"])}
@@ -125,23 +130,32 @@ function alert_settings() {
           <label for="settings_General_saveWindowState">${localization_dict.settings_General_saveWindowState}</label>
         </div>
 
-        <p class="info_settings">${localization_dict.settings_General_thame}</p>
+      </div>
+
+      <div class="settings_page" id="settings_page_appearance">
+        <p class="info_settings">${localization_dict.settings_Appearance_thame}</p>
         <div class="settings_one_line">
-          <div class="checkbox-round" for="settings_General_thame_light">
-            <input type="radio" id="settings_General_thame_light" name="thame">
-            <label for="settings_General_thame_light">${localization_dict.settings_General_thame_light}</label>
+          <div class="checkbox-round" for="settings_Appearance_thame_light">
+            <input type="radio" id="settings_Appearance_thame_light" name="thame">
+            <label for="settings_Appearance_thame_light">${localization_dict.settings_Appearance_thame_light}</label>
           </div>
-          <div class="checkbox-round" for="settings_General_thame_dark">
-            <input type="radio" id="settings_General_thame_dark" name="thame">
-            <label for="settings_General_thame_dark">${localization_dict.settings_General_thame_dark}</label>
+          <div class="checkbox-round" for="settings_Appearance_thame_dark">
+            <input type="radio" id="settings_Appearance_thame_dark" name="thame">
+            <label for="settings_Appearance_thame_dark">${localization_dict.settings_Appearance_thame_dark}</label>
           </div>
         </div>
 
-        <div class="checkbox" for="settings_General_defaultTitleBar">
-          <input type="checkbox" id="settings_General_defaultTitleBar">
-          <label for="settings_General_defaultTitleBar">${localization_dict.settings_General_defaultTitleBar}</label>
+        <div class="checkbox" for="settings_Appearance_defaultTitleBar">
+          <input type="checkbox" id="settings_Appearance_defaultTitleBar">
+          <label for="settings_Appearance_defaultTitleBar">${localization_dict.settings_Appearance_defaultTitleBar}</label>
+        </div>
+
+        <div class="checkbox" for="settings_Appearance_animationWindow">
+          <input type="checkbox" id="settings_Appearance_animationWindow">
+          <label for="settings_Appearance_animationWindow">${localization_dict.settings_Appearance_animationWindow}</label>
         </div>
       </div>
+
       <div id="settings_page_account">
         <div id="settings_account_login_container">
           <div class="user_icon">
@@ -177,8 +191,7 @@ function alert_settings() {
         </ul>
 
       </div>
-      <div id="settings_page_connection">
-        <p></a>
+      <div class="settings_page" id="settings_page_connection">
         <div class="checkbox" for="settings_Connections_autoConnect">
           <input type="checkbox" id="settings_Connections_autoConnect">
           <label for="settings_Connections_autoConnect">${localization_dict.settings_Connections_autoConnect}</label>
@@ -243,10 +256,11 @@ function alert_settings() {
   document.getElementById("settings_General_autoStart").checked = SETTINGS_DICT["General"]["autoStart"];
   document.getElementById("settings_General_keepBackground").checked = SETTINGS_DICT["General"]["keepBackground"];
   document.getElementById("settings_General_saveWindowState").checked = SETTINGS_DICT["General"]["saveWindowState"];
-  document.getElementById("settings_General_thame_light").checked = SETTINGS_DICT["General"]["thame"] == "light";
-  document.getElementById("settings_General_thame_dark").checked = SETTINGS_DICT["General"]["thame"] == "dark";
+  document.getElementById("settings_Appearance_thame_light").checked = SETTINGS_DICT["Appearance"]["thame"] == "light";
+  document.getElementById("settings_Appearance_thame_dark").checked = SETTINGS_DICT["Appearance"]["thame"] == "dark";
   // document.getElementById("settings_General_thame_system").checked = SETTINGS_DICT["General"]["thame"] == "system";
-  document.getElementById("settings_General_defaultTitleBar").checked = SETTINGS_DICT["General"]["defaultTitleBar"];
+  document.getElementById("settings_Appearance_defaultTitleBar").checked = SETTINGS_DICT["Appearance"]["defaultTitleBar"];
+  document.getElementById("settings_Appearance_animationWindow").checked = SETTINGS_DICT["Appearance"]["animationWindow"];
 
   document.getElementById("settings_Connections_autoConnect").checked = SETTINGS_DICT["Connections"]["autoConnect"];
   document.getElementById("settings_Connections_readyTimeout").value = SETTINGS_DICT["Connections"]["readyTimeout"];
@@ -263,6 +277,7 @@ get_config();
 
 const settings_pages = [
   "general",
+  "appearance",
   "account",
   "connection",
   "macros",

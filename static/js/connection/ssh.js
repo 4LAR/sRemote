@@ -327,7 +327,7 @@ class ShellManager {
 shellManager = new ShellManager(
   connection_config = connection_config,
   config            = config,
-  thame             = (config.General.thame == 'light')? light_thame: undefined
+  thame             = (config.Appearance.thame == 'light')? light_thame: undefined
 );
 
 // подгон размера терминала под окно

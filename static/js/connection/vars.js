@@ -36,10 +36,7 @@ const light_thame = {
   foreground: "#000000"
 }
 
-document.documentElement.setAttribute('data-theme', config.General.thame);
-if (config.General.thame == 'light') {
-  term.setOption('theme', light_thame);
-}
+document.documentElement.setAttribute('data-theme', config.Appearance.thame);
 
 /*----------------------------------------------------------------------------*/
 
