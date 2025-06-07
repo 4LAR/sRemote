@@ -177,8 +177,19 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
       <p>${localization_dict.delete}</p>
     </div>`: ""}
 
-    <div class="other-settings">
-
+    <div class="other-settings block_select">
+      <div id="connection_menu_general" onclick="">
+        <div></div>
+        <div class="selector"></div>
+        <img src="./static/img/settings/general.svg" alt="">
+        <p>General</p>
+      </div>
+      <div id="connection_menu_general" onclick="">
+        <div></div>
+        <div class="selector"></div>
+        <img src="./static/img/settings/general.svg" alt="">
+        <p>Terminal</p>
+      </div>
     </div>
   `, "alert")
   document.getElementById("connectioname").focus()

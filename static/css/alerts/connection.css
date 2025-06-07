@@ -308,7 +308,7 @@
 
 /* -------------------------------------------------------------------------- */
 
-.alert_body .other-settings {
+.alert_body div.other-settings {
   position: absolute;
   right: 100%;
   bottom: -1px;
@@ -318,4 +318,65 @@
   background-color: var(--alert-bg-color);
   border: 1px solid var(--alert-border-color);
   border-radius: 5px 0px 0px 5px;
+}
+
+.alert_body div.other-settings > div:first-child {
+  margin-top: 4px;
+}
+
+.alert_body div.other-settings > div {
+  position: relative;
+  width: 200px;
+  height: 40px;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  margin-bottom: 4px;
+}
+
+.alert_body div.other-settings > div > div {
+  position: absolute;
+  width: calc(100% - 6px);
+  height: 100%;
+  opacity: 0;
+  background-color: var(--alert-font-color);
+  /* transition: .1s all; */
+  border-radius: 5px;
+}
+
+.alert_body div.other-settings > div:hover > div {
+  opacity: .08;
+}
+
+.alert_body div.other-settings > div.selected > div {
+  background-color: var(--select-color);
+  opacity: .2;
+  border-radius: 5px;
+}
+
+.alert_body div.other-settings > div > div.selector {
+  width: 3px;
+  background-color: transparent;
+  border-radius: 5px 0 0 5px;
+}
+
+.alert_body div.other-settings > div.selected > div.selector {
+  opacity: 0;
+  background-color: var(--select-color);
+}
+
+.alert_body div.other-settings > div > p {
+  position: absolute;
+  left: 60px;
+  top: 10px;
+  margin: 0px;
+  /* font-size: 12px; */
+  color: var(--alert-font-color);
+}
+
+.alert_body div.other-settings > div > img {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  width: 20px;
+  filter: invert(var(--invert-buttons));
 }

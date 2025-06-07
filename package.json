@@ -54,9 +54,6 @@
       }
     ],
     "appId": "sRemote",
-    "extraMetadata": {
-      "name": "sRemote_nightly"
-    },
     "win": {
       "target": [
         "nsis",

@@ -70,7 +70,7 @@ function alert_settings() {
   open_alert(`
     <p class="name_settings">${localization_dict.settings_title}</p>
     <hr class="hr_settings">
-    <ul class="settings_list">
+    <ul class="settings_list block_select">
       <li id="settings_menu_general" onclick="change_settings_page('general')">
         <div></div>
         <div class="selector"></div>
@@ -133,16 +133,30 @@ function alert_settings() {
       </div>
 
       <div class="settings_page" id="settings_page_appearance">
-        <p class="info_settings">${localization_dict.settings_Appearance_thame}</p>
-        <div class="settings_one_line">
-          <div class="checkbox-round" for="settings_Appearance_thame_light">
+        <p class="settings_h">${localization_dict.settings_Appearance_thame}</p>
+
+        <div class="settings_grid block_select">
+          <label for="settings_Appearance_thame_light" class="checkbox-round-image">
+            <img class="disable-drag" src="./static/img/settings/thame/light-thame.svg" alt="">
+            <div>
+              <p>${localization_dict.settings_Appearance_thame_light}</p>
+            </div>
             <input type="radio" id="settings_Appearance_thame_light" name="thame">
-            <label for="settings_Appearance_thame_light">${localization_dict.settings_Appearance_thame_light}</label>
-          </div>
-          <div class="checkbox-round" for="settings_Appearance_thame_dark">
+          </label>
+          <label for="settings_Appearance_thame_dark" class="checkbox-round-image">
+            <img class="disable-drag" src="./static/img/settings/thame/dark-thame.svg" alt="">
+            <div>
+              <p>${localization_dict.settings_Appearance_thame_dark}</p>
+            </div>
             <input type="radio" id="settings_Appearance_thame_dark" name="thame">
-            <label for="settings_Appearance_thame_dark">${localization_dict.settings_Appearance_thame_dark}</label>
-          </div>
+          </label>
+          <label for="settings_Appearance_thame_system" class="checkbox-round-image">
+            <img class="disable-drag" src="./static/img/settings/thame/system-thame.svg" alt="">
+            <div>
+              <p>${localization_dict.settings_Appearance_thame_system}</p>
+            </div>
+            <input type="radio" id="settings_Appearance_thame_system" name="thame">
+          </label>
         </div>
 
         <div class="checkbox" for="settings_Appearance_defaultTitleBar">
@@ -258,6 +272,7 @@ function alert_settings() {
   document.getElementById("settings_General_saveWindowState").checked = SETTINGS_DICT["General"]["saveWindowState"];
   document.getElementById("settings_Appearance_thame_light").checked = SETTINGS_DICT["Appearance"]["thame"] == "light";
   document.getElementById("settings_Appearance_thame_dark").checked = SETTINGS_DICT["Appearance"]["thame"] == "dark";
+  document.getElementById("settings_Appearance_thame_system").checked = SETTINGS_DICT["Appearance"]["thame"] == "system";
   // document.getElementById("settings_General_thame_system").checked = SETTINGS_DICT["General"]["thame"] == "system";
   document.getElementById("settings_Appearance_defaultTitleBar").checked = SETTINGS_DICT["Appearance"]["defaultTitleBar"];
   document.getElementById("settings_Appearance_animationWindow").checked = SETTINGS_DICT["Appearance"]["animationWindow"];
@@ -269,7 +284,7 @@ function alert_settings() {
   document.getElementById("settings_Connections_keepaliveCountMax").value = SETTINGS_DICT["Connections"]["keepaliveCountMax"];
   document.getElementById("settings_Connections_keepaliveInterval").value = SETTINGS_DICT["Connections"]["keepaliveInterval"];
   change_settings_page("general");
-  // change_settings_page("macros");
+  // change_settings_page("appearance");
 }
 
 get_config();
