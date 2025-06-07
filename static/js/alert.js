@@ -1,9 +1,16 @@
 
+function readHtml(path, context=window) {
+  const htmlStr = fs.readFileSync(path, { encoding: 'utf8', flag: 'r' });
+  with(context) {
+    return eval("`" + htmlStr + "`");
+  }
+}
 
 var onclose_alert_function = undefined;
 var alert_onclose_flag = true;
-function open_alert(html, type="alert", onclose=undefined) {
-  document.getElementById("alert_body").innerHTML = html;
+function open_alert(html, type="alert", onclose=undefined, context=window) {
+  // document.getElementById("alert_body").innerHTML = html;
+  document.getElementById("alert_body").innerHTML = readHtml(html, context);
   document.getElementById("alert").className = "";
   document.getElementById("alert").classList.add(type);
   if (SETTINGS_DICT["Appearance"]["animationWindow"]) {

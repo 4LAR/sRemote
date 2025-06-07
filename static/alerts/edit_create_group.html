@@ -1,0 +1,13 @@
+<p class="name">${(edit_flag)? localization_dict.edit_group_title: localization_dict.create_group_title}</p>
+<hr>
+<input id="name" class="input_style" type="text" placeholder="${localization_dict.group_name}">
+<p class="name_info">${localization_dict.random_name}</p>
+<div class="button submit" onclick="${(edit_flag)? `save_data_group(${group_id}, true)`: `save_data_group()`}">
+  <p>${(edit_flag)? localization_dict.save: localization_dict.create}</p>
+</div>
+${(edit_flag)? `<div class="button share" onclick="share(${group_id})">
+  <p>${localization_dict.share}</p>
+</div>`: ""}
+${(edit_flag)? `<div class="button predelete" onclick="alert_delete_group(${group_id})">
+  <p>${localization_dict.delete}</p>
+</div>`: ""}

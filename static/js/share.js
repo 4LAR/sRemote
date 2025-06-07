@@ -32,17 +32,14 @@ function share(group_id, item_id=undefined) {
 function alert_import_connection(data) {
   var group_flag = data.type === "group"
   if (group_flag) {
-    open_alert(`
-      <p class="name">Import group</p>
-      <hr>
-      <input id="name" class="input_style" type="text" placeholder="Group name">
-      <p class="name_info">A random name is generated if you do not provide one.</p>
-      <p class="connection_page_name">Connections in group</p>
-      <ul id="import_items_list" class="scroll_style input_style"></ul>
-      <div class="button submit" id="import_button">
-        <p>Import</p>
-      </div>
-    `, "alert_import_group");
+    open_alert(
+      "static/alerts/import_group.html",
+      "alert_import_group",
+      undefined,
+      {
+        ...window
+      }
+    );
 
     document.getElementById("name").value = data.data.name;
     for (const item of data.data.items) {
@@ -60,42 +57,15 @@ function alert_import_connection(data) {
     for (const el of TABS) {
       selector[el.name] = el.id;
     }
-    open_alert(`
-      <p class="name">Import connection</p>
-      <hr>
-      ${select_generator(selector, "group_name", "input_style")}
-      <input id="name_connection" class="input_style" type="text" placeholder="Connection name">
-      <p class="name_info">A random name is generated if you do not provide one.</p>
-      <p class="connection_page_name">Connection</p>
-      <input id="host" class="input_style" type="text" placeholder="host">
-      <input id="port" class="input_style" type="text" placeholder="port">
-      <p class="port_info">Default port 22</p>
-      <p class="connection_page_name_auth">Authorization data: </p>
-      <select id="auth_scheme" class="connection_auth_scheme" onchange="change_auth_scheme()" tabindex="-1">
-        <option value="lap" selected>login and password</option>
-        <option value="lak">login and privateKey</option>
-      </select>
-      <div id="auth_scheme_input_lap">
-        <input id="login_lap" class="input_style" type="text" placeholder="login">
-        <input id="password" class="input_style" type="password" placeholder="password">
-      </div>
-      <div id="auth_scheme_input_lak" style="display: none">
-        <input id="login_lak" class="input_style" type="text" placeholder="login">
-        <input id="privateKey" class="input_style" type="text" placeholder="private key path">
-        <input type="file" id="PrivateKeyInput" accept=".ppk" style="display: none;">
-        <div class="option" onclick="document.getElementById('PrivateKeyInput').click()">
-          <div></div>
-          <p>...</p>
-        </div>
-
-      </div>
-      <p class="connection_page_name">Command</p>
-      <textarea id="first_command" class="input_style" type="text" placeholder="Command (For example: clear & python3)"></textarea>
-      <p class="first_command_info">Command to be executed on the server after connection (optional).</p>
-      <div class="button submit" id="import_button">
-        <p>Import</p>
-      </div>
-    `, "alert_import_connection");
+    open_alert(
+      "static/alerts/import_connection.html",
+      "alert_import_connection",
+      undefined,
+      {
+        ...window,
+        selector
+      }
+    );
 
     document.getElementById("name_connection").value = data.data.name;
     document.getElementById("host").value = data.data.host;
