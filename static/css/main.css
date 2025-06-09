@@ -59,7 +59,7 @@ ul {
   width: calc(100% - 201px);
   height: calc(100% - var(--titleBar-height));
   margin: 0px;
-  /* transition: .2s all; */
+  transition: .2s all;
 }
 
 iframe {

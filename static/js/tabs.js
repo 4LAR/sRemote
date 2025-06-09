@@ -138,6 +138,7 @@ function open_group(event) {
 function generate_item_by_data(data, group_id, item_id="") {
   return `
     <img id="status_${group_id}_${item_id}" class="status_none" src="./static/img/type/${data.ico}.svg">
+    <div class="indicator"></div>
     <p class="name">${data.name}</p>
     <p class="host">${data.host}:${data.port}</p>
     <div class="reconnect" onclick="reconnect_event(event)">

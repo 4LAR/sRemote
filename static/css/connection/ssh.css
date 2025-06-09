@@ -41,11 +41,23 @@ div.tabs-list > div.container > div {
   height: 26px;
   box-sizing: border-box;
   border-bottom: 1px solid var(--border-color);
+  border-left: 3px solid transparent;
 }
 
 div.tabs-list > div.container > div.selected {
   background-color: var(--terminal-bg);
   border-bottom: 1px solid var(--terminal-bg);
+  /* border-left: 3px solid var(--select-color); */
+}
+
+div.tabs-list > div.container > div::after {
+  content: " ";
+  position: absolute;
+  top: 0px;
+  left: -3px;
+  width: 3px;
+  height: 100%;
+  opacity: 0;
 }
 
 div.tabs-list > div.container > div > p {
@@ -68,6 +80,11 @@ div.tabs-list > div.container > div > input {
 
 div.tabs-list > div.container > div > input:read-only {
   pointer-events: none;
+}
+
+div.tabs-list > div.container > div.selected::after {
+  background-color: var(--select-color);
+  opacity: 1;
 }
 
 div.tabs-list > div.container > div.selected > p,
