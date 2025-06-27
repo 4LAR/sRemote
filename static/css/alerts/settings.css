@@ -32,12 +32,13 @@
 }
 
 .alert_body hr.hr_settings {
-  width: calc(100%);
+  width: calc(100% + 10px);
   margin: 0px;
   border: none;
   border-bottom: 1px solid var(--alert-hr-color);
   margin-top: 20px;
   margin-bottom: 10px;
+  margin-left: -5px;
 }
 
 .settings_alert .settings_buttons_bar {
