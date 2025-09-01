@@ -30,9 +30,9 @@ const DATA_CONNECTION_TO_READ = [
   { key: "password", default: "password" },
   { key: "privateKey", default: "" },
   { key: "first_command", default: "" },
-  { key: "multitab_terminal", default: false },
+  { key: "multitab_terminal", default: true },
   { key: "root", default: false },
-  { key: "xterm", default: false }
+  { key: "xterm", default: true }
 ];
 
 function change_auth_scheme() {
