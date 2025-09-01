@@ -1,6 +1,6 @@
 
-function readHtml(path, context=window) {
-  const htmlStr = fs.readFileSync(path, { encoding: 'utf8', flag: 'r' });
+function readHtml(html_path, context=window) {
+  const htmlStr = fs.readFileSync(path.join(__dirname, html_path), { encoding: 'utf8', flag: 'r' });
   with(context) {
     return eval("`" + htmlStr + "`");
   }
