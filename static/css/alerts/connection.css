@@ -5,13 +5,15 @@
   left: 50%;
   top: 50%;
   transform: translate(calc(-50% + 100px), -51%);
+  /* transform: translate(-50%, -48%); */
   width: 550px;
   background-color: var(--alert-bg-color);
   border-radius: 0px 5px 5px 0px;
+  /* border-radius: 5px; */
   z-index: 12;
   box-shadow: 0px 4px 27px 11px rgba(0, 0, 0, 0.02);
   border: 1px solid var(--alert-border-color);
-  height: 500px;
+  height: 510px;
 }
 
 .alert_group {
@@ -27,6 +29,18 @@
   box-shadow: 0px 4px 27px 11px rgba(0, 0, 0, 0.02);
   border: 1px solid var(--alert-border-color);
   height: 200px;
+}
+
+.alert .alert_head img {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 35px;
+  transform: rotate(45deg);
+  cursor: pointer;
+  filter: invert(var(--invert-buttons));
+  transition: .1s all;
+  z-index: 2;
 }
 
 .alert_body hr.hr_connection {
@@ -182,7 +196,7 @@
 
 .alert_body img.see {
   position: absolute;
-  top: 212px;
+  top: 220px;
   right: 50px;
   filter: invert(var(--invert-buttons));
   transition: .1s all;
@@ -288,6 +302,15 @@
   outline: none;
 }
 
+.alert_body .checkbox {
+  cursor: pointer;
+}
+
+.alert_body .checkbox > label {
+  color: var(--alert-font-color);
+  cursor: pointer;
+}
+
 #auth_scheme_input_lak {
   position: relative;
 }
@@ -298,8 +321,8 @@
 
 #auth_scheme_input_lak > .option > p {
   position: absolute;
-  top: -40px;
-  right: 20px;
+  top: -38px;
+  right: 18px;
   font-size: 2em;
   color: var(--input-border-color);
   transition: .15s all;
@@ -331,7 +354,7 @@
   position: absolute;
   right: 100%;
   bottom: -1px;
-  height: 500px;
+  height: 510px;
   width: 200px;
   z-index: 10;
   background-color: var(--alert-bg-color);

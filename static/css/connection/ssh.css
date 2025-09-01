@@ -158,6 +158,11 @@ div.terminal-list {
   position: absolute;
 }
 
+div.terminal-list.notab {
+  top: 0px;
+  height: 100%;
+}
+
 div.terminal-list > div {
   display: none;
   position: absolute;

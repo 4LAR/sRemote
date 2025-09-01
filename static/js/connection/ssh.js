@@ -24,10 +24,10 @@ function assembly_error(err) {
   let text = "";
   switch (err.level) {
     case "client-socket":
-      text = `[\x1b[31mERROR\x1b[0m] Failed to connect to the remote server. (${err.code})`;
+      text = `[\x1b[31mERROR\x1b[0m] ${localization_dict.ssh_failed_to_connect} (${err.code})`;
       break;
     case "client-authentication":
-      text = `[\x1b[31mERROR\x1b[0m] Invalid credentials for authentication.`;
+      text = `[\x1b[31mERROR\x1b[0m] ${localization_dict.ssh_invalid_credentials}`;
       break;
     default:
       text = `[\x1b[31mERROR\x1b[0m] ${err.level}`;
@@ -46,10 +46,16 @@ class ShellManager {
   conn = undefined;
   start_connect = false;
   font_size = 15;
+  multitab = true;
 
   constructor(connection_config, config, thame) {
     this.connection_config = connection_config;
     this.config = config;
+    this.multitab = connection_config.multitab_terminal;
+    if (!this.multitab) {
+      document.getElementById('tabs_list').style.display = "none";
+      document.getElementById('terminal_list').classList.add("notab");
+    }
     this.thame = thame;
     this.conn = new Client();
 
@@ -62,6 +68,25 @@ class ShellManager {
             newLine(this.shells[index].terminal);
           });
       }
+
+      // это sftp
+      this.conn.sftp((err, sftp) => {
+        if (err) {
+          console.error(err);
+          return;
+        };
+        sftp_obj = sftp;
+        document.getElementById('connection_warning').style.display = "none";
+        getHomePath().then(path=>{
+          pathArr[0] = path.split("/").filter(part => part !== "");
+          listFiles(0);
+          if (split_flag) {
+            pathArr[1] = path.split("/").filter(part => part !== "");
+            listFiles(1);
+          }
+        })
+      });
+
       local_update_status(3);
 
     }).on('end', () => {
@@ -94,6 +119,13 @@ class ShellManager {
   }
 
   disconnect() {
+    if (!this.connect_flag) {
+      this.conn.destroy();
+      connected_flag = false;
+      this.start_connect = false;
+      local_update_status(0);
+      return;
+    }
     this.connect_flag = false;
     this.conn.end();
   }
@@ -119,6 +151,7 @@ class ShellManager {
   }
 
   add_shell(name=undefined, auto_connect=true) {
+    if (this.count_create_shells > 0 && !this.multitab) return;
     if (auto_connect) {
       if (!connected_flag) {
         return false;
@@ -302,7 +335,31 @@ class ShellManager {
 
       this.shells[id].stream = stream;
 
-      const ondata = stream.on('data', function(data) {
+      let on_sudo_login = false;
+      let skip_last_message = false;
+      if (this.connection_config.root) {
+        on_sudo_login = true;
+        stream.write("sudo -i\n");
+        stream.write(`${this.connection_config.password}\n`);
+      } else {
+        if (this.connection_config.first_command.length > 0) {
+          stream.write(atob(this.connection_config.first_command) + "\n");
+        }
+      }
+
+      const ondata = stream.on('data', (data) => {
+        if (on_sudo_login && data.toString().indexOf("[sudo]") !== -1) {
+          on_sudo_login = false;
+          if (this.connection_config.first_command.length > 0 && !on_sudo_login) {
+            stream.write(atob(this.connection_config.first_command) + "\n");
+          }
+          skip_last_message = true;
+        }
+        if (on_sudo_login) return;
+        if (skip_last_message) {
+          skip_last_message = false;
+          return
+        }
         term.write(data);
       });
 
@@ -315,6 +372,7 @@ class ShellManager {
         ondata.close();
         onclose.close();
         printOnNewLine(term, `[\x1b[34mINFO\x1b[0m] ${localization_dict.ssh_host_terminated}`);
+        document.getElementById('connection_warning').style.display = "block";
       });
 
       if (on_connect !== undefined) {

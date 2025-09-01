@@ -1,35 +1,47 @@
 <p class="name">${(edit_flag)? localization_dict.edit_connection_title: localization_dict.create_connection_title}</p>
 <hr class="hr_connection">
-${generate_selector_icons("ico")}
-<input id="connectioname" class="input_style" type="text" placeholder="${localization_dict.connection_name}">
-<p class="name_info_connection">${localization_dict.random_name}</p>
-<p class="connection_page_name">${localization_dict.connection}</p>
-<input id="host" class="input_style" type="text" placeholder="${localization_dict.host}">
-<input id="port" class="input_style" type="text" placeholder="${localization_dict.port}">
-<p class="port_info">${localization_dict.default_port}</p>
-<p class="connection_page_name_auth">${localization_dict.authorization_data}: </p>
-<select id="auth_scheme" class="connection_auth_scheme" onchange="change_auth_scheme()" tabindex="-1">
-  <option value="lap" selected>${localization_dict.login_and_password}</option>
-  <option value="lak">${localization_dict.login_and_privateKey}</option>
-</select>
-<div id="auth_scheme_input_lap">
-  <input id="login_lap" class="input_style" type="text" placeholder="${localization_dict.login}">
-  <input id="password" class="input_style" type="password" placeholder="${localization_dict.password}" style="${!(edit_flag)? "padding-right: 45px": ""}">
-  ${!(edit_flag)? `<img id="see_indicator" class="see" src="./static/img/see.svg" onclick="show_password('password', 'see_indicator')">`: ""}
-</div>
-<div id="auth_scheme_input_lak" style="display: none">
-  <input id="login_lak" class="input_style" type="text" placeholder="${localization_dict.login}">
-  <input id="privateKey" class="input_style" type="text" placeholder="${localization_dict.private_key_path}">
-  <input type="file" id="PrivateKeyInput" accept=".ppk" style="display: none;">
-  <div class="option" onclick="document.getElementById('PrivateKeyInput').click()">
-    <div></div>
-    <p>...</p>
+<div id="connection_page_general">
+  ${generate_selector_icons("ico")}
+  <input id="connectioname" class="input_style" type="text" placeholder="${localization_dict.connection_name}">
+  <p class="name_info_connection">${localization_dict.random_name}</p>
+  <p class="connection_page_name">${localization_dict.connection}</p>
+  <input id="host" class="input_style" type="text" placeholder="${localization_dict.host}">
+  <input id="port" class="input_style" type="text" placeholder="${localization_dict.port}">
+  <p class="port_info">${localization_dict.default_port}</p>
+  <p class="connection_page_name_auth">${localization_dict.authorization_data}: </p>
+  <select id="auth_scheme" class="connection_auth_scheme" onchange="change_auth_scheme()" tabindex="-1">
+    <option value="lap" selected>${localization_dict.login_and_password}</option>
+    <option value="lak">${localization_dict.login_and_privateKey}</option>
+  </select>
+  <div id="auth_scheme_input_lap">
+    <input id="login_lap" class="input_style" type="text" placeholder="${localization_dict.login}">
+    <input id="password" class="input_style" type="password" placeholder="${localization_dict.password}" style="${!(edit_flag)? "padding-right: 45px": ""}">
+    ${!(edit_flag)? `<img id="see_indicator" class="see" src="./static/img/see.svg" onclick="show_password('password', 'see_indicator')">`: ""}
   </div>
-
+  <div id="auth_scheme_input_lak" style="display: none">
+    <input id="login_lak" class="input_style" type="text" placeholder="${localization_dict.login}">
+    <input id="privateKey" class="input_style" type="text" placeholder="${localization_dict.private_key_path}">
+    <input type="file" id="PrivateKeyInput" accept=".ppk" style="display: none;">
+    <div class="option" onclick="document.getElementById('PrivateKeyInput').click()">
+      <div></div>
+      <p>...</p>
+    </div>
+  </div>
+  <p class="connection_page_name">${localization_dict.command}</p>
+  <textarea id="first_command" class="input_style" type="text" placeholder="${localization_dict.command} (${localization_dict.command_example})"></textarea>
+  <p class="first_command_info">${localization_dict.command_info}</p>
 </div>
-<p class="connection_page_name">${localization_dict.command}</p>
-<textarea id="first_command" class="input_style" type="text" placeholder="${localization_dict.command} (${localization_dict.command_example})"></textarea>
-<p class="first_command_info">${localization_dict.command_info}</p>
+<div id="connection_page_other">
+  <p class="connection_page_name">${localization_dict.other}</p>
+  <div class="checkbox block_select" for="multitab_terminal">
+    <input type="checkbox" id="multitab_terminal">
+    <label for="multitab_terminal">${localization_dict.multitab_terminal}</label>
+  </div>
+  <div class="checkbox block_select" for="root">
+    <input type="checkbox" id="root">
+    <label for="root">${localization_dict.root}</label>
+  </div>
+</div>
 <div class="buttons_bar">
   <div class="button submit" onclick="${(edit_flag)? `save_data_connection(${group_id}, ${item_id}, true)`: `save_data_connection(${group_id})`}">
     <p>${(edit_flag)? localization_dict.save: localization_dict.create}</p>
@@ -42,16 +54,16 @@ ${generate_selector_icons("ico")}
   </div>`: ""}
 </div>
 <div class="other-settings block_select">
-  <div id="connection_menu_general" onclick="">
+  <div onclick="connection_menu('general')" id="connection_menu_general">
     <div></div>
     <div class="selector"></div>
     <img src="./static/img/settings/general.svg" alt="">
-    <p>General</p>
+    <p>${localization_dict.connection_menu_general}</p>
   </div>
-  <div id="connection_menu_general" onclick="">
+  <div onclick="connection_menu('other')" id="connection_menu_other">
     <div></div>
     <div class="selector"></div>
-    <img src="./static/img/settings/general.svg" alt="">
-    <p>Terminal</p>
+    <img src="./static/img/settings/connection.svg" alt="">
+    <p>${localization_dict.connection_menu_other}</p>
   </div>
 </div>

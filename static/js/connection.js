@@ -29,7 +29,9 @@ const DATA_CONNECTION_TO_READ = [
   { key: "username", default: "user" },
   { key: "password", default: "password" },
   { key: "privateKey", default: "" },
-  { key: "first_command", default: "" }
+  { key: "first_command", default: "" },
+  { key: "multitab_terminal", default: false },
+  { key: "root", default: false }
 ];
 
 function change_auth_scheme() {
@@ -103,7 +105,11 @@ function generate_selector_icons(id="", selected=undefined) {
     "terminal",
     "server",
     "git",
-    "notebook"
+    "notebook",
+    "wheelchair",
+    "cloud",
+    "lock",
+    "docker"
   ];
 
   let result = "";
@@ -163,6 +169,8 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
       document.getElementById("privateKey").value = item.privateKey;
     }
     document.getElementById("first_command").value = atob(item.first_command);
+    document.getElementById("multitab_terminal").checked = item.multitab_terminal;
+    document.getElementById("root").checked = item.root;
   }
 
   document.getElementById('PrivateKeyInput').addEventListener('change', (event) => {
@@ -172,8 +180,27 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
     }
   });
 
+  connection_menu("general");
+
   if (event) {
     event.stopPropagation();
+  }
+}
+
+const connection_settings_pages = [
+  "general",
+  "other"
+];
+
+function connection_menu(page_name) {
+  for (const page of connection_settings_pages) {
+    if (page == page_name) {
+      document.getElementById(`connection_page_${page}`).style.display = "block";
+      document.getElementById(`connection_menu_${page}`).className = "selected";
+    } else {
+      document.getElementById(`connection_page_${page}`).style.display = "none";
+      document.getElementById(`connection_menu_${page}`).className = "";
+    }
   }
 }
 
@@ -190,6 +217,8 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
   const privateKey = document.getElementById("privateKey");
   const first_command = document.getElementById("first_command");
   const ico = get_selector_icons("ico");
+  const multitab_terminal = document.getElementById("multitab_terminal");
+  const root = document.getElementById("root");
 
   var error_flag = false;
   for (const el of ((auth_scheme.value == "lap")? [host, login_lap, password]: [host, login_lak, privateKey])) {
@@ -212,7 +241,9 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
     "username": (auth_scheme.value == "lap")? login_lap.value: login_lak.value,
     "password": password.value,
     "privateKey": privateKey.value,
-    "first_command": btoa(first_command.value)
+    "first_command": btoa(first_command.value),
+    "multitab_terminal": multitab_terminal.checked,
+    "root": root.checked
   }
 
   var config_file = connectionsStore.get();
@@ -234,12 +265,15 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
       item.password = insert_data.password;
       item.privateKey = insert_data.privateKey;
       item.first_command = insert_data.first_command;
+      item.multitab_terminal = insert_data.multitab_terminal;
+      item.root = insert_data.root;
       item.search = insert_data.name + insert_data.host + ":" + insert_data.port;
 
       document.getElementById(`item_${group_id}_${item_id}`).innerHTML = generate_item_by_data(insert_data, group_id, item_id);
       document.getElementById(`li_${group_id}_${item_id}`).innerHTML = `<iframe src='ssh.html?data=${JSON.stringify(insert_data)}&config=${JSON.stringify(SETTINGS_DICT)}&group_id=${group_id}&item_id=${item_id}&data_path=${path.dirname(store.path)}' style="display: none" id="iframe_${group_id}_${item_id}"></div>`;
       document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.update_status = update_status;
       document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.localization_dict = localization_dict;
+      document.getElementById(`iframe_${group_id}_${item_id}`).contentWindow.mainHotkey = (e) => hotkeyStore.keydown(e, document.getElementById(`iframe_${group_id}_${item_id}`));;
 
     } catch (e) {
       console.warn(e);
@@ -262,6 +296,8 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
         "password": insert_data.password,
         "privateKey": insert_data.privateKey,
         "first_command": insert_data.first_command,
+        "multitab_terminal": insert_data.multitab_terminal,
+        "root": insert_data.root,
         "search": insert_data.name + insert_data.host + ":" + insert_data.port
       });
       var new_item_id = TABS[index].items[TABS[index].items.length - 1].id;

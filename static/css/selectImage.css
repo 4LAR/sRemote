@@ -11,6 +11,7 @@ div.select-image {
 
 div.select-image.opened {
   overflow-y: scroll;
+  padding-top: 55px;
 }
 
 div.select-image > input {
@@ -50,7 +51,7 @@ div.select-image > div:nth-child(2) {
 }
 
 div.select-image > div:last-child {
-  border-radius: 0 0 0 4px;
+  /* border-radius: 0 0 0 4px; */
 }
 
 div.select-image.opened > div {
@@ -62,6 +63,8 @@ div.select-image > div.selected {
 }
 
 div.select-image.opened > div.selected {
+  position: absolute;
+  top: 0px;
   border-left: 3px solid var(--select-color);
 }
 

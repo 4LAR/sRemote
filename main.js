@@ -8,6 +8,8 @@ const windowStateKeeper = require('electron-window-state');
 const Store = require('electron-store');
 const minimist = require('minimist');
 
+app.commandLine.appendSwitch('--no-sandbox')
+
 Store.initRenderer();
 
 const args = minimist(process.argv.slice(isPackaged ? 1 : 2));
