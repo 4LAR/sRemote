@@ -18,6 +18,7 @@
   "command_info": "Command to be executed on the server after connection (optional).",
   "multitab_terminal": "Use tabs in terminal",
   "root": "Try to enable superuser mode",
+  "xterm": "Improved terminal (consumes more traffic)",
   "share": "Share",
   "delete": "Delete",
   "delete_forever": "Delete forever",

@@ -31,7 +31,8 @@ const DATA_CONNECTION_TO_READ = [
   { key: "privateKey", default: "" },
   { key: "first_command", default: "" },
   { key: "multitab_terminal", default: false },
-  { key: "root", default: false }
+  { key: "root", default: false },
+  { key: "xterm", default: false }
 ];
 
 function change_auth_scheme() {
@@ -171,6 +172,7 @@ function alert_create_edit_connection(group_id, item_id, event, edit_flag=false)
     document.getElementById("first_command").value = atob(item.first_command);
     document.getElementById("multitab_terminal").checked = item.multitab_terminal;
     document.getElementById("root").checked = item.root;
+    document.getElementById("xterm").checked = item.xterm;
   }
 
   document.getElementById('PrivateKeyInput').addEventListener('change', (event) => {
@@ -219,6 +221,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
   const ico = get_selector_icons("ico");
   const multitab_terminal = document.getElementById("multitab_terminal");
   const root = document.getElementById("root");
+  const xterm = document.getElementById("xterm");
 
   var error_flag = false;
   for (const el of ((auth_scheme.value == "lap")? [host, login_lap, password]: [host, login_lak, privateKey])) {
@@ -243,7 +246,8 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
     "privateKey": privateKey.value,
     "first_command": btoa(first_command.value),
     "multitab_terminal": multitab_terminal.checked,
-    "root": root.checked
+    "root": root.checked,
+    "xterm": xterm.checked
   }
 
   var config_file = connectionsStore.get();
@@ -267,6 +271,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
       item.first_command = insert_data.first_command;
       item.multitab_terminal = insert_data.multitab_terminal;
       item.root = insert_data.root;
+      item.xterm = insert_data.xterm;
       item.search = insert_data.name + insert_data.host + ":" + insert_data.port;
 
       document.getElementById(`item_${group_id}_${item_id}`).innerHTML = generate_item_by_data(insert_data, group_id, item_id);
@@ -298,6 +303,7 @@ function save_data_connection(group_id, item_id, edit_flag=false) {
         "first_command": insert_data.first_command,
         "multitab_terminal": insert_data.multitab_terminal,
         "root": insert_data.root,
+        "xterm": insert_data.xterm,
         "search": insert_data.name + insert_data.host + ":" + insert_data.port
       });
       var new_item_id = TABS[index].items[TABS[index].items.length - 1].id;

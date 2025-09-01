@@ -41,6 +41,10 @@
     <input type="checkbox" id="root">
     <label for="root">${localization_dict.root}</label>
   </div>
+  <div class="checkbox block_select" for="xterm">
+    <input type="checkbox" id="xterm">
+    <label for="xterm">${localization_dict.xterm}</label>
+  </div>
 </div>
 <div class="buttons_bar">
   <div class="button submit" onclick="${(edit_flag)? `save_data_connection(${group_id}, ${item_id}, true)`: `save_data_connection(${group_id})`}">

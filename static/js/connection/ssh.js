@@ -342,6 +342,9 @@ class ShellManager {
         stream.write("sudo -i\n");
         stream.write(`${this.connection_config.password}\n`);
       } else {
+        if (this.connection_config.xterm) {
+          stream.write("TERM=xterm bash\n");
+        }
         if (this.connection_config.first_command.length > 0) {
           stream.write(atob(this.connection_config.first_command) + "\n");
         }
@@ -350,6 +353,9 @@ class ShellManager {
       const ondata = stream.on('data', (data) => {
         if (on_sudo_login && data.toString().indexOf("[sudo]") !== -1) {
           on_sudo_login = false;
+          if (this.connection_config.xterm) {
+            stream.write("TERM=xterm bash\n");
+          }
           if (this.connection_config.first_command.length > 0 && !on_sudo_login) {
             stream.write(atob(this.connection_config.first_command) + "\n");
           }
