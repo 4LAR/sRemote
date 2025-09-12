@@ -172,7 +172,7 @@ const createWindow = () => {
   app.on('second-instance', (event, commandLine, workingDirectory) => {
     if (top.win) {
       if (process.platform === 'win32') {
-        const filePath = commandLine.slice(1)[1];
+        const filePath = commandLine.filter(str => str.includes('.srem'))[0];
         if (filePath) {
           top.win.webContents.send('file-open', filePath);
         }

@@ -201,7 +201,6 @@ function read_import_file(file_path) {
   fs.readFile(file_path, 'utf8', function (err, data) {
     if (err) throw err;
     obj = JSON.parse(data);
-    console.log(obj);
     alert_import_connection(obj);
   });
 }
